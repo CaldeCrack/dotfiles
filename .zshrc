@@ -50,7 +50,7 @@ alias ls='ls --color=auto'
 export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman'"
 
 # Persistent history across sessions
-SAVEHIST=5000
+SAVEHIST=1000
 HISTFILE=~/.zsh_history
 HISTDUP=erase
 
