@@ -22,7 +22,6 @@ compinit -d $ZSH_COMPDUMP
 # Predicting syntax
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-source $(dirname $(gem which colorls))/tab_complete.sh
 
 # Oh My Zsh
 ZSH_THEME="powerlevel10k/powerlevel10k"
@@ -63,10 +62,9 @@ setopt hist_find_no_dups
 
 # Aliases
 alias lobster='lobster --discord -q 720'
-alias clear='clear'
-alias lgit='colorls -goAl --sd --gs'
-alias lc='colorls -goAl --sd'
-alias l='colorls -go --sd'
+alias lgit='eza -la --no-user --header --git --icons=always'
+alias lc='eza -la --no-user --header --icons=always'
+alias l='eza'
 
 # Environment variables
 export SUDO_EDITOR=nvim
