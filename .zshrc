@@ -67,6 +67,7 @@ alias lc='eza -la --no-user --header --icons=always'
 alias l='eza'
 alias nv='nvim'
 alias update='source ~/.zshrc'
+alias sudo='sudo '
 
 # Environment variables
 export SUDO_EDITOR=nvim
