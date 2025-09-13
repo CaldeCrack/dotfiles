@@ -17,7 +17,7 @@ function Workspaces() {
 
   return (
     <With value={focusedWorkspace}>
-      {(focusedWorkspace) => focusedWorkspace &&
+      {(focusedWorkspace) => Boolean(focusedWorkspace) &&
         <box>
           <For each={workspaces}>
             {workspace => (

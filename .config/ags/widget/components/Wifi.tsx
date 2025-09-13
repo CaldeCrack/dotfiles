@@ -1,8 +1,6 @@
 import { Gtk } from "ags/gtk4"
 import { With, createComputed, createBinding } from "ags"
 import { execAsync } from "ags/process"
-
-// @ts-ignore
 import Network from "gi://AstalNetwork"
 
 function Wifi() {
@@ -61,7 +59,7 @@ function Wifi() {
     return outerBox
   }
 
-  function buildPopover(data: Network) {
+  function buildPopover(data: { accessPoints: any; iconName?: string; activeSsid: any }) {
     const box = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL })
     for (const ap of sorted(data.accessPoints)) {
       const row = new Gtk.Button()

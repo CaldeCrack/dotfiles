@@ -2,9 +2,7 @@ import { With, createBinding } from "ags"
 import { Gtk } from "ags/gtk4"
 
 // --- Audio ---
-// @ts-ignore
 import WirePlumber from "gi://AstalWp"
-// @ts-ignore
 import Battery from "gi://AstalBattery"
 const battery = Battery.get_default()
 

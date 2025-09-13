@@ -2,7 +2,6 @@ import { Gtk } from "ags/gtk4"
 import { With, createState } from "ags"
 import { execAsync } from "ags/process"
 
-
 function Clipboard() {
   const [history, setHistory] = createState<string[]>([])
 

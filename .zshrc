@@ -65,6 +65,8 @@ alias lobster='lobster --discord -q 720'
 alias lgit='eza -la --no-user --header --git --icons=always'
 alias lc='eza -la --no-user --header --icons=always'
 alias l='eza'
+alias nv='nvim'
+alias update='source ~/.zshrc'
 
 # Environment variables
 export SUDO_EDITOR=nvim

@@ -1,6 +1,4 @@
 import { With, createBinding } from "ags"
-
-// @ts-ignore
 import Hyprland from "gi://AstalHyprland"
 
 function Title() {
