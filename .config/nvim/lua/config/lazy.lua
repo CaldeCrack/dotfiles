@@ -24,6 +24,7 @@ vim.g.maplocalleader = "\\"
 -- Setup lazy.nvim
 require("lazy").setup("lua.plugins")
 
+--[[ 
 require("rose-pine").setup({
 	variant = "auto", -- auto, main, moon, or dawn
 	dark_variant = "main", -- main, moon, or dawn
@@ -104,4 +105,4 @@ require("rose-pine").setup({
 })
 
 vim.cmd("colorscheme rose-pine")
-vim.opt.termguicolors = true
+vim.opt.termguicolors = true ]]
