@@ -67,6 +67,9 @@ fi
 "${CMD1[@]}" "$FILE"
 "${CMD2[@]}" $EXTRA_FLAGS -i "$FILE"
 
+# Restart AGS
+ags quit -i astal; hyprctl dispatch exec ags run ~/.config/ags/app.tsx
+
 # Update index for next time
 if [ "$DIRECTION" = "forward" ]; then
   NEXT_INDEX=$(( (INDEX + 1) % FILE_AMOUNT))
