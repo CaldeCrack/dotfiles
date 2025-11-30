@@ -1,13 +1,64 @@
 // https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-3-24/gtk/theme/Adwaita/_colors-public.scss
+
+@use 'sass:color';
+
 $fg-color: #%%foreground%%;
 $bg-color: #%%background%%;
-$detail-color: #%%color5.hex%%;
+$detail-color: #%%color1.hex%%;
+$lighter-bg: color.adjust($bg-color, $lightness: 10%);
 
 window.Bar {
   background: transparent;
   color: $fg-color;
   font-family: FiraCode;
   font-weight: bold;
+
+  slider {
+    background: $bg-color;
+    box-shadow: 0 0 0 2px $detail-color inset;
+  }
+
+  slider:hover {
+    box-shadow: 0 0 0 2px $detail-color inset, 0 0 0 8px rgba(255, 255, 255, 0.1);
+  }
+
+  highlight {
+    background: $detail-color;
+  }
+
+  button {
+    background: $lighter-bg;
+    border-radius: 8px;
+    margin: 2px;
+    outline-color: $detail-color;
+  }
+
+  button:focus,
+  calendar {
+    background: $lighter-bg;
+  }
+
+  .today:selected,
+  .today:focus {
+    color: $bg-color;
+    background: $detail-color;
+  }
+
+  .today {
+    color: $detail-color;
+    background: $bg-color;
+  }
+
+  button:active,
+  button:checked {
+    background: $detail-color;
+    color: $bg-color;
+  }
+
+  popover>contents,
+  popover>arrow {
+    background: $bg-color;
+  }
 
   >centerbox {
     border-radius: 10px;
@@ -28,17 +79,18 @@ window.Bar {
     padding-bottom: 0;
   }
 
-  button {
-    border-radius: 8px;
-    margin: 2px;
-  }
-
   levelbar>trough>block {
     border-radius: 6px;
     margin: 1px 0;
   }
 
-  .active {
+  levelbar>trough>block.filled,
+  levelbar>trough>block.full {
+    background: $detail-color;
+  }
+
+  .active,
+  .active:focus {
     background: $detail-color;
     color: $bg-color;
   }

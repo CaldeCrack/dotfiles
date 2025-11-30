@@ -1,7 +1,6 @@
 import { For, With, createBinding } from "ags"
 import { exec } from "ags/process"
 
-// @ts-ignore
 import Hyprland from "gi://AstalHyprland"
 
 function Workspaces() {
@@ -24,7 +23,7 @@ function Workspaces() {
               <button
                 class={focusedWorkspace === workspace!.id ? "active" : ""}
                 onClicked={() => switchWorkspace(workspace!.id)}
-                css="padding-top: 4px; padding-bottom: 0px;"
+                css="padding-top: 4px; padding-bottom: 0px; min-width: 8px;"
               >
                 {workspace!.id}
               </button>

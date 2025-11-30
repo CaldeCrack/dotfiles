@@ -10,9 +10,8 @@ STATE_FILE=$THIS_DIR/.carousel_state
 # Config file for extra flags (optional)
 FLAGS_FILE=$THIS_DIR/flags.conf
 
-# Command you want to run (replace "echo" with your command)
-CMD1=(hyprctl hyprpaper reload ,)
-CMD2=(hellwal --check-contrast -q -f ~/dotfiles/.config/hellwal/templates)
+CMD1=(hellwal --check-contrast -m -q -f ~/dotfiles/.config/hellwal/templates)
+CMD2=(hyprctl hyprpaper reload ,)
 
 # Default direction: forward
 DIRECTION="forward"
@@ -64,11 +63,10 @@ if [ -f "$FLAGS_FILE" ]; then
 fi
 
 # Run the commands
-"${CMD1[@]}" "$FILE"
-"${CMD2[@]}" $EXTRA_FLAGS -i "$FILE"
+"${CMD1[@]}" $EXTRA_FLAGS -i "$FILE" && "${CMD2[@]}" "$FILE"
 
 # Restart AGS
-ags quit -i astal; hyprctl dispatch exec ags run ~/.config/ags/app.tsx
+ags quit; hyprctl dispatch exec ags run ~/.config/ags/app.tsx
 
 # Update index for next time
 if [ "$DIRECTION" = "forward" ]; then
