@@ -1,7 +1,7 @@
 // --- Components ---
-import LeftBar from "./LeftBar"
-import CenterBar from "./CenterBar"
-import RightBar from "./RightBar"
+import LeftBar from "./components/LeftBar"
+import CenterBar from "./components/CenterBar"
+import RightBar from "./components/RightBar"
 
 function Bar() {
   return (

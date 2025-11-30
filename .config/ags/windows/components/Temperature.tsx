@@ -1,6 +1,8 @@
 import { Gtk } from "ags/gtk4"
 import { With, createState } from "ags"
 import { execAsync } from "ags/process"
+import MenuRevealer from "../../widgets/MenuRevealer"
+
 
 function Temperature() {
   const [temperature, setTemp] = createState("0")
@@ -24,16 +26,18 @@ function Temperature() {
   updateTemp()
 
   return (
-    <menubutton>
-      <With value={temperature}>
-        {(temp) => temp &&
-          <box>
-            <image iconName={getIcon(temp)} />
-            <label label={`${temp}°C`} />
-          </box>
-        }
-      </With>
-      <popover>
+    <MenuRevealer
+      boxWidget={
+        <With value={temperature}>
+          {(temp) => temp &&
+            <box>
+              <image iconName={getIcon(temp)} />
+              <label label={`${temp}°C`} />
+            </box>
+          }
+        </With>
+      }
+      popoverContent={
         <With value={temperature}>
           {(temp) => temp &&
             <box orientation={Gtk.Orientation.VERTICAL}>
@@ -42,8 +46,8 @@ function Temperature() {
             </box>
           }
         </With>
-      </popover>
-    </menubutton>
+      }
+    />
   )
 }
 

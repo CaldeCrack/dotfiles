@@ -1,5 +1,7 @@
 import { Gtk } from "ags/gtk4"
 import { execAsync } from "ags/process"
+import MenuRevealer from "../../widgets/MenuRevealer"
+
 
 function Screenshot() {
   const runShot = async (mode: string) => {
@@ -12,9 +14,11 @@ function Screenshot() {
 
   return (
     <box>
-      <menubutton>
-        <image iconName="camera-photo-symbolic" />
-        <popover>
+      <MenuRevealer
+        boxWidget={
+          <image iconName="camera-photo-symbolic" />
+        }
+        popoverContent={
           <box
             orientation={Gtk.Orientation.VERTICAL}
             halign={Gtk.Align.START}
@@ -38,8 +42,8 @@ function Screenshot() {
               </box>
             </button>
           </box>
-        </popover>
-      </menubutton>
+        }
+      />
     </box>
   )
 }

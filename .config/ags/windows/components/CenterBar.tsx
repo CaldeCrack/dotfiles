@@ -1,5 +1,5 @@
 // --- Components ---
-import Title from "./components/Title"
+import Title from "./Title"
 
 function CenterBar() {
   return (

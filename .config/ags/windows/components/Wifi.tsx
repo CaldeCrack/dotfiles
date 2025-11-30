@@ -2,6 +2,8 @@ import { Gtk } from "ags/gtk4"
 import { With, createComputed, createBinding } from "ags"
 import { execAsync } from "ags/process"
 import Network from "gi://AstalNetwork"
+import MenuRevealer from "../../widgets/MenuRevealer"
+
 
 function Wifi() {
   const network = Network.get_default()
@@ -85,16 +87,18 @@ function Wifi() {
   }
 
   return (
-    <menubutton>
-      <With value={activeAp}>
-        {(ap) => ap && buildOuterBox(ap)}
-      </With>
-      <popover>
+    <MenuRevealer
+      boxWidget={
+        <With value={activeAp}>
+          {(ap) => ap && buildOuterBox(ap)}
+        </With>
+      }
+      popoverContent={
         <With value={wifiData}>
           {(data) => data && buildPopover(data)}
         </With>
-      </popover>
-    </menubutton>
+      }
+    />
   )
 }
 

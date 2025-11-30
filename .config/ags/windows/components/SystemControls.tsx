@@ -1,5 +1,6 @@
-import { With, createBinding } from "ags"
+import { With, createBinding, createState } from "ags"
 import { Gtk } from "ags/gtk4"
+import MenuRevealer from "../../widgets/MenuRevealer"
 
 // --- Audio ---
 import WirePlumber from "gi://AstalWp"
@@ -163,20 +164,21 @@ function BatterySlider() {
 
 function SystemControls() {
   return (
-    <menubutton>
-      <box spacing={8}>
-        <box>
-          <AudioIcon />
+    <MenuRevealer
+      boxWidget={
+        <box spacing={8}>
+          <box>
+            <AudioIcon />
+          </box>
+          <box>
+            <BrightnessIcon />
+          </box>
+          <box>
+            <BatteryIcon />
+          </box>
         </box>
-        <box>
-          <BrightnessIcon />
-        </box>
-        <box>
-          <BatteryIcon />
-        </box>
-      </box>
-
-      <popover>
+      }
+      popoverContent={
         <box orientation={Gtk.Orientation.VERTICAL}>
           <box css="margin-bottom: -7px;">
             <AudioSlider />
@@ -188,8 +190,8 @@ function SystemControls() {
             <BatterySlider />
           </box>
         </box>
-      </popover>
-    </menubutton>
+      }
+    />
   )
 }
 

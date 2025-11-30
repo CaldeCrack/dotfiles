@@ -1,6 +1,8 @@
 import { Gtk } from "ags/gtk4"
 import { With, createState } from "ags"
 import { execAsync } from "ags/process"
+import MenuRevealer from "../../widgets/MenuRevealer"
+
 
 function Clipboard() {
   const [history, setHistory] = createState<string[]>([])
@@ -23,12 +25,14 @@ function Clipboard() {
   }
 
   return (
-    <menubutton>
-      <box>
-        <Gtk.GestureClick onPressed={() => checkClipboard()} />
-        <image iconName="edit-paste-symbolic" />
-      </box>
-      <popover>
+    <MenuRevealer
+      boxWidget={
+        <box>
+          <Gtk.GestureClick onPressed={() => checkClipboard()} />
+          <image iconName="edit-paste-symbolic" />
+        </box>
+      }
+      popoverContent={
         <With value={history}>
           {items => items.length > 0 ? (
             <scrolledwindow
@@ -46,8 +50,8 @@ function Clipboard() {
           ) : (<label label="Clipboard empty" />)
           }
         </With>
-      </popover>
-    </menubutton>
+      }
+    />
   )
 }
 

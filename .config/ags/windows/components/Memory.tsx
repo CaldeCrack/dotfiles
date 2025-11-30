@@ -1,6 +1,8 @@
 import { Gtk } from "ags/gtk4"
 import { With, createState } from "ags"
 import { execAsync } from "ags/process"
+import MenuRevealer from "../../widgets/MenuRevealer"
+
 
 function Memory() {
   const [usage, setUsage] = createState({ percent: 0, used: 0, total: 0 })
@@ -29,16 +31,18 @@ function Memory() {
 
   return (
     <box>
-      <menubutton>
-        <With value={usage}>
-          {({ percent }) =>
-            <box>
-              <image iconName="drive-harddisk-symbolic" />
-              <label label={` ${percent.toFixed(0).padStart(2, " ")}%`} />
-            </box>
-          }
-        </With>
-        <popover>
+      <MenuRevealer
+        boxWidget={
+          <With value={usage}>
+            {({ percent }) =>
+              <box>
+                <image iconName="drive-harddisk-symbolic" />
+                <label label={` ${percent.toFixed(0).padStart(2, " ")}%`} />
+              </box>
+            }
+          </With>
+        }
+        popoverContent={
           <With value={usage}>
             {({ percent, used, total }) => {
               const usedGB = (used / 1024 / 1024).toFixed(1)
@@ -67,8 +71,8 @@ function Memory() {
               )
             }}
           </With>
-        </popover>
-      </menubutton>
+        }
+      />
     </box>
   )
 }

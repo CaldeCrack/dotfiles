@@ -1,7 +1,7 @@
 import app from "ags/gtk4/app"
 import { Astal } from "ags/gtk4"
 import style from "./style.scss"
-import Bar from "./widget/Bar"
+import Bar from "./windows/Bar"
 import { For, This, createBinding } from "ags"
 
 function main() {

@@ -1,6 +1,8 @@
 import { Gtk } from "ags/gtk4"
 import { With, createState } from "ags"
 import { execAsync } from "ags/process"
+import MenuRevealer from "../../widgets/MenuRevealer"
+
 
 function CPU() {
   const [usage, setUsage] = createState({ total: 0, cores: [] as number[] })
@@ -37,16 +39,18 @@ function CPU() {
 
   return (
     <box>
-      <menubutton>
-        <With value={usage}>
-          {({ total }) =>
-            <box>
-              <image iconName="cpu-symbolic" />
-              <label label={` ${total.toFixed(0).padStart(2, " ")}%`} />
-            </box>
-          }
-        </With>
-        <popover>
+      <MenuRevealer
+        boxWidget={
+          <With value={usage}>
+            {({ total }) =>
+              <box>
+                <image iconName="cpu-symbolic" />
+                <label label={` ${total.toFixed(0).padStart(2, " ")}%`} />
+              </box>
+            }
+          </With>
+        }
+        popoverContent={
           <With value={usage}>
             {({ cores }) =>
               <box orientation={Gtk.Orientation.VERTICAL} halign={Gtk.Align.START}>
@@ -73,8 +77,8 @@ function CPU() {
               </box>
             }
           </With>
-        </popover>
-      </menubutton>
+        }
+      />
     </box>
   )
 }
