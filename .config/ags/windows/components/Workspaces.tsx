@@ -3,6 +3,7 @@ import { exec } from "ags/process"
 
 import Hyprland from "gi://AstalHyprland"
 
+
 function Workspaces() {
   const hyprland = Hyprland.get_default()
   const focusedWorkspace = createBinding(hyprland, "focusedWorkspace")(ws => ws.id)

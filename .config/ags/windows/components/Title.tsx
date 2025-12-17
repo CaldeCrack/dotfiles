@@ -12,8 +12,8 @@ function Title() {
           if (!client)
             return <label label="CaldeCrack" />
 
-          const clientTitle = createBinding(client, "title")(
-            title => client.initial_title || title || ""
+          const clientTitle = createBinding(client, "class")(
+            title => client.initial_class || title || ""
           )
 
           return <label label={clientTitle} />
