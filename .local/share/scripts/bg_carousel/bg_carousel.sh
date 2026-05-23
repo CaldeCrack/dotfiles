@@ -11,7 +11,7 @@ STATE_FILE=$THIS_DIR/.carousel_state
 FLAGS_FILE=$THIS_DIR/flags.conf
 
 CMD1=(hellwal --check-contrast -m -q -f ~/dotfiles/.config/hellwal/templates)
-CMD2=(hyprctl hyprpaper reload ,)
+CMD2=(hyprctl hyprpaper wallpaper)
 
 # Default direction: forward
 DIRECTION="forward"
@@ -63,7 +63,7 @@ if [ -f "$FLAGS_FILE" ]; then
 fi
 
 # Run the commands
-"${CMD1[@]}" $EXTRA_FLAGS -i "$FILE" && "${CMD2[@]}" "$FILE"
+"${CMD1[@]}" $EXTRA_FLAGS -i "$FILE" && "${CMD2[@]}" 'eDP-1,' "$FILE"
 
 # Restart AGS
 ags quit; hyprctl dispatch exec ags run ~/.config/ags/app.tsx

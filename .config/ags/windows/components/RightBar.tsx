@@ -2,6 +2,7 @@
 import Clipboard from "./Clipboard"
 import Screenshot from "./Screenshot"
 import ColorPicker from "./ColorPicker"
+import Bluetooth from "./Bluetooth"
 import Wifi from "./Wifi"
 import Time from "./Time"
 import SystemControls from "./SystemControls"
@@ -12,6 +13,7 @@ function RightBar() {
       <Clipboard />
       <Screenshot />
       <ColorPicker />
+      <Bluetooth />
       <Wifi />
       <SystemControls />
       <Time />

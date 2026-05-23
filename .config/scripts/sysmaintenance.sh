@@ -37,7 +37,7 @@ echo "CLEARING HOME CACHE"
 echo "----------------------------------------------------"
 
 home_cache_used="$(du -sh ~/.cache)"
-rm -rf ~/.cache/
+find ~/.cache -mindepth 1 ! -name hellwal -exec rm -rf {} +
 echo "Clearing ~/.cache/..."
 echo "Spaced saved: $home_cache_used"
 
