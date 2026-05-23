@@ -3,8 +3,8 @@
 @use 'sass:color';
 
 $fg-color: #ffffff;
-$bg-color: #1d2523;
-$detail-color: #6bd65d;
+$bg-color: #110b0c;
+$detail-color: #5d9ad6;
 $lighter-bg: color.adjust($bg-color, $lightness: 10%);
 
 window.Bar {
