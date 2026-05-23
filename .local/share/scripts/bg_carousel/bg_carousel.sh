@@ -66,7 +66,7 @@ fi
 "${CMD1[@]}" $EXTRA_FLAGS -i "$FILE" && "${CMD2[@]}" 'eDP-1,' "$FILE"
 
 # Restart AGS
-ags quit; hyprctl dispatch exec ags run ~/.config/ags/app.tsx
+ags quit; hyprctl dispatch "hl.dsp.exec_cmd('ags run ~/.config/ags/app.tsx')"
 
 # Update index for next time
 if [ "$DIRECTION" = "forward" ]; then
