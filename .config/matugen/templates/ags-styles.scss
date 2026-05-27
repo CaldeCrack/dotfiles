@@ -1,10 +1,8 @@
-// https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-3-24/gtk/theme/Adwaita/_colors-public.scss
-
 @use 'sass:color';
 
-$fg-color: #ffffff;
-$bg-color: #000000;
-$detail-color: #9f02bc;
+$fg-color: {{ colors.on_background.default.hex }};
+$bg-color: {{ colors.background.default.hex }};
+$detail-color: {{ colors.primary.default.hex }};
 $lighter-bg: color.adjust($bg-color, $lightness: 10%);
 
 window.Bar {

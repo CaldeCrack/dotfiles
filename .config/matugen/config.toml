@@ -2,8 +2,14 @@
 
 [templates.terminal-sequences]
 input_path = './templates/terminal-sequences'
-output_path = "~/.cache/terminal-sequences"
-post_hook = "tee /dev/pts/[0-9]* < ~/.cache/terminal-sequences"
+output_path = '~/.cache/terminal-sequences'
+post_hook = 'tee /dev/pts/[0-9]* < ~/.cache/terminal-sequences'
+
+[templates.ags-styles]
+pre_hook = 'ags quit'
+input_path = './templates/ags-styles.scss'
+output_path = '~/.config/ags/style.scss'
+post_hook = "hyprctl dispatch \"hl.dsp.exec_cmd('ags run ~/.config/ags/app.tsx')\""
 
 [templates.gtk3]
 input_path = './templates/gtk-colors.css'

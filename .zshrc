@@ -1,8 +1,4 @@
 # Created by CaldeCrack
-#
-# Hellwal terminal colors
-source ~/.cache/hellwal/variables.sh
-sh ~/.cache/hellwal/terminal.sh
 
 # fastfetch on startup
 fastfetch
