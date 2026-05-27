@@ -1,5 +1,9 @@
 # Created by CaldeCrack
 
+# Matugen colors
+source ~/.cache/matugen/variables.sh
+sh ~/.cache/matugen/terminal.sh
+
 # fastfetch on startup
 fastfetch
 

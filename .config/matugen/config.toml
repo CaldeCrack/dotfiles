@@ -1,10 +1,5 @@
 [config]
 
-[templates.terminal-sequences]
-input_path = './templates/terminal-sequences'
-output_path = '~/.cache/terminal-sequences'
-post_hook = 'tee /dev/pts/[0-9]* < ~/.cache/terminal-sequences'
-
 [templates.ags-styles]
 pre_hook = 'ags quit'
 input_path = './templates/ags-styles.scss'
@@ -42,6 +37,14 @@ output_path = '~/.config/Kvantum/matugen/matugen.svg'
 input_path = './templates/nvim-colors.lua'
 output_path = '~/.config/nvim/matugen.lua'
 post_hook = 'pkill -SIGUSR1 nvim'
+
+[templates.terminal]
+input_path  = '~/.config/matugen/templates/terminal.sh'
+output_path = '~/.cache/matugen/terminal.sh'
+
+[templates.variables]
+input_path  = '~/.config/matugen/templates/variables.sh'
+output_path = '~/.cache/matugen/variables.sh'
 
 [templates.yazi]
 input_path = './templates/yazi-theme.toml'
