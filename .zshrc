@@ -4,6 +4,15 @@
 source ~/.cache/matugen/variables.sh
 sh ~/.cache/matugen/terminal.sh
 
+# Hot-reload terminal colors when matugen updates them
+_matugen_color_watch() {
+    inotifywait -q -m -e close_write "${HOME}/.cache/matugen/terminal.sh" 2>/dev/null |
+    while IFS= read -r _; do
+        sh "${HOME}/.cache/matugen/terminal.sh"
+    done
+}
+_matugen_color_watch &!
+
 # fastfetch on startup
 fastfetch
 
