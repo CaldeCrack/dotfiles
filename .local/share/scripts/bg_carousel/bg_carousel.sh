@@ -7,10 +7,7 @@ DIR=~/.config/shared-assets/wallpapers
 THIS_DIR=~/.local/share/scripts/bg_carousel
 STATE_FILE=$THIS_DIR/.carousel_state
 
-# Config file for extra flags (optional)
-FLAGS_FILE=$THIS_DIR/flags.conf
-
-CMD1=(hellwal --check-contrast -m -q -f ~/dotfiles/.config/hellwal/templates)
+CMD1=(matugen image)
 CMD2=(hyprctl hyprpaper wallpaper)
 
 # Default direction: forward
@@ -25,9 +22,9 @@ while getopts "fb" opt; do
   esac
 done
 
-# Get sorted list of files (excluding the state file and flags file)
+# Get sorted list of files (excluding the state file)
 mapfile -t FILES < <(find "$DIR" -maxdepth 1 -type f \
-    ! -name ".carousel_state" ! -name "flags.conf" | sort)
+    ! -name ".carousel_state" | sort)
 
 FILE_AMOUNT=${#FILES[@]}
 
@@ -51,29 +48,15 @@ fi
 
 # Pick the file
 FILE="${FILES[$INDEX]}"
-BASENAME="$(basename "$FILE")"
-
-# Lookup extra flags (if any)
-EXTRA_FLAGS=""
-if [ -f "$FLAGS_FILE" ]; then
-    LINE=$(grep -E "^${BASENAME}:" "$FLAGS_FILE" || true)
-    if [ -n "$LINE" ]; then
-        EXTRA_FLAGS="${LINE#*:}"
-    fi
-fi
 
 # Run the commands
-"${CMD1[@]}" $EXTRA_FLAGS -i "$FILE" && "${CMD2[@]}" 'eDP-1,' "$FILE"
-
-# Restart AGS
-ags quit; hyprctl dispatch "hl.dsp.exec_cmd('ags run ~/.config/ags/app.tsx')"
+"${CMD2[@]}" 'eDP-1,' "$FILE" && "${CMD1[@]}" "$FILE" --source-color-index 0
 
 # Update index for next time
 if [ "$DIRECTION" = "forward" ]; then
-  NEXT_INDEX=$(( (INDEX + 1) % FILE_AMOUNT))
+  NEXT_INDEX=$(( (INDEX + 1) % FILE_AMOUNT ))
 else
   NEXT_INDEX=$(( (INDEX - 1 + FILE_AMOUNT) % FILE_AMOUNT ))
 fi
 
 echo "$NEXT_INDEX" > "$STATE_FILE"
-
