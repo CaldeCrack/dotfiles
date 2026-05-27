@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Directory with the files
-DIR=~/.config/assets/wallpapers
+DIR=~/.config/shared-assets/wallpapers
 
 # File to store the current index
 THIS_DIR=~/.local/share/scripts/bg_carousel
