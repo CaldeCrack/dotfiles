@@ -2,12 +2,7 @@
 -- Refer to the wiki for more information.
 -- https://wiki.hypr.land/Configuring/Start/
 
--- Placeholder colors (replace with your actual values or use the require above)
--- local colors = require("hyprland-colors")
--- local color1, color9, color8 = colors.color1, colors.color9, colors.color8
-local color1 = "rgba(b22888ff)"
-local color9 = "rgba(77476aff)"
-local color8 = "rgba(111212ff)"
+local colors = require("colors")
 
 ------------------
 ---- MONITORS ----
@@ -66,8 +61,8 @@ hl.config({
 		border_size = 2,
 
 		col = {
-			active_border = { colors = { color1, color9 }, angle = 45 },
-			inactive_border = color8,
+			active_border = { colors = { colors.outline, colors.outline_variant }, angle = 45 },
+			inactive_border = colors.shadow,
 		},
 
 		resize_on_border = false,
@@ -129,6 +124,7 @@ hl.animation({ leaf = "workspacesOut", enabled = true, speed = 2.4, bezier = "ea
 hl.config({
 	scrolling = {
 		column_width = 0.8,
+		focus_fit_method = 0,
 	},
 	misc = {
 		force_default_wallpaper = 0,
@@ -156,7 +152,7 @@ hl.config({
 		repeat_rate = 40,
 
 		follow_mouse = 1,
-		sensitivity = -0.15,
+		sensitivity = 0.2,
 
 		touchpad = {
 			natural_scroll = true,
@@ -202,8 +198,6 @@ hl.bind(mainMod .. " + escape", hl.dsp.exec_cmd("pkill " .. menuName .. " ; " ..
 -- Move focus with mainMod + arrow keys
 hl.bind(mainMod .. " + left", hl.dsp.focus({ direction = "left" }))
 hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
-hl.bind(mainMod .. " + up", hl.dsp.focus({ direction = "up" }))
-hl.bind(mainMod .. " + down", hl.dsp.focus({ direction = "down" }))
 
 -- Swap windows with mainMod + SHIFT + arrow keys
 hl.bind(mainMod .. " + SHIFT + left", hl.dsp.window.swap({ direction = "left" }))

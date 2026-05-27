@@ -1,4 +1,5 @@
 # vim:fileencoding=utf-8:foldmethod=marker
+include ./kitty-colors.conf
 
 #: Fonts {{{
 
@@ -6,10 +7,10 @@
 #: individual font faces and even specify special fonts for particular
 #: characters.
 
-# font_family      monospace
-# bold_font        auto
-# italic_font      auto
-# bold_italic_font auto
+font_family      family="FiraCode Nerd Font"
+bold_font        auto
+italic_font      auto
+bold_italic_font auto
 
 #: You can specify different fonts for the bold/italic/bold-italic
 #: variants. The easiest way to select fonts is to run the `kitten
@@ -20,7 +21,7 @@
 #: <https://sw.kovidgoyal.net/kitty/kittens/choose-fonts/#font-spec-
 #: syntax>.
 
-# font_size 11.0
+font_size 10.0
 
 #: Font size (in pts).
 
@@ -307,7 +308,7 @@
 #: Stop blinking cursor after the specified number of seconds of
 #: keyboard inactivity. Set to zero to never stop blinking.
 
-# cursor_trail 0
+cursor_trail 3
 
 #: Set this to a value larger than zero to enable a "cursor trail"
 #: animation. This is an animation that shows a "trail" following the
@@ -323,7 +324,7 @@
 #: cursor_trail_start_threshold to control when a cursor trail is
 #: started.
 
-# cursor_trail_decay 0.1 0.4
+cursor_trail_decay 0.1 0.4
 
 #: Controls the decay times for the cursor trail effect when the
 #: cursor_trail is enabled. This option accepts two positive float
@@ -1027,7 +1028,7 @@
 #: insensitive, from the set 0-9A-Z\-=[];',./\\`. Specify your
 #: preference as a string of characters.
 
-# confirm_os_window_close -1
+confirm_os_window_close -1
 
 #: Ask for confirmation when closing an OS window or a tab with at
 #: least this number of kitty windows in it by window manager (e.g.
@@ -1218,12 +1219,12 @@
 
 #: Color scheme {{{
 
-# foreground #dddddd
-# background #000000
+foreground #dddddd
+background #1a1a1d
 
 #: The foreground and background colors.
 
-# background_opacity 1.0
+background_opacity 0.92
 
 #: The opacity of the background. A number between zero and one, where
 #: one is opaque and zero is fully transparent. This will only work if
@@ -1248,7 +1249,7 @@
 #: will only work if dynamic_background_opacity was enabled in the
 #: original config.
 
-# background_blur 0
+background_blur 1
 
 #: Set to a positive value to enable background blur (blurring of the
 #: visuals behind a transparent window) on platforms that support it.
@@ -1651,7 +1652,7 @@
 #: special value of ask means that kitty will ask before opening the
 #: link when clicked.
 
-# shell_integration enabled
+shell_integration enabled
 
 #: Enable shell integration on supported shells. This enables features
 #: such as jumping to previous prompts, browsing the output of the
@@ -2660,3 +2661,4 @@
 #: }}}
 
 #: }}}
+

@@ -1,3 +1,1 @@
-return {
-	"danihek/hellwal-vim",
-}
+return {}

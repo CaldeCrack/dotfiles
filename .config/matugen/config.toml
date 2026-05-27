@@ -1,0 +1,42 @@
+[config]
+
+[templates.terminal-sequences]
+input_path = './templates/terminal-sequences'
+output_path = "~/.cache/terminal-sequences"
+post_hook = "tee /dev/pts/[0-9]* < ~/.cache/terminal-sequences"
+
+[templates.gtk3]
+input_path = './templates/gtk-colors.css'
+output_path = '~/.config/gtk-3.0/colors.css'
+post_hook = 'gsettings set org.gnome.desktop.interface gtk-theme ""; gsettings set org.gnome.desktop.interface gtk-theme adw-gtk3-{{mode}}'
+
+[templates.gtk4]
+input_path = './templates/gtk-colors.css'
+output_path = '~/.config/gtk-4.0/colors.css'
+post_hook = '~/.config/matugen/post-hook-scripts/gtk-themes-reload.sh'
+
+[templates.hyprland]
+input_path = './templates/hyprland-colors.lua'
+output_path = '~/.config/hypr/colors.lua'
+
+[templates.kitty]
+input_path = './templates/kitty-colors.conf'
+output_path = '~/.config/kitty/themes/Matugen.conf'
+post_hook = "kitty +kitten themes --reload-in=all Matugen"
+
+[templates.kvantum_kvconfig]
+input_path = './templates/kvantum-colors.kvconfig'
+output_path = '~/.config/Kvantum/matugen/matugen.kvconfig'
+
+[templates.kvantum_svg]
+input_path = './templates/kvantum-colors.svg'
+output_path = '~/.config/Kvantum/matugen/matugen.svg'
+
+[templates.nvim]
+input_path = './templates/nvim-colors.lua'
+output_path = '~/.config/nvim/matugen.lua'
+post_hook = 'pkill -SIGUSR1 nvim'
+
+[templates.yazi]
+input_path = './templates/yazi-theme.toml'
+output_path = '~/.config/yazi/theme.toml'
