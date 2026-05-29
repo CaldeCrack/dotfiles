@@ -1,1 +1,7 @@
 **/node_modules/*
+
+# Ignore theme files
+.local/share/scripts/bg_carousel/.carousel_state
+.config/ags/style.scss
+.config/yazi/theme.toml
+
