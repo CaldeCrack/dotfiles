@@ -163,13 +163,13 @@ hl.config({
 
 hl.gesture({
 	fingers = 3,
-	direction = "horizontal",
+	direction = "vertical",
 	action = "workspace",
 })
 
 hl.device({
-	name = "epic-mouse-v1",
-	sensitivity = -0.5,
+	name = "logitech-wireless-mouse-1",
+	sensitivity = -0.1,
 })
 
 ---------------------
