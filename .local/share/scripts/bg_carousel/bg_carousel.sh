@@ -51,6 +51,7 @@ FILE="${FILES[$INDEX]}"
 
 # Run the commands
 "${CMD2[@]}" 'eDP-1,' "$FILE" && "${CMD1[@]}" "$FILE" --source-color-index 0
+"${CMD2[@]}" 'HDMI-A-1,' "$FILE" && "${CMD1[@]}" "$FILE" --source-color-index 0
 
 # Update index for next time
 if [ "$DIRECTION" = "forward" ]; then
