@@ -7,6 +7,9 @@ DIR=~/.config/shared-assets/wallpapers
 THIS_DIR=~/.local/share/scripts/bg_carousel
 STATE_FILE=$THIS_DIR/.carousel_state
 
+# hyprpaper config, updated so the wallpaper persists across reboots
+HYPRPAPER_CONF=~/.config/hypr/hyprpaper.conf
+
 CMD1=(matugen image)
 CMD2=(hyprctl hyprpaper wallpaper)
 
@@ -52,6 +55,12 @@ FILE="${FILES[$INDEX]}"
 # Run the commands
 "${CMD2[@]}" 'eDP-1,' "$FILE" && "${CMD1[@]}" "$FILE" --source-color-index 0
 "${CMD2[@]}" 'HDMI-A-1,' "$FILE" && "${CMD1[@]}" "$FILE" --source-color-index 0
+
+# Persist the choice so it survives reboot: rewrite every
+# "path = ..." line in hyprpaper.conf to point at the current file.
+if [ -f "$HYPRPAPER_CONF" ]; then
+  sed -i "s|^\(\s*path = \).*|\1$FILE|" "$HYPRPAPER_CONF"
+fi
 
 # Update index for next time
 if [ "$DIRECTION" = "forward" ]; then
