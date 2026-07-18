@@ -32,8 +32,9 @@ local bar = "ags run ~/.config/ags/app.tsx"
 
 -- See https://wiki.hypr.land/Configuring/Basics/Autostart/
 hl.on("hyprland.start", function()
+	h1.exec_cmd("hyprpaper")
 	hl.exec_cmd("hyprlock")
-	hl.exec_cmd("nm-applet & " .. bar .. " & hyprpaper & hypridle")
+	hl.exec_cmd("nm-applet & " .. bar .. " & hypridle")
 	hl.exec_cmd("/usr/bin/dunst")
 	hl.exec_cmd("wl-paste --watch cliphist store")
 end)
