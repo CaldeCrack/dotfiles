@@ -1,0 +1,6 @@
+require("config.keybinds.launchers")
+require("config.keybinds.windows")
+require("config.keybinds.workspaces")
+require("config.keybinds.media")
+require("config.keybinds.screenshots")
+require("config.keybinds.hardware")

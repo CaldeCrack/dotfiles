@@ -1,0 +1,11 @@
+local cfg = require("config.programs")
+
+hl.on("hyprland.start", function()
+	hl.exec_cmd("nm-applet")
+	hl.exec_cmd("hyprpaper")
+	hl.exec_cmd(cfg.bar)
+	hl.exec_cmd("hyprlock")
+	hl.exec_cmd("hypridle")
+	hl.exec_cmd("/usr/bin/dunst")
+	hl.exec_cmd("wl-paste --watch cliphist store")
+end)
