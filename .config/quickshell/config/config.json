@@ -1,0 +1,13 @@
+{
+    "bar": {
+        "height": 30,
+        "margin": 6
+    },
+    "general": {
+        "wallpaperDir": "~/Pictures/Wallpapers"
+    },
+    "weather": {
+        "location": "Santiago",
+        "units": "metric"
+    }
+}
