@@ -69,12 +69,16 @@ compare_to = "{{ colors.primary.default.hex }}"
 post_hook = 'sudo -n papirus-folders -C {{ closest_color }} -u'
 index = 1
 
+[templates.quickshell]
+input_path = './templates/quickshell.json'
+output_path = '~/.local/state/quickshell/generated/colors.json'
+
 [templates.terminal]
-input_path  = '~/.config/matugen/templates/terminal.sh'
+input_path  = './templates/terminal.sh'
 output_path = '~/.cache/matugen/terminal.sh'
 
 [templates.variables]
-input_path  = '~/.config/matugen/templates/variables.sh'
+input_path  = './templates/variables.sh'
 output_path = '~/.cache/matugen/variables.sh'
 
 [templates.yazi]
