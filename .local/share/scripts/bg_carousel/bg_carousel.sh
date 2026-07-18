@@ -3,13 +3,12 @@
 # Directory with the files
 DIR=~/.config/shared-assets/wallpapers
 
-# File to store the current index
+# Directory for state files
 THIS_DIR=~/.local/share/scripts/bg_carousel
 STATE_FILE=$THIS_DIR/.carousel_state
 
-# hyprpaper and hyprlock config, updated so the wallpaper persists across reboots
-HYPRPAPER_CONF=~/.config/hypr/hyprpaper.conf
-HYPRLOCK_CONF=~/.config/hypr/hyprlock.conf
+# Wallpaper state shared with Hyprland configs
+WALLPAPER_STATE=~/.config/hypr/state/current_wallpaper.conf
 
 CMD1=(matugen image)
 CMD2=(hyprctl hyprpaper wallpaper)
@@ -26,14 +25,14 @@ while getopts "fb" opt; do
   esac
 done
 
-# Get sorted list of files (excluding the state file)
+# Get sorted list of files
 mapfile -t FILES < <(find "$DIR" -maxdepth 1 -type f \
     ! -name ".carousel_state" | sort)
 
 FILE_AMOUNT=${#FILES[@]}
 
 # No files case
-if [ $FILE_AMOUNT -eq 0 ]; then
+if [ "$FILE_AMOUNT" -eq 0 ]; then
     echo "No files found in $DIR"
     exit 1
 fi
@@ -53,27 +52,20 @@ fi
 # Pick the file
 FILE="${FILES[$INDEX]}"
 
-# Run the commands
+# Apply wallpaper
 "${CMD2[@]}" 'eDP-1,' "$FILE"
 "${CMD2[@]}" 'HDMI-A-1,' "$FILE"
 "${CMD1[@]}" "$FILE" --source-color-index 0
 
-# Persist the choice so it survives reboot: rewrite every
-# "path = ..." line in hyprpaper.conf to point at the current file.
-if [ -f "$HYPRPAPER_CONF" ]; then
-  sed -i --follow-symlinks "s|^\(\s*path = \).*|\1$FILE|" "$HYPRPAPER_CONF"
-fi
-
-# Persist wallpaper for hyprlock
-if [ -f "$HYPRLOCK_CONF" ]; then
-    sed -i --follow-symlinks '/^background[[:space:]]*{/,/^}/ s|^\([[:space:]]*path = \).*|\1'"$FILE"'|' "$HYPRLOCK_CONF"
-fi
+# Update the shared wallpaper state
+mkdir -p "$(dirname "$WALLPAPER_STATE")"
+printf '$current_wallpaper = %s\n' "$FILE" > "$WALLPAPER_STATE"
 
 # Update index for next time
 if [ "$DIRECTION" = "forward" ]; then
-  NEXT_INDEX=$(( (INDEX + 1) % FILE_AMOUNT ))
+    NEXT_INDEX=$(( (INDEX + 1) % FILE_AMOUNT ))
 else
-  NEXT_INDEX=$(( (INDEX - 1 + FILE_AMOUNT) % FILE_AMOUNT ))
+    NEXT_INDEX=$(( (INDEX - 1 + FILE_AMOUNT) % FILE_AMOUNT ))
 fi
 
 echo "$NEXT_INDEX" > "$STATE_FILE"

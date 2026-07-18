@@ -248,7 +248,7 @@ hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("pkill -f ags"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(bar))
 
 -- Handle Lid switch
-hl.bind("switch:on:Lid Switch", hl.dsp.exec_cmd("sh ~/.config/hypr/lid-close.sh"), { locked = true })
+hl.bind("switch:on:Lid Switch", hl.dsp.exec_cmd("sh ~/.config/hypr/scripts/lid-close.sh"), { locked = true })
 
 -- Volume (bindel: locked + repeating)
 hl.bind(
