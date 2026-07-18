@@ -20,6 +20,10 @@ require("toggleterm").setup({
 require("bufferline").setup({
 	options = { diagnostics = "nvim_lsp", numbers = "ordinal" },
 })
+vim.lsp.config("qmlls", {
+	cmd = { "/usr/lib/qt6/bin/qmlls" },
+})
+vim.lsp.enable("qmlls")
 
 vim.cmd.highlight("CursorLineNr guifg=#EB6F92")
 local lastplace = vim.api.nvim_create_augroup("LastPlace", {})
