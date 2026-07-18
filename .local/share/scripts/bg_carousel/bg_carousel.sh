@@ -7,8 +7,9 @@ DIR=~/.config/shared-assets/wallpapers
 THIS_DIR=~/.local/share/scripts/bg_carousel
 STATE_FILE=$THIS_DIR/.carousel_state
 
-# hyprpaper config, updated so the wallpaper persists across reboots
+# hyprpaper and hyprlock config, updated so the wallpaper persists across reboots
 HYPRPAPER_CONF=~/.config/hypr/hyprpaper.conf
+HYPRLOCK_CONF=~/.config/hypr/hyprlock.conf
 
 CMD1=(matugen image)
 CMD2=(hyprctl hyprpaper wallpaper)
@@ -53,13 +54,19 @@ fi
 FILE="${FILES[$INDEX]}"
 
 # Run the commands
-"${CMD2[@]}" 'eDP-1,' "$FILE" && "${CMD1[@]}" "$FILE" --source-color-index 0
-"${CMD2[@]}" 'HDMI-A-1,' "$FILE" && "${CMD1[@]}" "$FILE" --source-color-index 0
+"${CMD2[@]}" 'eDP-1,' "$FILE"
+"${CMD2[@]}" 'HDMI-A-1,' "$FILE"
+"${CMD1[@]}" "$FILE" --source-color-index 0
 
 # Persist the choice so it survives reboot: rewrite every
 # "path = ..." line in hyprpaper.conf to point at the current file.
 if [ -f "$HYPRPAPER_CONF" ]; then
-  sed -i "s|^\(\s*path = \).*|\1$FILE|" "$HYPRPAPER_CONF"
+  sed -i --follow-symlinks "s|^\(\s*path = \).*|\1$FILE|" "$HYPRPAPER_CONF"
+fi
+
+# Persist wallpaper for hyprlock
+if [ -f "$HYPRLOCK_CONF" ]; then
+    sed -i --follow-symlinks '/^background[[:space:]]*{/,/^}/ s|^\([[:space:]]*path = \).*|\1'"$FILE"'|' "$HYPRLOCK_CONF"
 fi
 
 # Update index for next time
