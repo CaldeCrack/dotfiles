@@ -40,7 +40,7 @@ Item {
             anchors.centerIn: parent
 
             text: KeyIcons.display(root.key)
-            font.family: KeyIcons.isSpecial(root.key) ? "Symbols Nerd Font" : "Inter"
+            font.family: KeyIcons.isSpecial(root.key) ? "Symbols Nerd Font" : "Noto Sans Mono CJK TC"
             color: "#ffffff"
         }
     }

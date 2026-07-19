@@ -5,23 +5,15 @@ hl.bind("switch:on:Lid Switch", hl.dsp.exec_cmd("sh ~/.config/hypr/scripts/lid-c
 hl.bind(
 	"XF86AudioRaiseVolume",
 	hl.dsp.exec_cmd("~/.local/share/scripts/volume-manager.sh -i"),
-	{ locked = true, repeating = true }
+	{ locked = true, repeating = false }
 )
 hl.bind(
 	"XF86AudioLowerVolume",
 	hl.dsp.exec_cmd("~/.local/share/scripts/volume-manager.sh -d"),
 	{ locked = true, repeating = true }
 )
-hl.bind(
-	"XF86AudioMute",
-	hl.dsp.exec_cmd("~/.local/share/scripts/volume-manager.sh -t"),
-	{ locked = true, repeating = true }
-)
-hl.bind(
-	"SHIFT + F6",
-	hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),
-	{ locked = true, repeating = true }
-)
+hl.bind("XF86AudioMute", hl.dsp.exec_cmd("~/.local/share/scripts/volume-manager.sh -t"), { locked = true })
+hl.bind("SHIFT + XF86AudioMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"), { locked = true })
 
 -- Brightness (bindel: locked + repeating)
 hl.bind(
