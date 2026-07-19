@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Io
 import Quickshell.Wayland
 import qs.config as Config
 import qs.widgets as Widgets
@@ -16,10 +17,14 @@ import qs.widgets as Widgets
 // Keybinds come from Config.KeybindsLoader.categories (see
 // config/KeybindsLoader.qml), rendered as 3 equal-width columns of 2
 // categories each, in the order they appear in keybinds.json. Each category
-// is a subtitle over a 2-column Grid — column 1 holds the Keybind widgets,
-// column 2 the descriptions. Grid (rather than two independent Columns) is
-// what keeps the description column aligned to the widest keybind in that
-// specific category, row by row.
+// is a subtitle over a 2-column GridLayout — column 1 holds the Keybind
+// widgets (sized to its widest entry), column 2 the descriptions
+// (Layout.fillWidth: true, so it stretches to the category's full
+// available width rather than just hugging its own text).
+//
+// Toggled externally via IpcHandler (see below) — bind a Hyprland key to
+// `qs ipc call shortcuts toggle` rather than handling the hotkey here,
+// since a layer-shell client can't grab global keys on its own.
 PanelWindow {
     id: root
 
@@ -46,6 +51,24 @@ PanelWindow {
 
     function close() {
         visible = false;
+    }
+
+    // Bridges an external Hyprland keybind to this window. Wayland
+    // compositors own all global keyboard input, so a layer-shell client
+    // can't grab a hotkey by itself — Hyprland captures the key and execs
+    // a command, this just gives that command something to call into.
+    // Add to your Hyprland config:
+    //   bind = SUPER, K, exec, qs ipc call shortcuts toggle
+    IpcHandler {
+        target: "shortcuts"
+
+        function toggle(): void {
+            root.toggle();
+        }
+
+        function close(): void {
+            root.close();
+        }
     }
 
     Shortcut {
@@ -218,10 +241,11 @@ PanelWindow {
                                 color: Config.Colors.md3.on_surface
                             }
 
-                            Grid {
+                            GridLayout {
                                 columns: 2
                                 rowSpacing: 6
                                 columnSpacing: 16
+                                Layout.fillWidth: true
 
                                 Repeater {
                                     // Doubled so each shortcut contributes
@@ -234,8 +258,15 @@ PanelWindow {
                                         required property int index
 
                                         readonly property var shortcut: categoryBlock.modelData.shortcuts[Math.floor(index / 2)]
+                                        readonly property bool isDescription: index % 2 === 1
 
-                                        sourceComponent: (index % 2 === 0) ? keybindCell : descriptionCell
+                                        // Only the description column stretches — the
+                                        // keybind column should stay sized to its
+                                        // widest entry, not spread out.
+                                        Layout.fillWidth: isDescription
+                                        Layout.alignment: Qt.AlignVCenter
+
+                                        sourceComponent: isDescription ? descriptionCell : keybindCell
                                     }
                                 }
                             }
