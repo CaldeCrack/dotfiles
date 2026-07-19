@@ -16,6 +16,10 @@ Singleton {
     id: root
 
     readonly property var categories: {
+        if (!fileView.text()) {
+            return [];
+        }
+
         try {
             const parsed = JSON.parse(fileView.text());
             return Array.isArray(parsed) ? parsed : [];

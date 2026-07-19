@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Wayland
 import qs.config as Config
 import qs.widgets as Widgets
 
@@ -13,16 +14,21 @@ import qs.widgets as Widgets
 // shared singleton.
 //
 // Keybinds come from Config.KeybindsLoader.categories (see
-// config/KeybindsLoader.qml), rendered as 3 columns of 2 categories each,
-// in the order they appear in keybinds.json. Each category is a subtitle
-// over a 2-column Grid — column 1 holds the Keybind widgets, column 2 the
-// descriptions. Grid (rather than two independent Columns) is what keeps
-// the description column aligned to the widest keybind in that specific
-// category, row by row.
+// config/KeybindsLoader.qml), rendered as 3 equal-width columns of 2
+// categories each, in the order they appear in keybinds.json. Each category
+// is a subtitle over a 2-column Grid — column 1 holds the Keybind widgets,
+// column 2 the descriptions. Grid (rather than two independent Columns) is
+// what keeps the description column aligned to the widest keybind in that
+// specific category, row by row.
 PanelWindow {
     id: root
 
     visible: false
+
+    // Layer-shell surfaces don't get keyboard focus by default. OnDemand
+    // requests it only while this window is actually visible/interactive,
+    // rather than permanently stealing focus from everything else.
+    WlrLayershell.keyboardFocus: visible ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
 
     anchors {
         top: true
@@ -40,6 +46,12 @@ PanelWindow {
 
     function close() {
         visible = false;
+    }
+
+    Shortcut {
+        sequence: "Escape"
+        enabled: root.visible
+        onActivated: root.close()
     }
 
     // Dims everything behind the panel; click anywhere on it to dismiss.
@@ -175,7 +187,14 @@ PanelWindow {
                     id: columnDelegate
                     required property int index
 
+                    // preferredWidth: 0 removes each column's own content
+                    // as a sizing baseline, so fillWidth splits the FULL
+                    // width three ways equally instead of only splitting
+                    // whatever's left over after each column's natural
+                    // (content-driven) width.
+                    Layout.preferredWidth: 0
                     Layout.fillWidth: true
+                    Layout.fillHeight: true
                     Layout.alignment: Qt.AlignTop
                     spacing: 16
 
