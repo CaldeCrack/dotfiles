@@ -5,3 +5,4 @@ Tooltip 1.0 Tooltip.qml
 singleton KeyIcons 1.0 KeyIcons.qml
 KeyCap 1.0 KeyCap.qml
 Keybind 1.0 Keybind.qml
+Icon 1.0 Icon.qml
