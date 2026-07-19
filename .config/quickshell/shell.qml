@@ -33,14 +33,84 @@ Scope {
 
         implicitHeight: Config.Settings.bar.height
 
-        Text {
+        Row {
             anchors.centerIn: parent
-            text: "hello world"
-            color: Config.Colors.md3.primary
+            spacing: 8
 
-            MouseArea {
-                anchors.fill: parent
+            // Simple case: one icon, one tooltip, drives the popup.
+            Widgets.BarButtonBase {
+                id: clockButton
+                checked: root.popupOpen
+                tooltipText: "Clock"
+
                 onClicked: root.togglePopup()
+
+                Text {
+                    text: "12:34"
+                    color: Config.Colors.md3.background
+                }
+            }
+
+            // Composite case: two "icons" sharing one button, each with
+            // its own independent tooltip. Text has no hover state of its
+            // own, so each icon gets a tiny hover-tracking wrapper (see
+            // Tooltip.qml's header comment for why).
+            Widgets.BarButtonBase {
+                id: statsButton
+
+                Row {
+                    id: statsRow
+                    spacing: 6
+
+                    Item {
+                        id: cpuWrap
+                        width: cpuIcon.implicitWidth
+                        height: cpuIcon.implicitHeight
+                        readonly property bool hovered: cpuHover.containsMouse
+
+                        Text {
+                            id: cpuIcon
+                            anchors.fill: parent
+                            text: "CPU"
+                            color: Config.Colors.md3.background
+                        }
+                        MouseArea {
+                            id: cpuHover
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            acceptedButtons: Qt.NoButton
+                        }
+                    }
+
+                    Item {
+                        id: ramWrap
+                        width: ramIcon.implicitWidth
+                        height: ramIcon.implicitHeight
+                        readonly property bool hovered: ramHover.containsMouse
+
+                        Text {
+                            id: ramIcon
+                            anchors.fill: parent
+                            text: "RAM"
+                            color: Config.Colors.md3.background
+                        }
+                        MouseArea {
+                            id: ramHover
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            acceptedButtons: Qt.NoButton
+                        }
+                    }
+                }
+
+                Widgets.Tooltip {
+                    target: cpuWrap
+                    text: "CPU: 23%"
+                }
+                Widgets.Tooltip {
+                    target: ramWrap
+                    text: "RAM: 8.1 / 16 GB"
+                }
             }
         }
     }

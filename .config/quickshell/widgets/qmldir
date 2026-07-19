@@ -1,1 +1,3 @@
 PanelBase 1.0 PanelBase.qml
+BarButtonBase 1.0 BarButtonBase.qml
+Tooltip 1.0 Tooltip.qml

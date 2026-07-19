@@ -45,7 +45,12 @@ Item {
 	id: root
 
 	// --- content -------------------------------------------------------
-	default property alias contentChildren: contentRow.children
+	// .data (not .children!) so this accepts both visual Items and
+	// non-Item children — specifically Widgets.Tooltip, which is now a
+	// PopupWindow, not an Item. As a side benefit, anything landing in
+	// .data-but-not-.children (like a Tooltip) is invisible to
+	// childrenRect below, so it can't distort this button's auto-sizing.
+	default property alias contentChildren: contentRow.data
 	readonly property alias contentItem: contentRow
 
 	// --- sizing / appearance ------------------------------------------------------
@@ -102,18 +107,6 @@ Item {
 		}
 	}
 
-	Item {
-		id: contentRow
-		anchors.centerIn: parent
-		implicitWidth: childrenRect.width
-		implicitHeight: childrenRect.height
-	}
-
-	Widgets.Tooltip {
-		target: root
-		text: root.tooltipText
-	}
-
 	MouseArea {
 		id: mouseArea
 		anchors.fill: parent
@@ -127,5 +120,21 @@ Item {
 			else
 				root.clicked()
 		}
+	}
+
+	// Declared AFTER mouseArea so content (and any nested per-icon hover
+	// areas inside it, for composite buttons) stacks visually on top and
+	// gets hover priority. Unaccepted clicks (icon hover areas use
+	// acceptedButtons: Qt.NoButton) fall through to mouseArea beneath.
+	Item {
+		id: contentRow
+		anchors.centerIn: parent
+		implicitWidth: childrenRect.width
+		implicitHeight: childrenRect.height
+	}
+
+	Widgets.Tooltip {
+		target: root
+		text: root.tooltipText
 	}
 }
