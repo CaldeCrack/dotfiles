@@ -180,9 +180,8 @@ Scope {
                     color: Config.Colors.md3.on_surface
                     font.bold: true
                 }
-                Text {
-                    text: "click hello world to close"
-                    color: Config.Colors.md3.on_surface_variant
+                Widgets.Keybind {
+                    keys: ["SUPER", "SHIFT", "T"]
                 }
             }
         }
