@@ -19,8 +19,12 @@ QtObject {
             return "↑";
         case "DOWN":
             return "↓";
+        case "Scroll HORIZONTAL":
+            return "Scroll ←/→";
         case "HORIZONTAL":
             return "←/→";
+        case "Scroll VERTICAL":
+            return "Scroll ↑/↓";
         case "VERTICAL":
             return "↑/↓";
         case "ARROWS":

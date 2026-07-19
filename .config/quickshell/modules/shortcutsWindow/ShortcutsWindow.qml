@@ -62,7 +62,7 @@ PanelWindow {
         // edge) plus the usual vertical margin, so the card never sits
         // under the bar; the other three sides just use the configured
         // margins directly.
-        anchors.topMargin: Config.Settings.bar.height + Config.Settings.bar.margin + Config.Settings.shortcutsWindow.verticalMargin
+        anchors.topMargin: Config.Settings.bar.margin + Config.Settings.shortcutsWindow.verticalMargin
         anchors.bottomMargin: Config.Settings.shortcutsWindow.verticalMargin
         anchors.leftMargin: Config.Settings.shortcutsWindow.horizontalMargin
         anchors.rightMargin: Config.Settings.shortcutsWindow.horizontalMargin
@@ -119,7 +119,6 @@ PanelWindow {
                     text: "\u2715"
                     color: Config.Colors.md3.on_surface
                     font.pixelSize: 14
-                    opacity: 1
                 }
 
                 MouseArea {
@@ -162,9 +161,9 @@ PanelWindow {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.margins: 20
-            anchors.topMargin: 12
+            anchors.topMargin: 10
 
-            spacing: 24
+            spacing: 12
 
             Repeater {
                 // 3 columns, 2 categories each, in the order they appear
@@ -178,7 +177,7 @@ PanelWindow {
 
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignTop
-                    spacing: 20
+                    spacing: 16
 
                     readonly property var categoriesForColumn: Config.KeybindsLoader.categories.slice(index * 2, index * 2 + 2)
 

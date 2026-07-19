@@ -23,6 +23,12 @@ hl.bind(cfg.mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 hl.bind(cfg.mainMod .. " + ALT + left", hl.dsp.layout("colresize -0.1"))
 hl.bind(cfg.mainMod .. " + ALT + right", hl.dsp.layout("colresize +0.1"))
 
--- Move active window to adjacent workspace with mainMod + CTRL + SHIFT + arrow keys
-hl.bind(cfg.mainMod .. " + SHIFT + CTRL + up", hl.dsp.window.move({ workspace = "e-1" }))
-hl.bind(cfg.mainMod .. " + SHIFT + CTRL + down", hl.dsp.window.move({ workspace = "e+1" }))
+-- Move active window to adjacent workspace with mainMod + SHIFT + arrow keys
+hl.bind(cfg.mainMod .. " + SHIFT + up", hl.dsp.window.move({ workspace = "e-1" }))
+hl.bind(cfg.mainMod .. " + SHIFT + down", hl.dsp.window.move({ workspace = "e+1" }))
+
+-- Move windows to workspaces 1–10
+for i = 1, 10 do
+	local key = i % 10 -- 10 maps to key 0
+	hl.bind(cfg.mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
+end

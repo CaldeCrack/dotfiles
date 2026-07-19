@@ -25,19 +25,143 @@
       {
         "keybind": ["SUPER", "."],
         "description": "Clipboard menu"
+      }
+    ]
+  },
+  {
+    "category": "Shell",
+    "shortcuts": [
+      {
+        "keybind": ["SUPER", "Enter"],
+        "description": "Toggle cheat sheet"
       },
       {
-        "keybind": ["SUPER", "Esc"],
-        "description": "Power menu"
+        "keybind": ["SUPER", "B"],
+        "description": "Bar"
+      },
+      {
+        "keybind": ["SUPER", "SHIFT", "B"],
+        "description": "Restart bar"
+      },
+      {
+        "keybind": ["SUPER", "W"],
+        "description": "Change wallpaper"
       }
     ]
   },
   {
     "category": "Windows",
-    "shortcuts": [
+    "shortcuts": [ 
+      {
+        "keybind": ["SUPER", "LMB"],
+        "description": "Move"
+      },
+      {
+        "keybind": ["SUPER", "RMB"],
+        "description": "Resize"
+      },
+      {
+        "keybind": ["SUPER", "SHIFT", "HORIZONTAL"],
+        "description": "Move in direction"
+      },
+      {
+        "keybind": ["SUPER", "ALT", "HORIZONTAL"],
+        "description": "Resize with direction"
+      },
+      {
+        "keybind": ["SUPER", "SHIFT", "VERTICAL"],
+        "description": "Send to workspace up/down"
+      },
+      {
+        "keybind": ["SUPER", "SHIFT", "#"],
+        "description": "Send to workspace # (1, 2, 3,...)"
+      },
+      {
+        "keybind": ["SUPER", "HORIZONTAL"],
+        "description": "Focus in direction"
+      },
       {
         "keybind": ["SUPER", "C"],
-        "description": "Closes the window"
+        "description": "Close"
+      },
+      {
+        "keybind": ["SUPER", "K"],
+        "description": "Kill"
+      },
+      {
+        "keybind": ["SUPER", "V"],
+        "description": "Float"
+      },
+      {
+        "keybind": ["SUPER", "F"],
+        "description": "Fullscreen"
+      }
+    ]
+  },
+  {
+    "category": "Workspaces",
+    "shortcuts": [
+      {
+        "keybind": ["SUPER", "VERTICAL"],
+        "description": "Focus up/down"
+      },
+      {
+        "keybind": ["SUPER", "Scroll VERTICAL"],
+        "description": "Focus up/down"
+      },
+      {
+        "keybind": ["SUPER", "#"],
+        "description": "Focus workspace # (1, 2, 3,...)"
+      }
+    ]
+  },
+  {
+    "category": "Media",
+    "shortcuts": [
+      {
+        "keybind": ["PRINT"],
+        "description": "Screenshot screen"
+      },
+      {
+        "keybind": ["SUPER", "PRINT"],
+        "description": "Screenshot window"
+      },
+      {
+        "keybind": ["SUPER", "SHIFT", "PRINT"],
+        "description": "Screenshot region"
+      },
+      {
+        "keybind": ["SUPER", "P"],
+        "description": "Pick color"
+      },
+      {
+        "keybind": ["SHIFT", "F9"],
+        "description": "Previous wallpaper"
+      },
+      {
+        "keybind": ["SHIFT", "F11"],
+        "description": "Next wallpaper"
+      }
+    ]
+  },
+  {
+    "category": "Session",
+    "shortcuts": [
+      {
+        "keybind": ["SHIFT", "F2"],
+        "description": "Set minimum brightness"
+      },
+      {
+        "keybind": ["SHIFT", "F3"],
+        "description": "Set maximum brightness"
+      },
+      {
+        "keybind": ["SUPER", "L"],
+        "description": "Lock"
+      },
+      {
+        "keybind": ["SUPER", "SHIFT", "Esc"],
+        "description": "Power menu"
       }
     ]
   }
