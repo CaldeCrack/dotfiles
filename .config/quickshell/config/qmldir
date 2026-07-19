@@ -1,3 +1,4 @@
 singleton Colors 1.0 Colors.qml
 singleton Settings 1.0 Settings.qml
 singleton ConfigLoader 1.0 ConfigLoader.qml
+singleton KeybindsLoader 1.0 KeybindsLoader.qml

@@ -1,8 +1,8 @@
-import qs.config as Config
-import qs.widgets as Widgets
-import Quickshell
-import QtQuick
+import qs.modules.bar as Bar
 
+Bar.Bar {}
+
+/*
 Scope {
     id: root
 
@@ -231,4 +231,5 @@ Scope {
             }
         }
     }
-}
+  }
+  */

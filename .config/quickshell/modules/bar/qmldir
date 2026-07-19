@@ -1,0 +1,5 @@
+Bar 1.0 Bar.qml
+LeftSection 1.0 LeftSection.qml
+MiddleSection 1.0 MiddleSection.qml
+RightSection 1.0 RightSection.qml
+singleton ButtonRegistry 1.0 ButtonRegistry.qml

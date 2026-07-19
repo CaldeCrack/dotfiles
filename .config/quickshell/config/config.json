@@ -1,7 +1,13 @@
 {
     "bar": {
         "height": 30,
-        "margin": 6
+        "margin": 0,
+        "spacing": 4,
+        "radius": 8
+    },
+    "shortcutsWindow": {
+        "horizontalMargin": 120,
+        "verticalMargin": 40
     },
     "general": {
         "wallpaperDir": "~/Pictures/Wallpapers"

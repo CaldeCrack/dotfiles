@@ -29,7 +29,14 @@ Singleton {
 
       property JsonObject bar: JsonObject {
         property int height: 30
-        property int margin: 6
+        property int margin: 0
+        property int spacing: 4
+        property int radius: 8
+      }
+
+      property JsonObject shortcutsWindow: JsonObject {
+        property int horizontalMargin: 24
+        property int verticalMargin: 24
       }
 
       property JsonObject weather: JsonObject {

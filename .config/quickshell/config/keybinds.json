@@ -1,0 +1,44 @@
+[
+  {
+    "category": "Apps",
+    "shortcuts": [
+      {
+        "keybind": ["SUPER", "T"],
+        "description": "Terminal"
+      },
+      {
+        "keybind": ["SUPER", "E"],
+        "description": "File Manager"
+      },
+      {
+        "keybind": ["SUPER", "Z"],
+        "description": "Browser"
+      },
+      {
+        "keybind": ["SUPER", "R"],
+        "description": "App Launcher"
+      },
+      {
+        "keybind": ["SUPER", "SHIFT", "R"],
+        "description": "Emoji menu"
+      },
+      {
+        "keybind": ["SUPER", "."],
+        "description": "Clipboard menu"
+      },
+      {
+        "keybind": ["SUPER", "Esc"],
+        "description": "Power menu"
+      }
+    ]
+  },
+  {
+    "category": "Windows",
+    "shortcuts": [
+      {
+        "keybind": ["SUPER", "C"],
+        "description": "Closes the window"
+      }
+    ]
+  }
+]
