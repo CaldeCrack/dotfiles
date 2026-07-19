@@ -22,6 +22,20 @@ Scope {
         }
     }
 
+    property bool sidebarOpen: false
+    property bool sidebarVisible: false
+
+    function toggleSidebar() {
+        if (!sidebarOpen) {
+            sidebarVisible = true;
+            sidebarOpen = true;
+        } else {
+            sidebarOpen = false;
+            // sidebarVisible flips off in SidebarBase.onClosed below,
+            // once the slide-out animation has finished
+        }
+    }
+
     PanelWindow {
         id: bar
 
@@ -32,6 +46,10 @@ Scope {
         }
 
         implicitHeight: Config.Settings.bar.height
+        // Temporary hardcoded dark bg so bar elements are actually
+        // visible for testing — Colors.md3 is all "transparent"
+        // placeholders until real matugen output exists.
+        color: "#14141c"
 
         Row {
             anchors.centerIn: parent
@@ -47,7 +65,7 @@ Scope {
 
                 Text {
                     text: "12:34"
-                    color: Config.Colors.md3.background
+                    color: Config.Colors.md3.on_surface
                 }
             }
 
@@ -72,7 +90,7 @@ Scope {
                             id: cpuIcon
                             anchors.fill: parent
                             text: "CPU"
-                            color: Config.Colors.md3.background
+                            color: Config.Colors.md3.on_surface
                         }
                         MouseArea {
                             id: cpuHover
@@ -92,7 +110,7 @@ Scope {
                             id: ramIcon
                             anchors.fill: parent
                             text: "RAM"
-                            color: Config.Colors.md3.background
+                            color: Config.Colors.md3.on_surface
                         }
                         MouseArea {
                             id: ramHover
@@ -112,6 +130,20 @@ Scope {
                     text: "RAM: 8.1 / 16 GB"
                 }
             }
+
+            // Sidebar toggle.
+            Widgets.BarButtonBase {
+                id: sidebarButton
+                checked: root.sidebarOpen
+                tooltipText: "Sidebar"
+
+                onClicked: root.toggleSidebar()
+
+                Text {
+                    text: "Sidebar"
+                    color: Config.Colors.md3.on_surface
+                }
+            }
         }
     }
 
@@ -120,14 +152,14 @@ Scope {
 
         visible: root.popupVisible
         color: "transparent"
+        exclusionMode: ExclusionMode.Ignore
 
         anchors {
             top: true
             right: true
         }
         margins {
-            top: 8
-            right: 4
+            top: Config.Settings.bar.height
         }
 
         implicitWidth: panel.implicitWidth
@@ -151,6 +183,51 @@ Scope {
                 Text {
                     text: "click hello world to close"
                     color: Config.Colors.md3.on_surface_variant
+                }
+            }
+        }
+    }
+
+    PanelWindow {
+        id: sidebarWindow
+
+        visible: root.sidebarVisible
+        color: "transparent"
+        exclusionMode: ExclusionMode.Ignore
+
+        anchors {
+            top: true
+            right: true
+            bottom: true
+        }
+        margins {
+            top: Config.Settings.bar.height
+        }
+
+        implicitWidth: sidebar.implicitWidth
+
+        Widgets.SidebarBase {
+            id: sidebar
+            anchors.fill: parent
+
+            edge: Qt.RightEdge
+            panelOpen: root.sidebarOpen
+            onClosed: root.sidebarVisible = false
+
+            Column {
+                anchors.fill: parent
+                spacing: 12
+
+                Text {
+                    text: "SidebarBase test"
+                    color: Config.Colors.md3.on_surface
+                    font.bold: true
+                }
+                Text {
+                    text: "click Sidebar to close"
+                    color: Config.Colors.md3.on_surface_variant
+                    wrapMode: Text.WordWrap
+                    width: parent.width
                 }
             }
         }

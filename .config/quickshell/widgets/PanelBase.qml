@@ -39,14 +39,12 @@ Item {
     property color shadowColor: Config.Colors.md3.shadow
     property real shadowBlur: 0.2
     property real shadowOpacity: 1.0
+    property real shadowSpread: 2
 
-    property real shadowSpreadX: 2
-    property real shadowSpreadY: 2
-
-    readonly property real shadowMarginLeft: shadowEnabled ? shadowSpreadX : 0
-    readonly property real shadowMarginRight: shadowEnabled ? shadowSpreadX : 0
-    readonly property real shadowMarginTop: shadowEnabled ? shadowSpreadY : 0
-    readonly property real shadowMarginBottom: shadowEnabled ? shadowSpreadY : 0
+    readonly property real shadowMarginLeft: shadowEnabled ? shadowSpread : 0
+    readonly property real shadowMarginRight: shadowEnabled ? shadowSpread : 0
+    readonly property real shadowMarginTop: shadowEnabled ? shadowSpread : 0
+    readonly property real shadowMarginBottom: shadowEnabled ? shadowSpread : 0
 
     // --- open/close animation ------------------------------------------------------
     property bool panelOpen: false
@@ -67,9 +65,6 @@ Item {
     enabled: panelOpen
 
     transformOrigin: Item.Top
-    transform: Translate {
-        y: -root.shadowSpreadY
-    }
 
     opacity: 0
     scale: closedScale
