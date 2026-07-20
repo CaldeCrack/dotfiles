@@ -4,41 +4,68 @@ import qs.config as Config
 import qs.widgets as Widgets
 
 // BarButtonBase
-// --------------
+// -------------
 // Shared hover/press/checked styling and click handling for every bar
 // button (ClockButton, WeatherButton, SystemStatsButton, PowerButton...).
 // Owns the pill-shaped background and its Material-style "state layer"
 // (a translucent overlay that darkens/lightens on hover and press), plus
 // left/right click signals. Content — icon, text, whatever — is placed
-// inside via the default property, same pattern as PanelBase.
+// inside via the default property, following the same pattern as
+// PanelBase.
 //
-// Tooltip handling is intentionally NOT built in beyond a single optional
-// convenience property (tooltipText), because not every bar button has
-// exactly one thing to show a tooltip for. A button like ClockButton has
-// one icon, so `tooltipText: "3:45 PM"` is enough. A button like
-// SystemStatsButton shows several icons (cpu/gpu/ram/battery) side by
-// side, each needing its OWN tooltip — that doesn't fit a single string
-// property on the button as a whole. For that case, skip tooltipText
-// entirely and nest a widgets/Tooltip.qml per icon inside the button's
-// content instead; both approaches use the same Tooltip visual under the
-// hood, so they stay consistent.
+// Tooltip handling is intentionally NOT built in beyond a single
+// optional convenience property (tooltipText), because not every bar
+// button has exactly one thing to show a tooltip for. A button like
+// ClockButton has one icon, so `tooltipText: "3:45 PM"` is enough. A
+// button like SystemStatsButton shows several icons (cpu/gpu/ram/
+// battery) side by side, each needing its own tooltip — that doesn't fit
+// a single string property on the button as a whole. For that case, skip
+// tooltipText entirely and nest a Widgets.Tooltip per icon inside the
+// button's content instead; both approaches use the same Tooltip visual
+// under the hood, so they stay consistent.
 //
 // Usage (simple, single icon):
 //   BarButtonBase {
 //       tooltipText: "Clock"
+//
 //       onClicked: InfoPanel.show(InfoPanel.TimeWeatherTab)
-//       Widgets.Icon { name: "clock" }
+//
+//       Widgets.Icon {
+//           name: "clock"
+//       }
 //   }
 //
 // Usage (composite, multiple icons/tooltips):
 //   BarButtonBase {
+//       id: button
+//
 //       Row {
 //           spacing: 4
-//           Widgets.Icon { id: cpuIcon; name: "cpu" }
-//           Widgets.Icon { id: ramIcon; name: "ram" }
+//
+//           Item {
+//               id: cpuWrap
+//               width: cpuIcon.size
+//               height: cpuIcon.size
+//               readonly property bool hovered: cpuHover.hovered
+//
+//               Widgets.Icon {
+//                   id: cpuIcon
+//                   name: "cpu"
+//               }
+//
+//               HoverHandler {
+//                   id: cpuHover
+//               }
+//           }
+//
+//           // Additional icons...
 //       }
-//       Widgets.Tooltip { target: cpuIcon; text: cpuUsage + "%" }
-//       Widgets.Tooltip { target: ramIcon; text: ramUsage + "%" }
+//
+//       Widgets.Tooltip {
+//           target: cpuWrap
+//           anchorTarget: button
+//           text: cpuUsage + "%"
+//       }
 //   }
 //
 // Per-icon hover for the composite case, if an icon needs its own hover
@@ -46,19 +73,11 @@ import qs.widgets as Widgets
 // MouseArea.containsMouse, a HoverHandler isn't "blocked" by another
 // pointer-handling item sitting visually on top of/near it — multiple
 // HoverHandlers can independently report hovered:true at the same time.
-// A MouseArea-based approach here will make this button's OWN hover
+// A MouseArea-based approach here will make this button's own hover
 // state layer flicker off whenever a nested icon claims the hover, since
-// only one MouseArea "owns" hover at a given point.
-//
-//   Item {
-//       id: cpuWrap
-//       width: cpuIcon.size
-//       height: cpuIcon.size
-//       readonly property bool hovered: cpuHover.hovered
-//       Widgets.Icon { id: cpuIcon; name: "cpu" }
-//       HoverHandler { id: cpuHover }
-//   }
-//   Widgets.Tooltip { target: cpuWrap; text: cpuUsage + "%" }
+// only one MouseArea "owns" hover at a given point. `anchorTarget` is
+// then used so the tooltip remains vertically aligned with the button
+// itself while still being horizontally centered on the hovered icon.
 
 Item {
     id: root
@@ -148,12 +167,6 @@ Item {
         }
     }
 
-    // cursorShape lives here, not on mouseArea below — MouseArea's legacy
-    // hover tracking has the same "blocked by a nested pointer-handling
-    // item on top of it" problem that hovered/the state layer had, so its
-    // cursorShape would silently stop applying over a composite button's
-    // icons (cursor falls back to the default arrow there). HoverHandler
-    // doesn't have that problem, so put the cursor here instead.
     HoverHandler {
         id: hoverHandler
     }

@@ -35,6 +35,7 @@ Widgets.BarButtonBase {
 
         Widgets.Tooltip {
             target: wrap
+            anchorTarget: root
             text: Math.round(wrap.value) + "%"
         }
     }
