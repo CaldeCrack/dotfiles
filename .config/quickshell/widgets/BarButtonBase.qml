@@ -40,6 +40,25 @@ import qs.widgets as Widgets
 //       Widgets.Tooltip { target: cpuIcon; text: cpuUsage + "%" }
 //       Widgets.Tooltip { target: ramIcon; text: ramUsage + "%" }
 //   }
+//
+// Per-icon hover for the composite case, if an icon needs its own hover
+// state (e.g. for its Tooltip): use HoverHandler, not MouseArea. Unlike
+// MouseArea.containsMouse, a HoverHandler isn't "blocked" by another
+// pointer-handling item sitting visually on top of/near it — multiple
+// HoverHandlers can independently report hovered:true at the same time.
+// A MouseArea-based approach here will make this button's OWN hover
+// state layer flicker off whenever a nested icon claims the hover, since
+// only one MouseArea "owns" hover at a given point.
+//
+//   Item {
+//       id: cpuWrap
+//       width: cpuIcon.size
+//       height: cpuIcon.size
+//       readonly property bool hovered: cpuHover.hovered
+//       Widgets.Icon { id: cpuIcon; name: "cpu" }
+//       HoverHandler { id: cpuHover }
+//   }
+//   Widgets.Tooltip { target: cpuWrap; text: cpuUsage + "%" }
 
 Item {
     id: root
@@ -65,7 +84,15 @@ Item {
     property color checkedBackgroundColor: Config.Colors.md3.primary_container
 
     // --- state ------------------------------------------------------
-    readonly property bool hovered: mouseArea.containsMouse
+    // hovered comes from a dedicated HoverHandler, not
+    // mouseArea.containsMouse — MouseArea-based hover is exclusive, so
+    // the moment a nested per-icon hover area (composite buttons) claims
+    // the hover, this button's own mouseArea.containsMouse would flip
+    // false and the state layer below would flicker off. HoverHandler
+    // doesn't have that problem: it isn't blocked by another
+    // pointer-handling item on top of it, so it stays accurate across
+    // the whole button regardless of what's nested inside.
+    readonly property bool hovered: hoverHandler.hovered
     readonly property bool pressed: mouseArea.pressed
     // For buttons that toggle something open (ControlPanelButton,
     // NotificationsButton...) rather than just firing an action.
@@ -121,12 +148,24 @@ Item {
         }
     }
 
+    // cursorShape lives here, not on mouseArea below — MouseArea's legacy
+    // hover tracking has the same "blocked by a nested pointer-handling
+    // item on top of it" problem that hovered/the state layer had, so its
+    // cursorShape would silently stop applying over a composite button's
+    // icons (cursor falls back to the default arrow there). HoverHandler
+    // doesn't have that problem, so put the cursor here instead.
+    HoverHandler {
+        id: hoverHandler
+    }
+
     MouseArea {
         id: mouseArea
         anchors.fill: parent
+
         hoverEnabled: true
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
         cursorShape: Qt.PointingHandCursor
+
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
 
         onClicked: mouse => {
             if (mouse.button === Qt.RightButton)
@@ -136,10 +175,10 @@ Item {
         }
     }
 
-    // Declared AFTER mouseArea so content (and any nested per-icon hover
-    // areas inside it, for composite buttons) stacks visually on top and
-    // gets hover priority. Unaccepted clicks (icon hover areas use
-    // acceptedButtons: Qt.NoButton) fall through to mouseArea beneath.
+    // Declared AFTER mouseArea purely so content renders visually on top
+    // of the background/state-layer rectangles beneath it — no longer a
+    // hover-priority workaround now that hovered comes from HoverHandler
+    // above, which isn't affected by stacking order.
     Item {
         id: contentRow
         anchors.centerIn: parent

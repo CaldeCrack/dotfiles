@@ -21,7 +21,7 @@ Widgets.BarButtonBase {
 
         width: icon.size
         height: icon.size
-        readonly property bool hovered: hoverArea.containsMouse
+        readonly property bool hovered: hoverArea.hovered
 
         Widgets.Icon {
             id: icon
@@ -29,11 +29,8 @@ Widgets.BarButtonBase {
             size: 16
         }
 
-        MouseArea {
+        HoverHandler {
             id: hoverArea
-            anchors.fill: parent
-            hoverEnabled: true
-            acceptedButtons: Qt.NoButton // clicks fall through to the button
         }
 
         Widgets.Tooltip {
