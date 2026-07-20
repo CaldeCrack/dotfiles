@@ -63,7 +63,7 @@ Widgets.BarButtonBase {
 
         StatIcon {
             visible: Services.Battery.available
-            iconName: "battery-vertical-4"
+            iconName: Services.Battery.iconName
             value: Services.Battery.percentage
         }
     }
