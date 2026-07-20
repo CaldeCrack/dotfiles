@@ -101,6 +101,10 @@
         "description": "Fullscreen"
       },
       {
+        "keybind": ["SUPER", "SHIFT", "F"],
+        "description": "Fullscreen spoof"
+      },
+      {
         "keybind": ["SUPER", "M"],
         "description": "Maximize"
       },
