@@ -12,6 +12,11 @@ local function toggle_touchscreen()
 				},
 			},
 		})
+
+		hl.device({
+			name = "synps/2-synaptics-touchpad",
+			enabled = touchable,
+		})
 	end
 end
 
@@ -73,7 +78,7 @@ hl.device({
 	sensitivity = -0.1,
 })
 
--- Trackpad Gestures
+-- Touchpad Gestures
 hl.gesture({
 	fingers = 3,
 	direction = "vertical",
