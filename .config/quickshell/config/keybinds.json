@@ -95,6 +95,14 @@
       {
         "keybind": ["SUPER", "F"],
         "description": "Fullscreen"
+      },
+      {
+        "keybind": ["SUPER", "M"],
+        "description": "Maximize"
+      },
+      {
+        "keybind": ["SUPER", "P"],
+        "description": "Pin"
       }
     ]
   },
@@ -131,7 +139,7 @@
         "description": "Screenshot region"
       },
       {
-        "keybind": ["SUPER", "P"],
+        "keybind": ["SUPER", "SHIFT", "P"],
         "description": "Pick color"
       },
       {
@@ -141,6 +149,14 @@
       {
         "keybind": ["SHIFT", "F11"],
         "description": "Next wallpaper"
+      },
+      {
+        "keybind": ["SUPER", "+"],
+        "description": "Zoom in"
+      },
+      {
+        "keybind": ["SUPER", "-"],
+        "description": "Zoom out"
       }
     ]
   },

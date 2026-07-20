@@ -1,5 +1,31 @@
 local cfg = require("config.programs")
 
+-- Zoom bindings
+local zoom = 1.0
+local MIN_ZOOM = 1.0
+local MAX_ZOOM = 5.0
+local STEP = 0.2
+
+local function set_zoom(delta)
+	return function()
+		zoom = math.max(MIN_ZOOM, math.min(MAX_ZOOM, zoom + delta))
+		hl.config({
+			cursor = {
+				zoom_factor = zoom,
+			},
+		})
+	end
+end
+
+hl.bind(cfg.mainMod .. " + PLUS", set_zoom(STEP), {
+	repeating = true,
+})
+
+hl.bind(cfg.mainMod .. " + MINUS", set_zoom(-STEP), {
+	repeating = true,
+})
+
+-- General input settings
 hl.config({
 	input = {
 		kb_layout = "latam",
@@ -19,12 +45,10 @@ hl.config({
 			scroll_factor = 0.45,
 		},
 	},
-})
 
-hl.gesture({
-	fingers = 3,
-	direction = "vertical",
-	action = "workspace",
+	cursor = {
+		zoom_factor = zoom,
+	},
 })
 
 hl.device({
@@ -32,4 +56,18 @@ hl.device({
 	sensitivity = -0.1,
 })
 
+-- Trackpad Gestures
+hl.gesture({
+	fingers = 3,
+	direction = "vertical",
+	action = "workspace",
+})
+
+hl.gesture({
+	fingers = 3,
+	direction = "horizontal",
+	action = "scroll_move",
+})
+
+-- Toggle touch input
 -- hl.bind(cfg.mainMod .. " + F4", hl.dsp.input.float({ action = "toggle" }))
