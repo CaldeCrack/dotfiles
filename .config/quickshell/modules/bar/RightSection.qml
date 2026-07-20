@@ -19,13 +19,14 @@ Row {
             id: wrapper
             required property string modelData
 
-            width: root.slotSize
-            height: root.slotSize
-
             readonly property var buttonComponent: Bar.ButtonRegistry.componentMap[modelData]
 
+            implicitWidth: buttonComponent !== undefined ? loader.implicitWidth : root.slotSize
+            implicitHeight: buttonComponent !== undefined ? loader.implicitHeight : root.slotSize
+
             Loader {
-                anchors.fill: parent
+                id: loader
+                anchors.centerIn: parent
                 active: wrapper.buttonComponent !== undefined
                 sourceComponent: wrapper.buttonComponent
             }
