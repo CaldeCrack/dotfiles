@@ -33,53 +33,51 @@ import qs.config as Config
 // surprised the bundled-icon path shows nothing during early testing.
 
 Item {
-	id: root
+    id: root
 
-	property string name: ""
-	property string systemIcon: ""
-	// Only used with systemIcon — passed straight to Quickshell.iconPath's
-	// fallback parameter, a second icon name to try if the first isn't
-	// found in the current icon theme (e.g. a generic exec icon).
-	property string systemIconFallback: ""
+    property string name: ""
+    property string systemIcon: ""
+    // Only used with systemIcon — passed straight to Quickshell.iconPath's
+    // fallback parameter, a second icon name to try if the first isn't
+    // found in the current icon theme (e.g. a generic exec icon).
+    property string systemIconFallback: ""
 
-	property real size: 20
-	property color color: Config.Colors.md3.on_surface
+    property real size: 20
+    property color color: Config.Colors.md3.on_surface
 
-	implicitWidth: size
-	implicitHeight: size
+    implicitWidth: size
+    implicitHeight: size
 
-	readonly property bool isSystemIcon: systemIcon.length > 0
-	readonly property bool isBundledIcon: !isSystemIcon && name.length > 0
+    readonly property bool isSystemIcon: systemIcon.length > 0
+    readonly property bool isBundledIcon: !isSystemIcon && name.length > 0
 
-	Image {
-		id: image
-		anchors.fill: parent
-		visible: status === Image.Ready
+    Image {
+        id: image
+        anchors.fill: parent
+        visible: status === Image.Ready
 
-		source: {
-			if (root.isSystemIcon) {
-				return root.systemIconFallback.length > 0
-					? Quickshell.iconPath(root.systemIcon, root.systemIconFallback)
-					: Quickshell.iconPath(root.systemIcon)
-			}
-			if (root.isBundledIcon)
-				return "file://" + Quickshell.shellDir + "/assets/icons/" + root.name + ".svg"
+        source: {
+            if (root.isSystemIcon) {
+                return root.systemIconFallback.length > 0 ? Quickshell.iconPath(root.systemIcon, root.systemIconFallback) : Quickshell.iconPath(root.systemIcon);
+            }
+            if (root.isBundledIcon)
+                return "file://" + Quickshell.shellDir + "/assets/icons/" + root.name + ".svg";
 
-			return ""
-		}
+            return "";
+        }
 
-		sourceSize.width: root.size
-		sourceSize.height: root.size
-		fillMode: Image.PreserveAspectFit
-		smooth: true
-		asynchronous: true
+        sourceSize.width: root.size
+        sourceSize.height: root.size
+        fillMode: Image.PreserveAspectFit
+        smooth: true
+        asynchronous: true
 
-		// Only recolor bundled icons — a system/app icon keeps its real
-		// colors, that's the entire reason systemIcon mode exists.
-		layer.enabled: root.isBundledIcon
-		layer.effect: MultiEffect {
-			colorization: 1.0
-			colorizationColor: root.color
-		}
-	}
+        // Only recolor bundled icons — a system/app icon keeps its real
+        // colors, that's the entire reason systemIcon mode exists.
+        layer.enabled: root.isBundledIcon
+        layer.effect: MultiEffect {
+            colorization: 1.0
+            colorizationColor: root.color
+        }
+    }
 }
