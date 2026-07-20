@@ -13,7 +13,7 @@ hl.bind(cfg.mainMod .. " + escape", hl.dsp.exec_cmd("pkill " .. cfg.menuName .. 
 hl.bind(cfg.mainMod .. " + SHIFT + L", hl.dsp.exec_cmd("hyprlock"))
 
 -- Hyprpicker
-hl.bind(cfg.mainMod .. " + P", hl.dsp.exec_cmd("hyprpicker -a -q"))
+hl.bind(cfg.mainMod .. " + SHIFT + P", hl.dsp.exec_cmd("hyprpicker -a -q"))
 
 -- Quickshell shortcuts
 hl.bind(cfg.mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("pkill -f ags"))
