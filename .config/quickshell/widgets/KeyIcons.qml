@@ -29,6 +29,10 @@ QtObject {
             return "↑/↓";
         case "ARROWS":
             return "←/↑/↓/→";
+        case "SWIPE HORIZONTAL":
+            return "3󰆽 ←/→";
+        case "SWIPE VERTICAL":
+            return "3󰆽 ↑/↓";
         default:
             return key;
         }
@@ -43,7 +47,9 @@ QtObject {
         case "RIGHT":
         case "UP":
         case "DOWN":
+        case "Scroll HORIZONTAL":
         case "HORIZONTAL":
+        case "Scroll VERTICAL":
         case "VERTICAL":
         case "ARROWS":
             return true;

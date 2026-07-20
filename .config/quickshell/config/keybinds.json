@@ -1,6 +1,8 @@
 [
   {
     "category": "Apps",
+    "column": 1,
+    "index": 1,
     "shortcuts": [
       {
         "keybind": ["SUPER", "T"],
@@ -46,6 +48,8 @@
   },
   {
     "category": "Shell",
+    "column": 1,
+    "index": 2,
     "shortcuts": [
       {
         "keybind": ["SUPER", "Enter"],
@@ -71,6 +75,8 @@
   },
   {
     "category": "Windows",
+    "column": 2,
+    "index": 1,
     "shortcuts": [ 
       {
         "keybind": ["SUPER", "LMB"],
@@ -132,6 +138,8 @@
   },
   {
     "category": "Workspaces",
+    "column": 2,
+    "index": 2,
     "shortcuts": [
       {
         "keybind": ["SUPER", "VERTICAL"],
@@ -149,6 +157,8 @@
   },
   {
     "category": "Media",
+    "column": 3,
+    "index": 1,
     "shortcuts": [
       {
         "keybind": ["PRINT"],
@@ -186,6 +196,8 @@
   },
   {
     "category": "Session",
+    "column": 3,
+    "index": 2,
     "shortcuts": [
       {
         "keybind": ["SHIFT", "F2"],
@@ -202,6 +214,21 @@
       {
         "keybind": ["SUPER", "SHIFT", "Esc"],
         "description": "Power menu"
+      }
+    ]
+  },
+  {
+    "category": "Gestures",
+    "column": 3,
+    "index": 3,
+    "shortcuts": [
+      {
+        "keybind": ["SWIPE HORIZONTAL"],
+        "description": "Swipe windows in direction"
+      },
+      {
+        "keybind": ["SWIPE VERTICAL"],
+        "description": "Swipe workspaces in direction"
       }
     ]
   }

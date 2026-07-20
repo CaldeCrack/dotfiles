@@ -15,12 +15,14 @@ import qs.widgets as Widgets
 // shared singleton.
 //
 // Keybinds come from Config.KeybindsLoader.categories (see
-// config/KeybindsLoader.qml), rendered as 3 equal-width columns of 2
-// categories each, in the order they appear in keybinds.json. Each category
-// is a subtitle over a 2-column GridLayout — column 1 holds the Keybind
-// widgets (sized to its widest entry), column 2 the descriptions
-// (Layout.fillWidth: true, so it stretches to the category's full
-// available width rather than just hugging its own text).
+// config/KeybindsLoader.qml), rendered as 3 equal-width columns. Each
+// category's "column" (1-3) and "index" (order within that column) fields
+// in keybinds.json decide where it lands — any number of categories per
+// column is fine, not just a fixed 2. Each category is a subtitle over a
+// 2-column GridLayout — column 1 holds the Keybind widgets (sized to its
+// widest entry), column 2 the descriptions (Layout.fillWidth: true, so it
+// stretches to the category's full available width rather than just
+// hugging its own text).
 //
 // Toggled externally via IpcHandler (see below) — bind a Hyprland key to
 // `qs ipc call shortcuts toggle` rather than handling the hotkey here,
@@ -201,9 +203,9 @@ PanelWindow {
             spacing: 12
 
             Repeater {
-                // 3 columns, 2 categories each, in the order they appear
-                // in keybinds.json — column 0 gets categories[0:2],
-                // column 1 gets categories[2:4], column 2 gets [4:6].
+                // 3 columns. Which categories land in which column, and in
+                // what order, is driven entirely by each category's
+                // "column"/"index" fields — see categoriesForColumn below.
                 model: 3
 
                 delegate: ColumnLayout {
@@ -221,7 +223,14 @@ PanelWindow {
                     Layout.alignment: Qt.AlignTop
                     spacing: 16
 
-                    readonly property var categoriesForColumn: Config.KeybindsLoader.categories.slice(index * 2, index * 2 + 2)
+                    // Each category now declares its own placement via
+                    // "column" (1-3) and "index" (order within that
+                    // column) in keybinds.json, rather than being assumed
+                    // to fall 2-per-column in file order. A category with
+                    // no matching column (missing/out-of-range) simply
+                    // won't render in any of the three — nothing crashes,
+                    // it's just silently skipped.
+                    readonly property var categoriesForColumn: Config.KeybindsLoader.categories.filter(category => category.column === index + 1).sort((a, b) => a.index - b.index)
 
                     Repeater {
                         model: columnDelegate.categoriesForColumn

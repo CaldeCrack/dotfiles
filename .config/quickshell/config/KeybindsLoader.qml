@@ -6,12 +6,15 @@ import Quickshell.Io
 // KeybindsLoader
 // --------------
 // Reads config/keybinds.json and exposes it parsed as `categories`: a list
-// of { category, shortcuts: [{ keybind, description }] } objects, in file
-// order. keybinds.json is a top-level JSON array, not an object, so it
-// can't bind through JsonAdapter the way config.json does in ConfigLoader —
-// instead this reads the raw file text and JSON.parses it by hand.
-// Read-only from the shell's side: this file is meant to be hand-edited,
-// not written back like config.json is.
+// of { category, column, index, shortcuts: [{ keybind, description }] }
+// objects. `column` (1-3) and `index` (order within that column) decide
+// where each category renders in ShortcutsWindow — this file just parses,
+// it doesn't group or sort, that's ShortcutsWindow's job. keybinds.json is
+// a top-level JSON array, not an object, so it can't bind through
+// JsonAdapter the way config.json does in ConfigLoader — instead this reads
+// the raw file text and JSON.parses it by hand. Read-only from the shell's
+// side: this file is meant to be hand-edited, not written back like
+// config.json is.
 Singleton {
     id: root
 
