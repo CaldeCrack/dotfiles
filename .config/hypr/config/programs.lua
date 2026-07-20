@@ -10,6 +10,10 @@ M.clipboardMenu = M.menuName .. " -modi clipboard:~/.local/share/scripts/cliphis
 M.powerMenu = M.menuName .. " -show pm -modi pm:rofi-power-menu"
 
 M.browser = "zen-browser"
+M.discord = "vesktop"
+M.office = "onlyoffice-desktopeditors"
+M.volumeMixer = "pavucontrol"
+M.wifi = "kitty nmtui"
 
 M.bar = "ags run ~/.config/ags/app.tsx"
 

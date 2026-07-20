@@ -15,6 +15,14 @@
         "description": "Browser"
       },
       {
+        "keybind": ["SUPER", "D"],
+        "description": "Discord"
+      },
+      {
+        "keybind": ["SUPER", "SHIFT", "W"],
+        "description": "Office software"
+      },
+      {
         "keybind": ["SUPER", "R"],
         "description": "App Launcher"
       },
@@ -25,6 +33,14 @@
       {
         "keybind": ["SUPER", "."],
         "description": "Clipboard menu"
+      },
+            {
+        "keybind": ["CTRL", "SUPER", "V"],
+        "description": "Volume mixer"
+      },
+            {
+        "keybind": ["CTRL", "SUPER", "W"],
+        "description": "Network Manager"
       }
     ]
   },
