@@ -1,5 +1,5 @@
 -- Handle Lid switch
-hl.bind("switch:on:Lid Switch", hl.dsp.exec_cmd("sh ~/.config/hypr/scripts/lid-close.sh"), { locked = true })
+hl.bind("switch:on:Lid Switch", hl.dsp.exec_cmd("loginctl suspend"), { locked = true })
 
 -- Volume (bindel: locked + repeating)
 hl.bind(
