@@ -77,11 +77,21 @@ Item {
     signal clicked
     signal rightClicked
 
+    // Sizing reads the content's own implicit size directly, rather than
+    // going through contentRow.childrenRect — childrenRect turned out not
+    // to reliably reflect a Row-wrapped composite child's real size (the
+    // single-icon case worked because Icon has its own implicitWidth; a
+    // Row wrapping several icons didn't propagate through childrenRect
+    // the same way). Icon sets implicitWidth explicitly, and Row computes
+    // its own implicitWidth natively as a positioner, so reading straight
+    // off whatever's actually in contentRow sidesteps the issue entirely.
+    readonly property Item primaryContent: contentRow.children.length > 0 ? contentRow.children[0] : null
+
     // Square by default (most bar buttons are icon-only) but grows to fit
     // wider content like a clock's text label. Height defaults to the
     // bar's own height so every button lines up regardless of content.
-    implicitWidth: Math.max(implicitHeight, contentRow.childrenRect.width + horizontalPadding * 2)
-    implicitHeight: Config.Settings.bar.height
+    implicitWidth: Math.max(implicitHeight, (primaryContent ? primaryContent.implicitWidth : 0) + horizontalPadding * 2)
+    implicitHeight: Config.Settings.bar.height - 4
 
     Rectangle {
         anchors.fill: parent
@@ -133,8 +143,8 @@ Item {
     Item {
         id: contentRow
         anchors.centerIn: parent
-        implicitWidth: childrenRect.width
-        implicitHeight: childrenRect.height
+        implicitWidth: root.primaryContent ? root.primaryContent.implicitWidth : 0
+        implicitHeight: root.primaryContent ? root.primaryContent.implicitHeight : 0
     }
 
     Widgets.Tooltip {

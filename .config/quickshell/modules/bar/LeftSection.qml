@@ -23,13 +23,26 @@ Row {
             id: wrapper
             required property string modelData
 
-            width: root.slotSize
-            height: root.slotSize
-
             readonly property var buttonComponent: Bar.ButtonRegistry.componentMap[modelData]
 
+            // Real components (BarButtonBase-based, e.g. the clock or a
+            // composite stats button) size themselves via their own
+            // implicitWidth/Height — could be wider than a square, and
+            // that's fine, that's the whole point of BarButtonBase's own
+            // sizing logic. Only the placeholder (nothing built for this
+            // id yet) is forced into a fixed square, since it's meant to
+            // be a uniform circular avatar regardless of content.
+            implicitWidth: buttonComponent !== undefined ? loader.implicitWidth : root.slotSize
+            implicitHeight: buttonComponent !== undefined ? loader.implicitHeight : root.slotSize
+
             Loader {
-                anchors.fill: parent
+                id: loader
+                // NOT anchors.fill: parent — that would force the loaded
+                // item down to wrapper's size, which is exactly the bug
+                // this fixes (wrapper's size already comes FROM loader
+                // above, so anchors.fill here would be circular and would
+                // win, since an explicit anchor always beats implicitWidth).
+                anchors.centerIn: parent
                 active: wrapper.buttonComponent !== undefined
                 sourceComponent: wrapper.buttonComponent
             }
