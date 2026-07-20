@@ -2,10 +2,14 @@ local cfg = require("config.programs")
 
 -- Core window management
 hl.bind(cfg.mainMod .. " + C", hl.dsp.window.close())
-hl.bind(cfg.mainMod .. " + K", hl.dsp.window.kill()) -- forcekillactive
-hl.bind(cfg.mainMod .. " + M", hl.dsp.exit())
+hl.bind(cfg.mainMod .. " + K", hl.dsp.window.kill())
 hl.bind(cfg.mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(cfg.mainMod .. " + F", hl.dsp.window.fullscreen())
+hl.bind(cfg.mainMod .. " + M", function()
+	hl.dispatch(hl.dsp.layout("colresize +conf"))
+	hl.dispatch(hl.dsp.layout("focus r"))
+	hl.dispatch(hl.dsp.layout("focus l"))
+end)
 
 -- Move focus with mainMod + arrow keys
 hl.bind(cfg.mainMod .. " + left", hl.dsp.focus({ direction = "left" }))

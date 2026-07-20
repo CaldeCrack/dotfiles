@@ -39,7 +39,8 @@ hl.config({
 		enabled = true,
 	},
 	scrolling = {
-		column_width = 0.8,
+		explicit_column_widths = "0.9, 1",
+		column_width = 0.9,
 		focus_fit_method = 0,
 	},
 	misc = {

@@ -1,3 +1,5 @@
+local cfg = require("config.programs")
+
 hl.config({
 	input = {
 		kb_layout = "latam",
@@ -29,3 +31,5 @@ hl.device({
 	name = "logitech-wireless-mouse-1",
 	sensitivity = -0.1,
 })
+
+-- hl.bind(cfg.mainMod .. " + F4", hl.dsp.input.float({ action = "toggle" }))
