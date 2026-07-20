@@ -42,13 +42,16 @@ end
 hl.bind(cfg.mainMod .. " + PLUS", set_zoom(STEP), {
 	repeating = true,
 })
-
 hl.bind(cfg.mainMod .. " + MINUS", set_zoom(-STEP), {
 	repeating = true,
 })
 
 -- General input settings
 hl.config({
+	cursor = {
+		no_warps = true,
+	},
+
 	input = {
 		kb_layout = "latam",
 		kb_variant = "",
