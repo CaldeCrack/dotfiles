@@ -1,5 +1,22 @@
 local cfg = require("config.programs")
 
+-- Toggle touch screen
+local touchable = true
+local function toggle_touchscreen()
+	return function()
+		touchable = not touchable
+		hl.config({
+			input = {
+				touchdevice = {
+					enabled = touchable,
+				},
+			},
+		})
+	end
+end
+
+hl.bind("SHIFT + F4", toggle_touchscreen())
+
 -- Zoom bindings
 local zoom = 1.0
 local MIN_ZOOM = 1.0
@@ -37,17 +54,17 @@ hl.config({
 		repeat_delay = 250,
 		repeat_rate = 40,
 
-		follow_mouse = 1,
+		follow_mouse = 0,
 		sensitivity = 0.2,
 
 		touchpad = {
 			natural_scroll = true,
 			scroll_factor = 0.45,
 		},
-	},
 
-	cursor = {
-		zoom_factor = zoom,
+		touchdevice = {
+			enabled = true,
+		},
 	},
 })
 
@@ -68,6 +85,3 @@ hl.gesture({
 	direction = "horizontal",
 	action = "scroll_move",
 })
-
--- Toggle touch input
--- hl.bind(cfg.mainMod .. " + F4", hl.dsp.input.float({ action = "toggle" }))

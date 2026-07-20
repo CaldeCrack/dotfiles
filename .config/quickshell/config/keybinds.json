@@ -36,6 +36,10 @@
         "description": "Toggle cheat sheet"
       },
       {
+        "keybind": ["SHIFT", "F4"],
+        "description": "Toggle touch devices"
+      },
+      {
         "keybind": ["SUPER", "B"],
         "description": "Bar"
       },
