@@ -59,8 +59,6 @@ PanelWindow {
     // compositors own all global keyboard input, so a layer-shell client
     // can't grab a hotkey by itself — Hyprland captures the key and execs
     // a command, this just gives that command something to call into.
-    // Add to your Hyprland config:
-    //   bind = SUPER, K, exec, qs ipc call shortcuts toggle
     IpcHandler {
         target: "shortcuts"
 

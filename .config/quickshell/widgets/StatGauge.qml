@@ -30,7 +30,7 @@ Item {
     property real strokeWidth: 8
     property real iconSize: 28
     property real cornerRadius: 20
-    property real percentageRadialOffset: 2
+    property real percentageRadialOffset: 4
     property real pullInFactor: 0.92
     property bool showPercentageInGap: true
 
