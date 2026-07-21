@@ -31,8 +31,8 @@ Item {
     property color color: Config.Colors.md3.surface_container
     property color borderColor: Config.Colors.md3.outline_variant
     property real borderWidth: 1
-    property real radius: 16
-    property real contentPadding: 12
+    property real radius: 24
+    property real contentPadding: 8
 
     // --- shadow ------------------------------------------------------
     property bool shadowEnabled: true

@@ -31,6 +31,7 @@ PanelWindow {
     id: root
 
     visible: false
+    exclusionMode: ExclusionMode.Ignore
 
     // Layer-shell surfaces don't get keyboard focus by default. OnDemand
     // requests it only while this window is actually visible/interactive,
@@ -97,7 +98,7 @@ PanelWindow {
         // edge) plus the usual vertical margin, so the card never sits
         // under the bar; the other three sides just use the configured
         // margins directly.
-        anchors.topMargin: Config.Settings.bar.margin + Config.Settings.shortcutsWindow.verticalMargin
+        anchors.topMargin: Config.Settings.bar.height + Config.Settings.shortcutsWindow.verticalMargin
         anchors.bottomMargin: Config.Settings.shortcutsWindow.verticalMargin
         anchors.leftMargin: Config.Settings.shortcutsWindow.horizontalMargin
         anchors.rightMargin: Config.Settings.shortcutsWindow.horizontalMargin

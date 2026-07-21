@@ -1,13 +1,20 @@
 import QtQuick
+import qs.config as Config
 import qs.widgets as Widgets
 import qs.services as Services
-import qs.modules.systemStatsPopup as StatsPopup
 
 Widgets.BarButtonBase {
     id: root
 
-    checked: popup.panelOpen
-    onClicked: popup.panelOpen ? popup.close() : popup.openBelow(root)
+    onClicked: root.checked ? close() : open(root)
+
+    function open() {
+        root.checked = true;
+    }
+
+    function close() {
+        root.checked = false;
+    }
 
     // Icon + hover-wrapper + tooltip, repeated per stat. Item/Icon have no
     // hover state of their own (the button's MouseArea covers the whole
@@ -40,8 +47,65 @@ Widgets.BarButtonBase {
         }
     }
 
-    StatsPopup.SystemStatsPopup {
+    Widgets.DismissablePopup {
         id: popup
+
+        open: root.checked
+        onDismissRequested: root.checked = false
+
+        contentX: root.x
+        contentY: Config.Settings.bar.height
+
+        // Memory is conventionally shown in binary GiB (matches free/htop),
+        // disk capacity in decimal GB (matches how drives are marketed/df -H).
+        // Kept here rather than in the service since "what's the normal unit"
+        // is a display decision, not something SystemStats should bake in.
+        function formatGiB(bytes) {
+            return (bytes / (1024 * 1024 * 1024)).toFixed(1) + " GB";
+        }
+
+        function formatGB(bytes) {
+            return (bytes / (1000 * 1000 * 1000)).toFixed(1) + " GB";
+        }
+
+        // VRAM total stays at 0 on integrated GPUs (no dedicated pool to
+        // report) — show a dash instead of a nonsensical "0.0 GB".
+        function formatVramTotal(bytes) {
+            return bytes > 0 ? panel.formatGiB(bytes) : "—";
+        }
+
+        // 2x2 of the percentage-driven gauges. Battery/temperature will
+        // sit alongside this as a vertical 2x1 block (different shape,
+        // not a StatGauge) — not part of this pass.
+        Grid {
+            columns: 2
+            rowSpacing: 8
+            columnSpacing: 8
+
+            Widgets.StatGauge {
+                iconName: "cpu"
+                percentage: Services.SystemStats.cpuUsage
+                label: (Services.SystemStats.cpuMaxFrequencyMHz / 1000).toFixed(1) + " GHz\n" + Services.SystemStats.cpuCoreCount + " cores"
+            }
+
+            Widgets.StatGauge {
+                iconName: "memory-stick"
+                percentage: Services.SystemStats.memoryUsage
+                label: popup.formatGiB(Services.SystemStats.memoryTotalBytes)
+            }
+
+            Widgets.StatGauge {
+                iconName: "hard-drive"
+                percentage: Services.SystemStats.diskUsage
+                label: popup.formatGB(Services.SystemStats.diskTotalBytes)
+            }
+
+            Widgets.StatGauge {
+                iconName: "gpu"
+                percentage: Services.SystemStats.gpuUsage
+                label: popup.formatVramTotal(Services.SystemStats.gpuTotalVramBytes)
+            }
+        }
     }
 
     Row {
