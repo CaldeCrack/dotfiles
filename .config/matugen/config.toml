@@ -88,3 +88,10 @@ output_path = '~/.config/vesktop/themes/midnight-discord.css'
 [templates.yazi]
 input_path = './templates/yazi-theme.toml'
 output_path = '~/.config/yazi/theme.toml'
+
+[templates.zen-browser]
+pre_hook = '~/.config/matugen/pre-hook-scripts/zen-browser.sh'
+input_path = './templates/zen-browser.css'
+output_path = '~/.cache/matugen/userChrome.css'
+post_hook = '~/.config/matugen/post-hook-scripts/zen-browser.sh'
+
