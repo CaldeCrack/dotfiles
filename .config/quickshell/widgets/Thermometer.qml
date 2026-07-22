@@ -7,42 +7,37 @@ import qs.config as Config
 // The outline and the fill are two separate layers rather than one SVG,
 // for two reasons:
 //  - Qt's SVG renderer doesn't reliably honor <clipPath>/clip-path inside a
-//    data-URI SVG, so the fill rectangle's corners could poke past the
-//    tube's rounded silhouette once near-full. The fill is clipped with
-//    QML's own MultiEffect masking instead (same mechanism already used
-//    elsewhere in this file for the hover glow) — real compositing, not
-//    the SVG parser.
+//    data-URI SVG, so the fill geometry is clipped with QML's own masking.
 //  - The outline only depends on tubeColor/tubeStrokeWidth, not on
-//    percentage. Baking both into one SVG meant regenerating and
-//    re-decoding the whole image every animation frame, which is
-//    asynchronous and produced a visible blank flash each tick. The fill
-//    is now a plain Rectangle animated via ordinary property bindings —
-//    the outline/mask images are built once and never touched again by
-//    the percentage animation.
+//    percentage, so it is generated only once while the fill animates using
+//    ordinary QML geometry.
 Item {
     id: root
 
     required property real percentage
 
     property color fillColor: Config.Colors.md3.primary
-    property color tubeColor: Config.Colors.md3.surface_container_highest
-    property real tubeStrokeWidth: 2
+    property color tubeColor: Config.Colors.md3.on_surface
+    property real tubeStrokeWidth: 1.4
 
-    // Convenience for quick testing — same pattern as Icon.qml's `size`.
-    // Sets both dimensions at once; override width/height individually at
-    // the call site instead if a non-square footprint is ever needed.
+    // Convenience property for square sizing.
     property real size: 24
     implicitWidth: size
     implicitHeight: size
 
-    // Fill geometry, in the same 24x24 coordinate space as the source SVG
-    // path — pulled out as named properties (rather than left inline in a
-    // template string) specifically so these are easy to nudge while
-    // testing, without hunting through SVG markup.
-    property real fillX: 8
-    property real fillWidth: 8
-    property real fillBottomY: 21
-    property real fillMaxHeight: 18
+    // ---------------------------------------------------------------------
+    // Fill geometry (24x24 SVG coordinate space)
+    // ---------------------------------------------------------------------
+
+    // Bottom bulb.
+    property real bulbCenterX: 12
+    property real bulbCenterY: 18
+    property real bulbRadius: 2.4
+
+    // Vertical temperature column.
+    property real columnWidth: 1
+    property real columnTopY: 3.5
+    property real columnBottomY: 18
 
     property real _displayPercentage: percentage
     Behavior on _displayPercentage {
@@ -53,80 +48,106 @@ Item {
     }
 
     readonly property real _clamped: Math.max(0, Math.min(100, _displayPercentage))
-    readonly property real _fillHeightUnits: _clamped / 100 * fillMaxHeight
-    readonly property real _fillYUnits: fillBottomY - _fillHeightUnits
-    readonly property real _viewBoxSize: 24
-    readonly property real _scale: root.width / _viewBoxSize
+    readonly property real _columnHeight: 100 / 100 * (columnBottomY - columnTopY)
+    readonly property real _columnY: columnBottomY - _columnHeight
 
-    // --- Static outline (rebuilt only if color/stroke props change) ---
-    readonly property string _outlineSvg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${root.tubeColor}" stroke-width="${root.tubeStrokeWidth}" stroke-linecap="round" stroke-linejoin="round">
-<path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/>
+    readonly property real _viewBoxSize: 24
+    readonly property real _scale: width / _viewBoxSize
+
+    // ---------------------------------------------------------------------
+    // Static outline
+    // ---------------------------------------------------------------------
+
+    readonly property string _outlineSvg: `
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="${tubeColor}"
+     stroke-width="${tubeStrokeWidth}"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+    <path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/>
 </svg>`
 
-    // Solid silhouette of that same path — used purely as an alpha mask,
-    // never shown directly.
-    readonly property string _maskSvg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-<path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z" fill="white"/>
+    // Filled silhouette used only as a mask.
+    readonly property string _maskSvg: `
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24"
+     height="24"
+     viewBox="0 0 24 24">
+    <path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"
+          fill="white"/>
 </svg>`
 
     Image {
         id: maskImage
+
         anchors.fill: parent
         visible: false
         layer.enabled: true
+
         fillMode: Image.PreserveAspectFit
         smooth: true
+
         sourceSize.width: root.width * 2
         sourceSize.height: root.height * 2
+
         source: "data:image/svg+xml;utf8," + encodeURIComponent(root._maskSvg)
     }
 
-    // The fill — plain geometry, animates cheaply, gets clamped to the
-    // tube silhouette by the mask below rather than trusting hand-tuned
-    // x/width numbers alone to never overflow.
-    //
-    // fillRect sits inside a full-size container rather than being used as
-    // MultiEffect's source directly: MultiEffect captures `source` at that
-    // item's own bounding size, then stretches the captured texture to
-    // fill MultiEffect's own bounds. A bare fillRect is only ever as big
-    // as the fill itself, so that capture-then-stretch step was blowing
-    // the small rect up to cover the entire tube regardless of its real
-    // height — reliably "full" no matter what percentage said. Sizing the
-    // container to match root exactly means the captured texture already
-    // has the rect at the right position/proportion within transparent
-    // space, so the later 1:1 stretch onto MultiEffect's own same-size
-    // bounds doesn't distort anything.
     Item {
         id: fillContainer
+
         anchors.fill: parent
         visible: false
         layer.enabled: true
 
+        // Temperature column.
         Rectangle {
-            id: fillRect
             color: root.fillColor
-            x: root.fillX * root._scale
-            width: root.fillWidth * root._scale
-            y: root._fillYUnits * root._scale
-            height: root._fillHeightUnits * root._scale
+
+            width: root.columnWidth * root._scale
+            radius: width / 2
+
+            x: (root.bulbCenterX - root.columnWidth / 2) * root._scale
+
+            y: root._columnY * root._scale
+            height: root._columnHeight * root._scale
+        }
+
+        // Bottom bulb (always visible).
+        Rectangle {
+            color: root.fillColor
+
+            width: root.bulbRadius * 2 * root._scale
+            height: width
+            radius: width / 2
+
+            x: (root.bulbCenterX - root.bulbRadius) * root._scale
+            y: (root.bulbCenterY - root.bulbRadius) * root._scale
         }
     }
 
     MultiEffect {
         anchors.fill: parent
+
         source: fillContainer
+
         maskEnabled: true
         maskSource: maskImage
     }
 
-    // Outline drawn last, on top, completely unmasked — always crisp
-    // regardless of fill level.
     Image {
         anchors.fill: parent
+
         fillMode: Image.PreserveAspectFit
         smooth: true
+
         sourceSize.width: root.width * 2
         sourceSize.height: root.height * 2
+
         source: "data:image/svg+xml;utf8," + encodeURIComponent(root._outlineSvg)
     }
 }
