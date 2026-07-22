@@ -1,4 +1,5 @@
 import QtQuick
+import qs.config as Config
 
 Item {
     id: root
@@ -18,7 +19,7 @@ Item {
 
         height: parent.height
         radius: 6
-        color: "#ffffff"
+        color: Config.Colors.md3.primary
     }
 
     // Top face
@@ -32,8 +33,8 @@ Item {
         }
 
         radius: 6
-        color: "#2f2f2f"
-        border.color: "#ffffff"
+        color: Config.Colors.md3.surface_container
+        border.color: Config.Colors.md3.primary
 
         Text {
             id: label
@@ -41,7 +42,7 @@ Item {
 
             text: KeyIcons.display(root.key)
             font.family: KeyIcons.isSpecial(root.key) ? "Symbols Nerd Font" : "Noto Sans Mono CJK TC"
-            color: "#ffffff"
+            color: Config.Colors.md3.on_surface
         }
     }
 }
