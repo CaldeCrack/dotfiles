@@ -149,7 +149,7 @@ Widgets.BarButtonBase {
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
                             text: Math.round(Services.SystemStats.temperature) + "°C"
-                            color: Config.Colors.md3.on_surface
+                            color: Config.Colors.md3.primary
                             font.pixelSize: 20
                             font.bold: true
                         }
@@ -161,14 +161,14 @@ Widgets.BarButtonBase {
                             Text {
                                 id: fahrenheitLabel
                                 text: Math.round(popup.toFahrenheit(Services.SystemStats.temperature)) + "°F"
-                                color: Config.Colors.md3.on_surface_variant
+                                color: Config.Colors.md3.on_surface
                                 font.pixelSize: 10
                             }
 
                             Text {
                                 id: kelvinLabel
                                 text: Math.round(popup.toKelvin(Services.SystemStats.temperature)) + "K"
-                                color: Config.Colors.md3.on_surface_variant
+                                color: Config.Colors.md3.on_surface
                                 font.pixelSize: 10
                             }
                         }
@@ -227,10 +227,28 @@ Widgets.BarButtonBase {
                 }
             }
 
-            // Battery — placeholder shell, content added later.
+            // Battery — fill glyph plus a percentage label above it.
             Widgets.StatCardVertical {
                 width: popup.statCellSize
                 height: popup.statCellSize * 2 + popup.statSpacing
+
+                Text {
+                    anchors.top: parent.top
+                    anchors.topMargin: 16
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: Math.round(Services.Battery.percentage) + "%"
+                    color: Config.Colors.md3.primary
+                    font.pixelSize: 32
+                    font.bold: true
+                }
+
+                Widgets.BatteryIndicator {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                    height: parent.height * 0.74
+                    width: height
+                    percentage: Services.Battery.percentage
+                }
             }
         }
     }

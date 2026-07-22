@@ -9,4 +9,5 @@ Icon 1.0 Icon.qml
 StatGauge 1.0 StatGauge.qml
 StatCardVertical 1.0 StatCardVertical.qml
 Thermometer 1.0 Thermometer.qml
+BatteryIndicator 1.0 BatteryIndicator.qml
 DismissablePopup 1.0 DismissablePopup.qml
