@@ -81,6 +81,10 @@ output_path = '~/.cache/matugen/terminal.sh'
 input_path  = './templates/variables.sh'
 output_path = '~/.cache/matugen/variables.sh'
 
+[templates.vesktop]
+input_path = './templates/midnight-discord.css'
+output_path = '~/.config/vesktop/themes/midnight-discord.css'
+
 [templates.yazi]
 input_path = './templates/yazi-theme.toml'
 output_path = '~/.config/yazi/theme.toml'
