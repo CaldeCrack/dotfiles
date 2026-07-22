@@ -7,4 +7,6 @@ KeyCap 1.0 KeyCap.qml
 Keybind 1.0 Keybind.qml
 Icon 1.0 Icon.qml
 StatGauge 1.0 StatGauge.qml
+StatCardVertical 1.0 StatCardVertical.qml
+Thermometer 1.0 Thermometer.qml
 DismissablePopup 1.0 DismissablePopup.qml
