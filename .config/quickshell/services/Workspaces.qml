@@ -9,8 +9,8 @@ Singleton {
     // Sorted list of used workspaces — drives the Repeater
     readonly property var workspaces: {
         let ws = [];
-        for (let i = 0; i < Hyprland.workspaces.count; ++i)
-            ws.push(Hyprland.workspaces.get(i));
+        for (let i = 0; i < Hyprland.workspaces.values.length; ++i)
+            ws.push(Hyprland.workspaces.values[i]);
         ws.sort((a, b) => a.id - b.id);
         return ws;
     }
@@ -19,6 +19,6 @@ Singleton {
     readonly property int activeId: Hyprland.focusedMonitor?.activeWorkspace?.id ?? -1
 
     function focus(id) {
-        Hyprland.dispatch("workspace " + id);
+        Hyprland.dispatch("hl.dsp.focus({ workspace = " + id + " })");
     }
 }

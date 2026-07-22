@@ -31,7 +31,7 @@ PanelWindow {
     // Ordered id lists — the only thing that needs to change to reorder,
     // add, or move a button between sections. Ids are resolved against
     // ButtonRegistry.componentMap by each section.
-    readonly property var leftButtons: ["arch", "systemStats"]
+    readonly property var leftButtons: ["arch", "systemStats", "workspaces"]
     readonly property var middleButtons: ["clock"]
     readonly property var rightButtons: ["media", "tray", "controlPanel", "notifications", "power"]
 
