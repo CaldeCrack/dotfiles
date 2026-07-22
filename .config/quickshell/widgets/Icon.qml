@@ -66,8 +66,8 @@ Item {
             return "";
         }
 
-        sourceSize.width: root.size
-        sourceSize.height: root.size
+        sourceSize.width: root.width * 2
+        sourceSize.height: root.height * 2
         fillMode: Image.PreserveAspectFit
         smooth: true
         asynchronous: true

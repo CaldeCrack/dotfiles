@@ -22,7 +22,7 @@ import qs.config as Config
 Item {
     id: root
 
-    required property real percentage // 0-100, clamped internally
+    required property real percentage
 
     property color fillColor: Config.Colors.md3.primary
     property color tubeColor: Config.Colors.md3.surface_container_highest
@@ -39,10 +39,10 @@ Item {
     // path — pulled out as named properties (rather than left inline in a
     // template string) specifically so these are easy to nudge while
     // testing, without hunting through SVG markup.
-    property real fillX: 9
-    property real fillWidth: 6
-    property real fillBottomY: 21   // bottom of the fillable region
-    property real fillMaxHeight: 18 // height at 100% — tune this against fillBottomY so the top edge lands inside the tube's actual drawn bounds (path starts at y=4), not above it
+    property real fillX: 8
+    property real fillWidth: 8
+    property real fillBottomY: 21
+    property real fillMaxHeight: 18
 
     property real _displayPercentage: percentage
     Behavior on _displayPercentage {
@@ -73,21 +73,15 @@ Item {
         id: maskImage
         anchors.fill: parent
         visible: false
-        layer.enabled: true // capturable as a texture while hidden
+        layer.enabled: true
         fillMode: Image.PreserveAspectFit
         smooth: true
-        // Bound to the widget's actual rendered size rather than a fixed
-        // constant — a mismatch between sourceSize and the real display
-        // size is what was making this blurrier than Icon.qml's SVGs (the
-        // fixed 96x96 raster was getting resampled up/down to whatever
-        // size the widget actually ended up at). Doubled for a bit of
-        // supersampling headroom so edges stay clean even after masking.
         sourceSize.width: root.width * 2
         sourceSize.height: root.height * 2
         source: "data:image/svg+xml;utf8," + encodeURIComponent(root._maskSvg)
     }
 
-    // The red fill — plain geometry, animates cheaply, gets clamped to the
+    // The fill — plain geometry, animates cheaply, gets clamped to the
     // tube silhouette by the mask below rather than trusting hand-tuned
     // x/width numbers alone to never overflow.
     //
