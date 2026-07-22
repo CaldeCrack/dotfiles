@@ -48,7 +48,7 @@ Item {
     }
 
     readonly property real _clamped: Math.max(0, Math.min(100, _displayPercentage))
-    readonly property real _columnHeight: 100 / 100 * (columnBottomY - columnTopY)
+    readonly property real _columnHeight: _clamped / 100 * (columnBottomY - columnTopY)
     readonly property real _columnY: columnBottomY - _columnHeight
 
     readonly property real _viewBoxSize: 24
