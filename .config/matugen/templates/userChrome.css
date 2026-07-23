@@ -213,6 +213,10 @@ zen-folder[expanded] .tab-group-label-container {
   background-color: color-mix(in srgb, var(--matugen-accent) 20%, var(--matugen-bg-dark) 80%) !important;
 }
 
+.menupopup-arrowscrollbox {
+  background-color: var(--matugen-bg) !important;
+}
+
 /* ============================================================
  * 3. SIDEBAR (vertical tabs, workspaces, splitter)
  * ============================================================ */
