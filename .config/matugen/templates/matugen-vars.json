@@ -1,0 +1,10 @@
+{
+  "accent":      "{{ colors.primary.default.hex }}",
+  "bg":          "{{ colors.background.default.hex }}",
+  "bg-dark":     "{{ colors.surface_container.default.hex }}",
+  "bg-light":    "{{ colors.surface_container_highest.default.hex }}",
+  "fg":          "{{ colors.on_background.default.hex }}",
+  "fg-light":    "{{ colors.on_surface_variant.default.hex }}",
+  "secondary":   "{{ colors.secondary.default.hex }}",
+  "tertiary":    "{{ colors.tertiary.default.hex }}"
+}
