@@ -29,7 +29,10 @@ Singleton {
         Buttons.SystemStatsButton {}
     }
     // Component { id: media; Buttons.MediaButton {} }
-    // Component { id: profile; Buttons.Profile {} }
+    Component {
+        id: about
+        Buttons.AboutButton {}
+    }
     // Component { id: clock; Buttons.ClockButton {} }
     // Component { id: weather; Buttons.WeatherButton {} }
     // Component { id: tray; Buttons.Tray {} }
@@ -41,9 +44,9 @@ Singleton {
     readonly property var componentMap: ({
             arch: archButton,
             workspaces: workspaces,
-            systemStats: systemStats
-        // media: media,
-        // profile: profile,
+            systemStats: systemStats,
+            // media: media,
+            about: about
         // clock: clock,
         // weather: weather,
         // tray: tray,
