@@ -86,6 +86,36 @@
   }
 }
 
+/* Variables and styles specific to about:config */
+@-moz-document url-prefix("about:config") {
+  #toolbar,
+  th::before,
+  td::before {
+    background-color: var(--matugen-bg) !important;
+  }
+
+  #about-config-search {
+    background-color: var(--matugen-bg-dark) !important;
+    color: var(--matugen-accent) !important;
+    fill: var(--matugen-accent) !important;
+    accent-color: var(--matugen-accent) !important;
+    border: 1px solid color-mix(in srgb, var(--matugen-accent) 40%, transparent) !important;
+  }
+
+  table > tr:hover {
+    background-color: color-mix(in srgb, var(--matugen-accent) 40%, transparent) !important;
+  }
+
+  tr.odd {
+    background-color: var(--matugen-bg-light) !important;
+  }
+
+  tr:not(.odd),
+  tr.add {
+    background-color: var(--matugen-bg-dark) !important;
+  }
+}
+
 /* Variables and styles specific to about:preferences */
 @-moz-document url-prefix("about:preferences") {
   :root {
