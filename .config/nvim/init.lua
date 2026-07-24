@@ -12,7 +12,7 @@ require("nvim-treesitter.configs").setup({
 	indent = { enable = true },
 })
 require("lualine").setup({
-	options = { theme = "auto" },
+	options = { theme = "base16" },
 })
 require("toggleterm").setup({
 	open_mapping = [[<c-7>]],
@@ -64,7 +64,6 @@ end
 -- Main entrypoint on matugen reloads
 local function auxiliary_function()
 	-- Load the matugen style file to get all the new colors
-	local matugen_path = os.getenv("HOME") .. "/.config/nvim/matugen.lua"
 	source_matugen()
 
 	-- Because reloading base16 overwrites lualine configuration, just source lualine here

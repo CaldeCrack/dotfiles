@@ -58,3 +58,5 @@ set_hl_mutliple({ "TSFunction", "Function" }, {
 set_hl_mutliple({ "Keyword", "TSKeyword", "TSKeywordFunction", "TSRepeat" }, {
 	fg = "{{colors.inverse_primary.default.hex}}",
 })
+
+require('lualine').setup({})
