@@ -6,69 +6,14 @@
  */
 
 :root {
-  --matugen-bg: {
-      {
-      colors.background.default.hex
-    }
-  }
-
-  ;
-
-  --matugen-bg-dark: {
-      {
-      colors.background.dark.hex
-    }
-  }
-
-  ;
-
-  --matugen-bg-light: {
-      {
-      colors.background.light.hex
-    }
-  }
-
-  ;
-
-  --matugen-fg: {
-      {
-      colors.surface.dark.hex
-    }
-  }
-
-  ;
-
-  --matugen-fg-light: {
-      {
-      colors.surface.light.hex
-    }
-  }
-
-  ;
-
-  --matugen-accent: {
-      {
-      colors.primary
-    }
-  }
-
-  ;
-
-  --matugen-secondary: {
-      {
-      colors.secondary
-    }
-  }
-
-  ;
-
-  --matugen-tertiary: {
-      {
-      colors.tertiary
-    }
-  }
-
-  ;
+  --matugen-bg: {{ colors.background.default.hex }};
+  --matugen-bg-dark: {{ colors.surface_container.default.hex }};
+  --matugen-bg-light: {{ colors.surface_container_highest.default.hex }};
+  --matugen-fg: {{ colors.on_background.default.hex }};
+  --matugen-fg-light: {{ colors.on_surface_variant.default.hex }};
+  --matugen-accent: {{ colors.primary.default.hex }};
+  --matugen-secondary: {{ colors.secondary.default.hex }};
+  --matugen-tertiary: {{ colors.tertiary.default.hex }};
 }
 
 /* Text selection highlight on all web pages. Accent bg with
@@ -90,6 +35,10 @@
     --color-accent-primary-active: color-mix(in srgb, var(--matugen-accent) 75%, var(--matugen-fg) 25%) !important;
     background-color: var(--matugen-bg) !important;
     --in-content-page-background: var(--matugen-bg) !important;
+  }
+
+  #input {
+    background-color: var(--matugen-accent) !important;
   }
 }
 
@@ -160,8 +109,22 @@
     color: var(--matugen-fg) !important;
   }
 
-  .main-content {
+  .main-content,
+  #search-container {
     background-color: var(--matugen-bg-dark) !important;
+  }
+
+  #input {
+    background-color: var(--matugen-bg) !important;
+    color: var(--matugen-accent) !important;
+    accent-color: var(--matugen-accent) !important;
+  }
+
+  groupbox.highlighting-group {
+    padding-inline: 1.5em;
+    padding-top: 1.5em;
+    padding-bottom: 1.5em;
+    border-radius: 16pt;
   }
 
   .identity-color-blue {
@@ -210,6 +173,13 @@
   :root {
     --zen-dark-color-mix-base: var(--matugen-bg-dark) !important;
     --background-color-box: var(--matugen-bg) !important;
+  }
+
+  #content,
+  .main-search,
+  .main-heading,
+  .sticky-container {
+    background-color: var(--matugen-bg-dark) !important;
   }
 }
 

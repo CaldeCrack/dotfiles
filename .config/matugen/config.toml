@@ -94,11 +94,17 @@ output_path = '~/.config/vesktop/themes/midnight-discord.css'
 input_path = './templates/yazi-theme.toml'
 output_path = '~/.config/yazi/theme.toml'
 
-[templates.zen-browser]
-pre_hook = '~/.config/matugen/pre-hook-scripts/zen-browser.sh'
+[templates.user_chrome]
+pre_hook = '~/.config/matugen/pre-hook-scripts/userChrome.sh'
 input_path = './templates/userChrome.css'
 output_path = '~/.cache/matugen/userChrome.css'
-post_hook = '~/.config/matugen/post-hook-scripts/zen-browser.sh'
+post_hook = '~/.config/matugen/post-hook-scripts/userChrome.sh'
+
+[templates.user_content]
+pre_hook = '~/.config/matugen/pre-hook-scripts/userContent.sh'
+input_path = './templates/userContent.css'
+output_path = '~/.cache/matugen/userContent.css'
+post_hook = '~/.config/matugen/post-hook-scripts/userContent.sh'
 
 [templates.zen-wabi]
 input_path = './templates/matugen-vars.json'

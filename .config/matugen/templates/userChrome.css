@@ -169,9 +169,12 @@ menucaption {
   border-radius: 8px !important;
 }
 
-.tabbrowser-tab .tab-background {
-  border: 1px solid color-mix(in srgb, var(--matugen-accent) 40%, transparent) !important;
-  border-radius: 8px !important;
+.tabbrowser-tab:not([selected]) .tab-background {
+  border: 1px solid color-mix(in srgb, var(--matugen-accent) 15%, transparent) !important;
+}
+
+.tabbrowser-tab[selected] .tab-background {
+  border: 1px solid color-mix(in srgb, var(--matugen-accent) 60%, transparent) !important;
 }
 
 /* Zen folder label hover: kill Zen's rounded overlay, add a
