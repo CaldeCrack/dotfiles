@@ -24,6 +24,7 @@ output_path = '~/.config/hypr/colors.lua'
 input_path = './templates/kitty-colors.conf'
 output_path = '~/.config/kitty/themes/Matugen.conf'
 post_hook = "kitty +kitten themes --reload-in=all Matugen"
+index = 1
 
 [templates.kvantum_kvconfig]
 input_path = './templates/kvantum-colors.kvconfig'
@@ -73,6 +74,10 @@ index = 1
 input_path = './templates/quickshell.json'
 output_path = '~/.local/state/quickshell/generated/colors.json'
 
+[templates.superfile]
+input_path = './templates/superfile.toml'
+output_path = '~/.config/superfile/theme/matugen.toml'
+
 [templates.terminal]
 input_path  = './templates/terminal.sh'
 output_path = '~/.cache/matugen/terminal.sh'
@@ -94,11 +99,10 @@ pre_hook = '~/.config/matugen/pre-hook-scripts/zen-browser.sh'
 input_path = './templates/userChrome.css'
 output_path = '~/.cache/matugen/userChrome.css'
 post_hook = '~/.config/matugen/post-hook-scripts/zen-browser.sh'
-index = 1
 
 [templates.zen-wabi]
 input_path = './templates/matugen-vars.json'
 output_path = '~/.cache/matugen/matugen-vars.json'
 post_hook = '~/.config/matugen/post-hook-scripts/zen-wabi.sh'
-index = 2
+index = 1
 
