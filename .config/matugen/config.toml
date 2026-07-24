@@ -24,7 +24,6 @@ output_path = '~/.config/hypr/colors.lua'
 input_path = './templates/kitty-colors.conf'
 output_path = '~/.config/kitty/themes/Matugen.conf'
 post_hook = "kitty +kitten themes --reload-in=all Matugen"
-index = 1
 
 [templates.kvantum_kvconfig]
 input_path = './templates/kvantum-colors.kvconfig'
@@ -38,6 +37,7 @@ output_path = '~/.config/Kvantum/matugen/matugen.svg'
 input_path = './templates/nvim-colors.lua'
 output_path = '~/.config/nvim/matugen.lua'
 post_hook = 'pkill -SIGUSR1 nvim'
+index = 1
 
 [templates.papirus-folders]
 input_path = './templates/papirus-color'

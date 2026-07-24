@@ -144,7 +144,7 @@ zen-folder:hover .tab-group-label-container::after,
 #searchbar,
 #searchbar .searchbar-textbox,
 .content-shortcuts,
-toolbarbutton,
+toolbarbutton:not(#sidebar-switcher-target, #sidebar-close),
 .toolbarbutton-1,
 .toolbarbutton-icon,
 menupopup,
@@ -162,6 +162,8 @@ menucaption {
 .zen-current-workspace-indicator:hover,
 .zen-current-workspace-indicator:hover::before,
 .zen-current-workspace-indicator:hover::after,
+#sidebar-switcher-target,
+#sidebar-close,
 .tabbrowser-tab .tab-background,
 .tabbrowser-tab .tab-stack {
   border-radius: 8px !important;
@@ -255,8 +257,25 @@ toolbarbutton.bookmark-item,
   color: var(--matugen-accent) !important;
 }
 
-.sidebar-placesTree {
+.sidebar-placesTree,
+.content-container,
+slot[part="content"] {
+  background-color: var(--matugen-bg) !important;
+}
+
+#input {
+  background-color: var(--matugen-bg) !important;
+  color: var(--matugen-accent) !important;
+  accent-color: var(--matugen-accent) !important;
+}
+
+#viewButton {
   background-color: var(--matugen-bg-dark) !important;
+}
+
+.item.client > .item-title-container:hover,
+.item.tab:hover {
+  background-color: color-mix(in srgb, var(--matugen-accent) 15%, var(--matugen-bg-dark) 85%) !important;
 }
 
 /* ============================================================
@@ -479,6 +498,14 @@ hbox#titlebar {
   background: var(--matugen-bg-dark) !important;
 }
 
+#editBookmarkPanelDoneButton {
+  background-color: var(--matugen-bg-dark) !important;
+}
+
+#editBookmarkPanelDoneButton:hover {
+  background-color: var(--matugen-bg-light) !important;
+}
+
 /* URL bar text selection + suggestion row highlight. */
 #urlbar-input::selection,
 #urlbar-input::-moz-selection,
@@ -557,6 +584,10 @@ panel ::-moz-selection {
 #sidebar,
 #sidebar-box {
   color-scheme: light dark;
+}
+
+#sidebar-box {
+  background-color: var(--matugen-bg) !important;
 }
 
 #urlbar-results .urlbarView-row[selected],
@@ -894,6 +925,11 @@ dialog .toolbarbutton-text,
   fill: var(--matugen-accent) !important;
   background-color: transparent !important;
   background: none !important;
+}
+
+toolbarbutton.active > .toolbarbutton-icon,
+toolbarbutton.permission-popup-permission-icon > .toolbarbutton-icon {
+  fill: var(--matugen-bg) !important;
 }
 
 .toolbarbutton-1,
