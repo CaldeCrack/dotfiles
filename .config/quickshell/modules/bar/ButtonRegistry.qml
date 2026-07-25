@@ -17,8 +17,8 @@ Singleton {
     id: root
 
     Component {
-        id: archButton
-        Buttons.ArchButton {}
+        id: distroButton
+        Buttons.DistroButton {}
     }
     Component {
         id: workspaces
@@ -42,7 +42,7 @@ Singleton {
     // Component { id: power; Buttons.PowerButton {} }
 
     readonly property var componentMap: ({
-            arch: archButton,
+            distro: distroButton,
             workspaces: workspaces,
             systemStats: systemStats,
             // media: media,

@@ -28,7 +28,7 @@ Widgets.BarButtonBase {
 
     Text {
         text: root.label
-        color: root.checked ? Config.Colors.md3.primary : Config.Colors.md3.on_surface
+        color: Config.Colors.md3.on_surface
         font.pixelSize: 10
         font.bold: true
         horizontalAlignment: Text.AlignHCenter

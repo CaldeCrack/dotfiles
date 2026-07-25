@@ -28,7 +28,7 @@ Item {
     readonly property alias contentItem: contentContainer
 
     // --- appearance ------------------------------------------------------
-    property color color: Config.Colors.md3.surface_container
+    property color color: Config.Colors.md3.surface
     property color borderColor: Config.Colors.md3.outline_variant
     property real borderWidth: 1
     property real radius: 24

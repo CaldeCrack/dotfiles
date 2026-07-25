@@ -10,7 +10,8 @@
         "verticalMargin": 20
     },
     "general": {
-        "wallpaperDir": "~/Pictures/Wallpapers"
+        "wallpaperDir": "~/Pictures/Wallpapers",
+        "profilePicture": "~/.config/shared-assets/pfps/Purple_anime_boy.jpg"
     },
     "weather": {
         "location": "Santiago",

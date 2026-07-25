@@ -196,6 +196,7 @@ Singleton {
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                Layout.topMargin: 8
                 clip: true
 
                 /*
@@ -221,14 +222,14 @@ Singleton {
                     active: root.currentIndex === 3
                     visible: active
                     sourceComponent: Tabs.WeatherTab {}
-                }
+                  }*/
 
                 Loader {
                     anchors.fill: parent
                     active: root.currentIndex === 4
                     visible: active
                     sourceComponent: Tabs.AboutTab {}
-                  }*/
+                }
             }
         }
     }
