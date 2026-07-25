@@ -91,7 +91,7 @@ PopupWindow {
     anchor.margins.bottom: edge === Edges.Top ? edgeMargin : 0
     anchor.margins.left: edge === Edges.Right ? edgeMargin : 0
     anchor.margins.right: edge === Edges.Left ? edgeMargin : 0
-    anchor.rect.x: target.x + target.width
+    anchor.rect.x: anchorTarget != target ? target.x + target.width : target.width / 2
 
     implicitWidth: label.implicitWidth + horizontalPadding * 2
     implicitHeight: label.implicitHeight + verticalPadding * 2
