@@ -36,7 +36,7 @@ Singleton {
     // resize as tabs change. Each tab is expected to fill this area.
 
     readonly property int panelWidth: 640
-    readonly property int panelHeight: 440
+    readonly property int panelHeight: 420
 
     // ---- Tab model -----------------------------------------------------
     // Single source of truth for both the tab bar and which index maps to
@@ -208,7 +208,7 @@ Singleton {
                 Tabs.MediaTab {
                     anchors.fill: parent
                     visible: root.currentIndex === 1
-                }
+                  }*/
 
                 Loader {
                     anchors.fill: parent
@@ -217,6 +217,7 @@ Singleton {
                     sourceComponent: Tabs.TimeTab {}
                 }
 
+                /*
                 Loader {
                     anchors.fill: parent
                     active: root.currentIndex === 3
