@@ -131,13 +131,13 @@ Item {
 
             ColumnLayout {
                 anchors.centerIn: parent
-                spacing: -12
+                spacing: -18
 
                 Text {
                     Layout.alignment: Qt.AlignHCenter
                     text: Qt.formatTime(Services.Time.dateTime, "HH")
                     color: Config.Colors.md3.primary
-                    font.pixelSize: 36
+                    font.pixelSize: 40
                     font.bold: true
                 }
 
@@ -145,7 +145,7 @@ Item {
                     Layout.alignment: Qt.AlignHCenter
                     text: Qt.formatTime(Services.Time.dateTime, "mm")
                     color: Config.Colors.md3.secondary
-                    font.pixelSize: 36
+                    font.pixelSize: 40
                     font.bold: true
                 }
 
@@ -153,8 +153,8 @@ Item {
                     Layout.alignment: Qt.AlignHCenter
                     text: Qt.formatTime(Services.Time.dateTime, "ss")
                     color: Config.Colors.md3.on_surface_variant
-                    font.pixelSize: 20
-                    topPadding: 4
+                    font.pixelSize: 22
+                    topPadding: 6
                 }
             }
         }
