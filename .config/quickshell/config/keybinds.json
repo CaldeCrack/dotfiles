@@ -100,7 +100,7 @@
       },
       {
         "keybind": ["SUPER", "SHIFT", "#"],
-        "description": "Send to workspace # (1, 2, 3,...)"
+        "description": "Send to workspace #"
       },
       {
         "keybind": ["SUPER", "HORIZONTAL"],
@@ -151,7 +151,7 @@
       },
       {
         "keybind": ["SUPER", "#"],
-        "description": "Focus workspace # (1, 2, 3,...)"
+        "description": "Focus workspace #"
       }
     ]
   },

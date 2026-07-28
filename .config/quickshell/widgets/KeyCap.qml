@@ -41,7 +41,8 @@ Item {
             anchors.centerIn: parent
 
             text: KeyIcons.display(root.key)
-            font.family: KeyIcons.isSpecial(root.key) ? "Symbols Nerd Font" : "Noto Sans Mono CJK TC"
+            font.family: "PixelMPlus12"
+            font.pixelSize: 12
             color: Config.Colors.md3.on_surface
         }
     }
