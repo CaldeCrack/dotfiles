@@ -41,7 +41,7 @@ Row {
                     anchors.centerIn: parent
                     text: wrapper.modelData.charAt(0).toUpperCase()
                     color: Config.Colors.md3.on_surface
-                    font.pixelSize: parent.height * 0.45
+                    font.pixelSize: parent.height * 0.5
                 }
             }
         }

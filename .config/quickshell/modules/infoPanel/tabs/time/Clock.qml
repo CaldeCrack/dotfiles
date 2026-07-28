@@ -101,14 +101,14 @@ Item {
                 // 6=Saturday).
                 text: Qt.formatDate(Services.Time.dateTime, "dddd")
                 color: Config.Colors.md3.on_surface_variant
-                font.pixelSize: 20
+                font.pixelSize: 30
             }
 
             Text {
                 Layout.alignment: Qt.AlignHCenter
                 text: Services.Time.dateTime.getDate()
                 color: Config.Colors.md3.on_surface
-                font.pixelSize: 30
+                font.pixelSize: 40
                 font.bold: true
             }
         }
@@ -123,7 +123,7 @@ Item {
                 id: hourGauge
 
                 anchors.centerIn: parent
-                width: Math.min(parent.width, parent.height) - 8
+                width: Math.min(parent.width, parent.height)
                 height: width
 
                 percentage: ((Services.Time.dateTime.getHours() + Services.Time.dateTime.getMinutes() / 60) / 24) * 100
@@ -131,7 +131,7 @@ Item {
 
             ColumnLayout {
                 anchors.centerIn: parent
-                spacing: -18
+                spacing: -8
 
                 Text {
                     Layout.alignment: Qt.AlignHCenter
@@ -154,7 +154,7 @@ Item {
                     text: Qt.formatTime(Services.Time.dateTime, "ss")
                     color: Config.Colors.md3.on_surface_variant
                     font.pixelSize: 22
-                    topPadding: 6
+                    topPadding: 2
                 }
             }
         }
@@ -169,14 +169,14 @@ Item {
                 Layout.alignment: Qt.AlignHCenter
                 text: Qt.formatDate(Services.Time.dateTime, "MMMM")
                 color: Config.Colors.md3.on_surface_variant
-                font.pixelSize: 20
+                font.pixelSize: 30
             }
 
             Text {
                 Layout.alignment: Qt.AlignHCenter
                 text: Services.Time.dateTime.getFullYear()
                 color: Config.Colors.md3.on_surface
-                font.pixelSize: 30
+                font.pixelSize: 40
                 font.bold: true
             }
         }
