@@ -197,7 +197,7 @@ Widgets.BarButtonBase {
                 Widgets.StatGauge {
                     width: popup.statCellSize
                     height: popup.statCellSize
-                    iconName: "cpu"
+                    iconName: "hardware/cpu"
                     percentage: Services.SystemStats.cpuUsage
                     label: (Services.SystemStats.cpuMaxFrequencyMHz / 1000).toFixed(1) + " GHz\n" + Services.SystemStats.cpuCoreCount + " cores"
                 }
@@ -205,7 +205,7 @@ Widgets.BarButtonBase {
                 Widgets.StatGauge {
                     width: popup.statCellSize
                     height: popup.statCellSize
-                    iconName: "memory-stick"
+                    iconName: "hardware/memory-stick"
                     percentage: Services.SystemStats.memoryUsage
                     label: popup.formatGiB(Services.SystemStats.memoryTotalBytes)
                 }
@@ -213,7 +213,7 @@ Widgets.BarButtonBase {
                 Widgets.StatGauge {
                     width: popup.statCellSize
                     height: popup.statCellSize
-                    iconName: "hard-drive"
+                    iconName: "hardware/hard-drive"
                     percentage: Services.SystemStats.diskUsage
                     label: popup.formatGB(Services.SystemStats.diskTotalBytes)
                 }
@@ -221,7 +221,7 @@ Widgets.BarButtonBase {
                 Widgets.StatGauge {
                     width: popup.statCellSize
                     height: popup.statCellSize
-                    iconName: "gpu"
+                    iconName: "hardware/gpu"
                     percentage: Services.SystemStats.gpuUsage
                     label: popup.formatVramTotal(Services.SystemStats.gpuTotalVramBytes)
                 }
@@ -257,17 +257,17 @@ Widgets.BarButtonBase {
         spacing: 6
 
         StatIcon {
-            iconName: "cpu"
+            iconName: "hardware/cpu"
             value: Services.SystemStats.cpuUsage
         }
 
         StatIcon {
-            iconName: "memory-stick"
+            iconName: "hardware/memory-stick"
             value: Services.SystemStats.memoryUsage
         }
 
         StatIcon {
-            iconName: "hard-drive"
+            iconName: "hardware/hard-drive"
             value: Services.SystemStats.diskUsage
         }
 

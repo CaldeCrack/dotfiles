@@ -45,23 +45,23 @@ Singleton {
     readonly property var tabModel: [
         {
             label: "Wallpaper",
-            icon: "wallpaper"
+            icon: "common/wallpaper"
         },
         {
             label: "Media",
-            icon: "music"
+            icon: "common/music"
         },
         {
             label: "Time",
-            icon: "calendar"
+            icon: "common/calendar"
         },
         {
             label: "Weather",
-            icon: "weather"
+            icon: "weather/default"
         },
         {
             label: "About",
-            icon: "about"
+            icon: "common/about"
         },
     ]
 

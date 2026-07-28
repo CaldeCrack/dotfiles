@@ -65,7 +65,7 @@ Item {
 
     Widgets.Icon {
         anchors.fill: parent
-        name: "battery-vertical"
+        name: "battery/vertical"
         size: root.size
     }
 }

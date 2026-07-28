@@ -99,7 +99,7 @@ Item {
             Widgets.Icon {
                 id: uptimeIcon
                 anchors.verticalCenter: parent.verticalCenter
-                name: "clock"
+                name: "common/clock"
                 size: 14
                 color: Config.Colors.md3.on_surface_variant
             }
@@ -119,7 +119,7 @@ Item {
             Widgets.Icon {
                 id: wmIcon
                 anchors.verticalCenter: parent.verticalCenter
-                name: "wm"
+                name: "common/wm"
                 size: 14
                 color: Config.Colors.md3.on_surface_variant
             }

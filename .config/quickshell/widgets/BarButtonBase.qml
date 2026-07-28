@@ -28,10 +28,10 @@ import qs.widgets as Widgets
 //   BarButtonBase {
 //       tooltipText: "Clock"
 //
-//       onClicked: InfoPanel.show(InfoPanel.TimeWeatherTab)
+//       onClicked: InfoPanel.show(InfoPanel.WeatherTab)
 //
 //       Widgets.Icon {
-//           name: "clock"
+//           name: "weather"
 //       }
 //   }
 //
