@@ -117,6 +117,16 @@ Singleton {
 
                             readonly property bool selected: index === root.currentIndex
 
+                            // Subtle background tint on hover, independent
+                            // of the selected-tab indicator below — margins
+                            // keep it from touching neighboring tabs/edges.
+                            Rectangle {
+                                anchors.fill: parent
+                                topLeftRadius: 16
+                                topRightRadius: 16
+                                color: tabMouse.containsMouse ? Config.Colors.md3.surface_container_high : "transparent"
+                            }
+
                             Column {
                                 anchors.centerIn: parent
                                 spacing: 5
@@ -138,7 +148,9 @@ Singleton {
                             }
 
                             MouseArea {
+                                id: tabMouse
                                 anchors.fill: parent
+                                hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
                                 onClicked: root.currentIndex = tabDelegate.index
                             }
