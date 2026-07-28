@@ -32,7 +32,7 @@ PanelWindow {
     // add, or move a button between sections. Ids are resolved against
     // ButtonRegistry.componentMap by each section.
     readonly property var leftButtons: ["distro", "systemStats", "workspaces"]
-    readonly property var middleButtons: ["about", "time"]
+    readonly property var middleButtons: ["about", "time", "weather"]
     readonly property var rightButtons: ["media", "tray", "controlPanel", "notifications", "power"]
 
     Rectangle {

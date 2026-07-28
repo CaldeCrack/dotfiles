@@ -1,4 +1,5 @@
 singleton Battery 1.0 Battery.qml
 singleton SystemStats 1.0 SystemStats.qml
 singleton Time 1.0 Time.qml
+singleton Weather 1.0 Weather.qml
 singleton Workspaces 1.0 Workspaces.qml

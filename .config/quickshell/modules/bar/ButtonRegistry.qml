@@ -37,7 +37,10 @@ Singleton {
         id: time
         Buttons.TimeButton {}
     }
-    // Component { id: weather; Buttons.WeatherButton {} }
+    Component {
+        id: weather
+        Buttons.WeatherButton {}
+    }
     // Component { id: tray; Buttons.Tray {} }
     // Component { id: miscApps; Buttons.MiscAppsButton {} }
     // Component { id: controlPanel; Buttons.ControlPanelButton {} }
@@ -50,8 +53,8 @@ Singleton {
             systemStats: systemStats,
             // media: media,
             about: about,
-            time: time
-        // weather: weather,
+            time: time,
+            weather: weather
         // tray: tray,
         // miscApps: miscApps,
         // controlPanel: controlPanel,
