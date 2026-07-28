@@ -49,11 +49,28 @@ PanelWindow {
         model: root.leftButtons
     }
 
-    MiddleSection {
-        // Centered on the bar as a whole, independent of how wide the left
-        // and right sections end up being.
-        anchors.centerIn: parent
-        model: root.middleButtons
+    // A plain Item spanning the full bar width, purely so MiddleSection's
+    // `parent.width` (used to compute its centerOn offset) is unambiguous:
+    // the true full bar width, not whatever width MiddleSection's Row
+    // happens to have itself. anchors.fill here is safe from the
+    // horizontal-centering fight anchors.centerIn would otherwise cause,
+    // since MiddleSection now positions its own `x` explicitly.
+    Item {
+        id: middleAnchor
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        MiddleSection {
+            anchors.verticalCenter: parent.verticalCenter
+            model: root.middleButtons
+            // Set to the id of a button in middleButtons (e.g. "time") to
+            // anchor the bar's true center on that button specifically,
+            // rather than the row's overall midpoint. Leave empty to
+            // center the row as a whole.
+            centerOn: "about"
+        }
     }
 
     RightSection {
