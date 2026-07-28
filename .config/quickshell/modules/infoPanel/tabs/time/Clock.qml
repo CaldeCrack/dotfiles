@@ -29,8 +29,8 @@ Item {
         property color trackColor: Config.Colors.md3.surface_container_highest
         property color progressColor: Config.Colors.md3.primary
         property real strokeWidth: 8
-        property real startAngle: -90
-        property real totalSweep: 360
+        property real startAngle: -80
+        property real totalSweep: 340
 
         Shape {
             id: shape

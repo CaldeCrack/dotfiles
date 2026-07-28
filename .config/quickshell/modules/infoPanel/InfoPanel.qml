@@ -6,7 +6,7 @@ import QtQuick.Layouts
 import Quickshell
 import qs.widgets as Widgets
 import qs.config as Config
-import qs.modules.infoPanel.tabs as Tabs
+import "tabs" as Tabs
 
 // Singleton so there can only ever be one InfoPanel window in the shell —
 // every bar button (wallpaper/media/time/weather/about) reaches this same
