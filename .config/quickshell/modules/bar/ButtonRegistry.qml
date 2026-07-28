@@ -2,7 +2,7 @@ pragma Singleton
 
 import Quickshell
 import QtQml
-import qs.modules.bar.components as Buttons
+import "components" as Buttons
 
 // Central registry mapping button id -> Component. Every bar section reads
 // from this single map, so a button is defined once here and becomes
@@ -33,7 +33,10 @@ Singleton {
         id: about
         Buttons.AboutButton {}
     }
-    // Component { id: clock; Buttons.ClockButton {} }
+    Component {
+        id: time
+        Buttons.TimeButton {}
+    }
     // Component { id: weather; Buttons.WeatherButton {} }
     // Component { id: tray; Buttons.Tray {} }
     // Component { id: miscApps; Buttons.MiscAppsButton {} }
@@ -46,8 +49,8 @@ Singleton {
             workspaces: workspaces,
             systemStats: systemStats,
             // media: media,
-            about: about
-        // clock: clock,
+            about: about,
+            time: time
         // weather: weather,
         // tray: tray,
         // miscApps: miscApps,
