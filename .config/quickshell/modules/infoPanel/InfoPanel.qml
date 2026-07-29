@@ -211,12 +211,12 @@ Singleton {
                 Layout.topMargin: 8
                 clip: true
 
-                /*
                 Tabs.WallpaperTab {
                     anchors.fill: parent
                     visible: root.currentIndex === 0
                 }
 
+                /*
                 Tabs.MediaTab {
                     anchors.fill: parent
                     visible: root.currentIndex === 1

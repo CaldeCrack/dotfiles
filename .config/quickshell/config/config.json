@@ -10,7 +10,7 @@
         "verticalMargin": 20
     },
     "general": {
-        "wallpaperDir": "~/Pictures/Wallpapers",
+        "wallpaperDir": "~/.config/shared-assets/wallpapers/",
         "profilePicture": "~/.config/shared-assets/pfps/Purple_anime_boy.jpg"
     },
     "weather": {

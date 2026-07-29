@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Io
 
 Singleton {
+    readonly property string wallpaper: jsonAdapter.image.replace("/dotfiles", "")
     property alias md3: jsonAdapter.md3
     property alias base16: jsonAdapter.base16
     property alias palette: jsonAdapter.palette
@@ -17,6 +18,7 @@ Singleton {
         JsonAdapter {
             id: jsonAdapter
 
+            property string image: ""
             readonly property Md3 md3: Md3 {}
             readonly property Base16 base16: Base16 {}
             readonly property Palette palette: Palette {}

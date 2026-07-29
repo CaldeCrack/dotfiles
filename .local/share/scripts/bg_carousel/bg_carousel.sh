@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-# Directory with the files
-DIR=~/.config/shared-assets/wallpapers
+# Directory with the files — overridable via -d so the shell can pass its
+# configured general.wallpaperDir instead of duplicating that path here.
+DIR="$HOME/.config/shared-assets/wallpapers"
 
 # Directory for state files
 THIS_DIR=~/.local/share/scripts/bg_carousel
@@ -15,42 +16,60 @@ CMD2=(hyprctl hyprpaper wallpaper)
 
 # Default direction: forward
 DIRECTION="forward"
+# Explicit file, set via -w — when present, skips the carousel index math
+# and applies this file directly (the case the InfoPanel wallpaper tab
+# uses; -f/-b remain for the existing keybind-driven carousel).
+EXPLICIT_FILE=""
 
-# Parse flags
-while getopts "fb" opt; do
+while getopts "fbw:d:" opt; do
   case "$opt" in
     f) DIRECTION="forward" ;;
     b) DIRECTION="backward" ;;
-    *) echo "Usage: $0 [-f | -b]"; exit 1 ;;
+    w) EXPLICIT_FILE="$OPTARG" ;;
+    d) DIR="$OPTARG" ;;
+    *) echo "Usage: $0 [-f | -b] [-w <file>] [-d <dir>]"; exit 1 ;;
   esac
 done
 
-# Get sorted list of files
+mkdir -p "$THIS_DIR"
+
+# Get sorted list of files — still needed in explicit mode too, so we can
+# locate the picked file's index and keep the carousel in sync for any
+# later -f/-b call.
 mapfile -t FILES < <(find "$DIR" -maxdepth 1 -type f \
     ! -name ".carousel_state" | sort)
 
 FILE_AMOUNT=${#FILES[@]}
 
-# No files case
 if [ "$FILE_AMOUNT" -eq 0 ]; then
     echo "No files found in $DIR"
     exit 1
 fi
 
-# Read previous index, default to 0
-if [ -f "$STATE_FILE" ]; then
-    INDEX=$(<"$STATE_FILE")
+if [ -n "$EXPLICIT_FILE" ]; then
+    FILE="$EXPLICIT_FILE"
+    INDEX=0
+    for i in "${!FILES[@]}"; do
+        if [ "${FILES[$i]}" = "$FILE" ]; then
+            INDEX=$i
+            break
+        fi
+    done
 else
-    INDEX=0
-fi
+    # Read previous index, default to 0
+    if [ -f "$STATE_FILE" ]; then
+        INDEX=$(<"$STATE_FILE")
+    else
+        INDEX=0
+    fi
 
-# Ensure index is valid
-if [ "$INDEX" -ge "$FILE_AMOUNT" ] || [ "$INDEX" -lt 0 ]; then
-    INDEX=0
-fi
+    # Ensure index is valid
+    if [ "$INDEX" -ge "$FILE_AMOUNT" ] || [ "$INDEX" -lt 0 ]; then
+        INDEX=0
+    fi
 
-# Pick the file
-FILE="${FILES[$INDEX]}"
+    FILE="${FILES[$INDEX]}"
+fi
 
 # Apply wallpaper
 "${CMD2[@]}" 'eDP-1,' "$FILE"
