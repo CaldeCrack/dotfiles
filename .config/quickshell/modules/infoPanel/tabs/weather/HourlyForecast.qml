@@ -109,6 +109,8 @@ Item {
                             Row {
                                 Layout.alignment: Qt.AlignHCenter
 
+                                spacing: 2
+
                                 Widgets.Icon {
                                     name: "weather/humidity"
                                     size: 18

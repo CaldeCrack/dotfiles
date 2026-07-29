@@ -94,7 +94,7 @@ Item {
                                 Layout.alignment: Qt.AlignVCenter
                                 name: "weather/humidity"
                                 size: 20
-                                color: Config.Colors.md3.on_surface
+                                color: "#85c1dc"
                                 opacity: placeholder ? 0.35 : 1
                             }
 

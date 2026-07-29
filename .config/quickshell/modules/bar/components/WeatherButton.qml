@@ -30,7 +30,7 @@ Widgets.BarButtonBase {
 
         Widgets.Icon {
             name: Services.Weather.current.iconName || "weather/default"
-            size: root.height * 0.5
+            size: 16
             color: Config.Colors.md3.on_surface
             opacity: loading ? 0.35 : 1
         }
