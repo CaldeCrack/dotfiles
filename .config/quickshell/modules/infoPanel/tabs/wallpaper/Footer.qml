@@ -18,6 +18,7 @@ Item {
 
     Row {
         anchors.left: parent.left
+        anchors.leftMargin: 12
         anchors.verticalCenter: parent.verticalCenter
         spacing: 6
 
@@ -38,29 +39,59 @@ Item {
 
     Row {
         anchors.centerIn: parent
+        anchors.verticalCenter: parent.verticalCenter
         spacing: 12
 
-        Text {
-            text: "<"
-            color: root.currentPage > 0 ? "white" : "gray"
+        Rectangle {
+            anchors.verticalCenter: parent.verticalCenter
+            width: 24
+            height: 24
+            radius: 12
+            color: mousePrev.containsMouse && root.currentPage > 0 ? Qt.rgba(1, 1, 1, 0.12) : "transparent"
+
+            Text {
+                anchors.centerIn: parent
+                text: "<"
+                color: root.currentPage > 0 ? Config.Colors.md3.on_surface : Config.Colors.md3.on_surface_variant
+            }
+
             MouseArea {
+                id: mousePrev
                 anchors.fill: parent
+                hoverEnabled: true
                 enabled: root.currentPage > 0
+                cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+
                 onClicked: root.prevRequested()
             }
         }
 
         Text {
+            anchors.verticalCenter: parent.verticalCenter
             text: (root.currentPage + 1) + " / " + root.totalPages
-            color: "gray"
+            color: Config.Colors.md3.on_surface
         }
 
-        Text {
-            text: ">"
-            color: root.currentPage < root.totalPages - 1 ? "white" : "gray"
+        Rectangle {
+            anchors.verticalCenter: parent.verticalCenter
+            width: 24
+            height: 24
+            radius: 12
+            color: mouseNext.containsMouse && root.currentPage < root.totalPages - 1 ? Qt.rgba(1, 1, 1, 0.12) : "transparent"
+
+            Text {
+                anchors.centerIn: parent
+                text: ">"
+                color: root.currentPage < root.totalPages - 1 ? Config.Colors.md3.on_surface : Config.Colors.md3.on_surface_variant
+            }
+
             MouseArea {
+                id: mouseNext
                 anchors.fill: parent
+                hoverEnabled: true
                 enabled: root.currentPage < root.totalPages - 1
+                cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+
                 onClicked: root.nextRequested()
             }
         }
