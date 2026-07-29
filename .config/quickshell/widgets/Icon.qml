@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Effects
+import QtQuick.Controls.impl
 import Quickshell
 
 import qs.config as Config
@@ -51,7 +51,7 @@ Item {
     readonly property bool isSystemIcon: systemIcon.length > 0
     readonly property bool isBundledIcon: !isSystemIcon && name.length > 0
 
-    Image {
+    IconImage {
         id: image
         anchors.fill: parent
         visible: status === Image.Ready
@@ -66,18 +66,11 @@ Item {
             return "";
         }
 
-        sourceSize.width: root.width * 2
-        sourceSize.height: root.height * 2
+        sourceSize.width: width * 2
+        sourceSize.height: height * 2
         fillMode: Image.PreserveAspectFit
         smooth: true
         asynchronous: true
-
-        // Only recolor bundled icons — a system/app icon keeps its real
-        // colors, that's the entire reason systemIcon mode exists.
-        layer.enabled: root.isBundledIcon
-        layer.effect: MultiEffect {
-            colorization: 1.0
-            colorizationColor: root.color
-        }
+        color: root.isBundledIcon ? root.color : "transparent"
     }
 }
