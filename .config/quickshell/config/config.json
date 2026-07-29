@@ -14,7 +14,7 @@
         "profilePicture": "~/.config/shared-assets/pfps/Purple_anime_boy.jpg"
     },
     "weather": {
-        "location": "Santiago",
+        "location": "Santiago,CL",
         "units": "metric"
     }
 }

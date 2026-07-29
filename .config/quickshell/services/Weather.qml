@@ -19,6 +19,10 @@ Singleton {
     property bool loading: false
     property string errorMessage: ""
 
+    property date lastFetchTime
+
+    readonly property string lastFetchTimeString: lastFetchTime ? Qt.formatDateTime(lastFetchTime, "hh:mm") : ""
+
     // Full parsed payload kept around for anything not surfaced below —
     // avoids adding a new property here every time a section wants one
     // more field out of wttr.in's fairly large response.
@@ -63,9 +67,7 @@ Singleton {
 
     function buildUrl() {
         const location = encodeURIComponent(Config.Settings.weather.location);
-        const units = Config.Settings.weather.units === "imperial" ? "u"
-            : Config.Settings.weather.units === "metric" ? "m"
-            : "";
+        const units = Config.Settings.weather.units === "imperial" ? "u" : Config.Settings.weather.units === "metric" ? "m" : "";
         const unitsParam = units ? "&" + units : "";
         return "https://wttr.in/" + location + "?format=j1" + unitsParam;
     }
@@ -79,6 +81,7 @@ Singleton {
                 root.loading = false;
                 try {
                     root.applyPayload(JSON.parse(text));
+                    root.lastFetchTime = new Date();
                 } catch (e) {
                     root.errorMessage = "Failed to parse weather data: " + e;
                 }
@@ -104,22 +107,58 @@ Singleton {
         return padded.slice(0, 2) + ":00";
     }
 
+    // Parses a 12-hour "HH:MM AM/PM" string (wttr.in's astronomy block
+    // format) onto the given calendar date, returning a Date.
+    function parseAmPmTime(dateObj, timeStr) {
+        const match = /(\d+):(\d+)\s*(AM|PM)/i.exec(timeStr || "");
+        if (!match)
+            return null;
+
+        let hour = parseInt(match[1], 10);
+        const minute = parseInt(match[2], 10);
+        const meridiem = match[3].toUpperCase();
+        if (meridiem === "PM" && hour !== 12)
+            hour += 12;
+        if (meridiem === "AM" && hour === 12)
+            hour = 0;
+
+        const result = new Date(dateObj);
+        result.setHours(hour, minute, 0, 0);
+        return result;
+    }
+
+    // Whether entryDate falls between that day's actual sunrise/sunset —
+    // more accurate than a fixed hour cutoff since sunrise/sunset shifts
+    // with season and location. astronomy is a day's astronomy[0] object
+    // (or null, in which case this defaults to "day" rather than guessing).
+    function isDaytime(entryDate, astronomy) {
+        if (!astronomy)
+            return true;
+
+        const sunrise = parseAmPmTime(entryDate, astronomy.sunrise);
+        const sunset = parseAmPmTime(entryDate, astronomy.sunset);
+        if (!sunrise || !sunset)
+            return true;
+
+        return entryDate >= sunrise && entryDate < sunset;
+    }
+
     function applyPayload(data) {
         raw = data;
 
         const area = data.nearest_area && data.nearest_area[0];
-        locationName = area
-            ? [area.areaName[0].value, area.country[0].value].filter(Boolean).join(", ")
-            : Config.Settings.weather.location;
+        locationName = area ? [area.areaName[0].value, area.country[0].value].filter(Boolean).join(", ") : Config.Settings.weather.location;
 
         const days = data.weather || [];
         const todayEntry = days[0];
+        const todayAstronomy = todayEntry && todayEntry.astronomy ? todayEntry.astronomy[0] : null;
 
         // ---- Current -----------------------------------------------------
 
         const cc = data.current_condition && data.current_condition[0];
         if (cc) {
             const code = parseInt(cc.weatherCode, 10);
+            const now = new Date();
             current = {
                 tempC: parseFloat(cc.temp_C),
                 minTempC: todayEntry ? parseFloat(todayEntry.mintempC) : NaN,
@@ -129,18 +168,20 @@ Singleton {
                 windSpeedKmph: parseFloat(cc.windspeedKmph),
                 windDir: cc.winddir16Point || "",
                 weatherCode: code,
-                iconName: iconForCode(code),
-                description: cc.weatherDesc && cc.weatherDesc[0] ? cc.weatherDesc[0].value.trim() : "",
+                iconName: iconForCode(code, isDaytime(now, todayAstronomy)),
+                description: cc.weatherDesc && cc.weatherDesc[0] ? cc.weatherDesc[0].value.trim() : ""
             };
         }
 
         // ---- Hourly (next 5 slots, spanning day boundaries if needed) -----
 
-        const now = new Date();
+        const now2 = new Date();
         const allHourly = [];
 
         for (const day of days) {
             const dayDate = parseWttrDate(day.date);
+            const astronomy = day.astronomy && day.astronomy[0] ? day.astronomy[0] : null;
+
             for (const h of (day.hourly || [])) {
                 const hhmm = parseInt(h.time, 10); // e.g. 0, 300, 1800
                 const hour = Math.floor(hhmm / 100);
@@ -153,25 +194,22 @@ Singleton {
                     dateTime: entryDate,
                     time: formatWttrTime(h.time),
                     tempC: parseFloat(h.tempC),
+                    humidity: parseInt(h.humidity, 10),
                     weatherCode: code,
-                    iconName: iconForCode(code),
-                    description: h.weatherDesc && h.weatherDesc[0] ? h.weatherDesc[0].value.trim() : "",
+                    iconName: iconForCode(code, isDaytime(entryDate, astronomy)),
+                    description: h.weatherDesc && h.weatherDesc[0] ? h.weatherDesc[0].value.trim() : ""
                 });
             }
         }
 
-        hourlyForecast = allHourly
-            .sort((a, b) => a.dateTime - b.dateTime)
-            .filter(entry => entry.dateTime > now)
-            .slice(0, 5)
-            .map(entry => ({
-                time: entry.time,
-                minTempC: entry.tempC,
-                maxTempC: entry.tempC,
-                weatherCode: entry.weatherCode,
-                iconName: entry.iconName,
-                description: entry.description,
-            }));
+        hourlyForecast = allHourly.sort((a, b) => a.dateTime - b.dateTime).filter(entry => entry.dateTime > now2).slice(0, 5).map(entry => ({
+                    time: entry.time,
+                    tempC: entry.tempC,
+                    humidity: entry.humidity,
+                    weatherCode: entry.weatherCode,
+                    iconName: entry.iconName,
+                    description: entry.description
+                }));
 
         // ---- Daily (up to 5 — wttr.in's free API typically returns 3) -----
 
@@ -183,15 +221,18 @@ Singleton {
             const midday = hourly[4] || hourly[0] || null;
             const code = midday ? parseInt(midday.weatherCode, 10) : 0;
 
+            const middayDate = parseWttrDate(day.date);
+            middayDate.setHours(12, 0, 0, 0);
+            const astronomy = day.astronomy && day.astronomy[0] ? day.astronomy[0] : null;
+
             return {
                 dayName: Qt.formatDate(parseWttrDate(day.date), "dddd"),
                 minTempC: parseFloat(day.mintempC),
                 maxTempC: parseFloat(day.maxtempC),
+                humidity: parseInt(midday.humidity, 10),
                 weatherCode: code,
-                iconName: iconForCode(code),
-                description: midday && midday.weatherDesc && midday.weatherDesc[0]
-                    ? midday.weatherDesc[0].value.trim()
-                    : "",
+                iconName: iconForCode(code, isDaytime(middayDate, astronomy)),
+                description: midday && midday.weatherDesc && midday.weatherDesc[0] ? midday.weatherDesc[0].value.trim() : ""
             };
         });
     }
@@ -201,66 +242,73 @@ Singleton {
     // table (~35 distinct codes — e.g. "Patchy light rain", "Moderate rain
     // shower", "Torrential rain shower" are all separately coded), plus a
     // couple of extra codes (149 "Smoky haze", 152 "Smog") that show up in
-    // practice but aren't part of that standard table. Bucketed down to 11
-    // icon categories rather than one SVG per code, since most of that
-    // granularity is a severity gradient within the same kind of weather.
-    // Expects assets/icons/<name>.svg for each category below.
+    // practice but aren't part of that standard table.
+    // Expects assets/icons/weather/<name>.svg for each category below.
 
     readonly property var _codeToIcon: ({
-        113: "clear",
-        116: "partly-cloudy",
-        119: "cloudy",
-        122: "overcast",
-        143: "fog",
-        149: "fog",         // Smoky haze (non-standard, seen in practice)
-        152: "fog",         // Smog (non-standard, seen in practice)
-        176: "rain",
-        179: "snow",
-        182: "sleet",
-        185: "drizzle",
-        200: "thunderstorm",
-        227: "snow",
-        230: "snow",
-        248: "fog",
-        260: "fog",
-        263: "drizzle",
-        266: "drizzle",
-        281: "drizzle",
-        284: "drizzle",
-        293: "rain",
-        296: "rain",
-        299: "rain",
-        302: "rain",
-        305: "heavy-rain",
-        308: "heavy-rain",
-        311: "sleet",
-        314: "sleet",
-        317: "sleet",
-        320: "sleet",
-        323: "snow",
-        326: "snow",
-        329: "snow",
-        332: "snow",
-        335: "snow",
-        338: "snow",
-        350: "sleet",
-        353: "rain",
-        356: "heavy-rain",
-        359: "heavy-rain",
-        362: "sleet",
-        365: "sleet",
-        368: "snow",
-        371: "snow",
-        374: "sleet",
-        377: "sleet",
-        386: "thunderstorm",
-        389: "thunderstorm",
-        392: "thunderstorm",
-        395: "thunderstorm",
-    })
+            113: "clear",
+            116: "partly-cloudy",
+            119: "cloudy",
+            122: "overcast",
+            143: "fog",
+            149: "fog"     // Smoky haze (non-standard, seen in practice)
+            ,
+            152: "fog"     // Smog (non-standard, seen in practice)
+            ,
+            176: "sprinkle",
+            179: "snow",
+            182: "sleet",
+            185: "sleet",
+            200: "thunderstorm",
+            227: "snow",
+            230: "snow",
+            248: "fog",
+            260: "fog",
+            263: "sprinkle",
+            266: "sprinkle",
+            281: "sleet",
+            284: "sleet",
+            293: "sprinkle",
+            296: "sprinkle",
+            299: "drizzle",
+            302: "drizzle",
+            305: "rain",
+            308: "rain",
+            311: "sleet",
+            314: "sleet",
+            317: "sleet",
+            320: "sleet",
+            323: "snow",
+            326: "snow",
+            329: "snow",
+            332: "snow",
+            335: "snow",
+            338: "snow",
+            350: "hail",
+            353: "sprinkle",
+            356: "rain",
+            359: "rain",
+            362: "sleet",
+            365: "sleet",
+            368: "snow",
+            371: "snow",
+            374: "sleet",
+            377: "hail",
+            386: "thunderstorm",
+            389: "thunderstorm",
+            392: "thunderstorm",
+            395: "thunderstorm"
+        })
 
-    function iconForCode(code) {
-        return _codeToIcon[code] || "cloudy"; // safe fallback for any unmapped code
+    // Only clear/partly-cloudy have day-/night- variants (per the actual
+    // SVGs available) — isDay is ignored for every other category, and
+    // also tolerated as undefined by callers that don't care (falls
+    // through to the plain category name).
+    function iconForCode(code, isDay) {
+        const category = _codeToIcon[code] || "default";
+        const hasDayNightVariant = category === "clear" || category === "partly-cloudy";
+        const variant = hasDayNightVariant && typeof isDay === "boolean" ? (isDay ? "day-" : "night-") + category : category;
+        return "weather/" + variant;
     }
 
     // ---- Periodic refresh ------------------------------------------------

@@ -229,13 +229,10 @@ Singleton {
                     sourceComponent: Tabs.TimeTab {}
                 }
 
-                /*
-                Loader {
+                Tabs.WeatherTab {
                     anchors.fill: parent
-                    active: root.currentIndex === 3
-                    visible: active
-                    sourceComponent: Tabs.WeatherTab {}
-                  }*/
+                    visible: root.currentIndex === 3
+                }
 
                 Loader {
                     anchors.fill: parent
