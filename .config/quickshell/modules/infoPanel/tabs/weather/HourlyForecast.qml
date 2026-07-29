@@ -174,38 +174,55 @@ Item {
                         font.bold: true
                     }
 
-                    Widgets.Icon {
-                        id: refreshIcon
+                    Rectangle {
+                        id: refreshButton
 
-                        anchors.horizontalCenter: parent.horizontalCenter
+                        width: 40
+                        height: 40
+                        radius: width / 2
 
-                        name: "common/refresh"
-                        size: 28
-                        color: Config.Colors.md3.primary
+                        color: mouseArea.containsMouse ? Config.Colors.md3.surface_container_highest : Config.Colors.md3.surface_container
 
-                        RotationAnimator {
-                            target: refreshIcon
-                            from: 0
-                            to: -360
-                            duration: 1000
-                            loops: Animation.Infinite
-                            running: Services.Weather.loading
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 150
+                            }
                         }
 
-                        Connections {
-                            target: Services.Weather
+                        Widgets.Icon {
+                            id: refreshIcon
 
-                            function onLoadingChanged() {
-                                if (!Services.Weather.loading)
-                                    refreshIcon.rotation = 0;
+                            anchors.centerIn: parent
+
+                            name: "common/refresh"
+                            size: 28
+                            color: Config.Colors.md3.primary
+
+                            RotationAnimator {
+                                target: refreshIcon
+                                from: 0
+                                to: -360
+                                duration: 1000
+                                loops: Animation.Infinite
+                                running: Services.Weather.loading
+                            }
+
+                            Connections {
+                                target: Services.Weather
+
+                                function onLoadingChanged() {
+                                    if (!Services.Weather.loading)
+                                        refreshIcon.rotation = 0;
+                                }
                             }
                         }
 
                         MouseArea {
+                            id: mouseArea
+
                             anchors.fill: parent
 
                             hoverEnabled: true
-                            enabled: true
                             cursorShape: Services.Weather.loading ? Qt.ArrowCursor : Qt.PointingHandCursor
 
                             onClicked: {

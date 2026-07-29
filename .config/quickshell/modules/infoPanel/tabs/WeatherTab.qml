@@ -17,7 +17,7 @@ Item {
     // 1 gap between them is accounted for.
     readonly property real usableHeight: height - sectionSpacing
     // Height fraction taken by the top section.
-    readonly property real proportion: 0.55
+    readonly property real proportion: 0.5
 
     // Width fraction taken by the top section's left (current conditions)
     // part vs its right part.
