@@ -19,16 +19,14 @@ Item {
 
     signal wallpaperSelected(string path)
 
-    // Fixed grid shape — cell size is derived from this to fill the
-    // available width/height exactly, rather than the other way around.
     readonly property int columns: 3
     readonly property int rows: 2
     readonly property int cellSpacing: 8
     readonly property int itemsPerPage: columns * rows
     readonly property string currentWallpaperName: Services.Wallpaper.currentWallpaper
 
-    readonly property real effectiveCellWidth: (width - columns * cellSpacing) / columns
-    readonly property real effectiveCellHeight: (height - rows * cellSpacing) / rows
+    readonly property real effectiveCellWidth: (width - (columns - 1) * cellSpacing) / columns
+    readonly property real effectiveCellHeight: (height - (rows - 1) * cellSpacing) / rows
 
     readonly property var filteredWallpapers: {
         if (!root.filterText)
@@ -40,9 +38,6 @@ Item {
     readonly property int totalPages: Math.max(1, Math.ceil(filteredWallpapers.length / itemsPerPage))
     property int currentPage: 0
 
-    // Filtering (or a resize that changes itemsPerPage) can shrink the page
-    // count out from under an already-picked page — clamp back into range
-    // rather than showing a blank grid.
     onTotalPagesChanged: if (currentPage >= totalPages)
         currentPage = totalPages - 1
     onFilterTextChanged: currentPage = 0
@@ -53,101 +48,107 @@ Item {
         if (currentPage < totalPages - 1)
             currentPage += 1;
     }
+
     function prevPage() {
         if (currentPage > 0)
             currentPage -= 1;
     }
 
-    GridView {
-        id: gridView
+    Grid {
         anchors.fill: parent
-        cellWidth: root.effectiveCellWidth + root.cellSpacing
-        cellHeight: root.effectiveCellHeight + root.cellSpacing
-        interactive: false // paging replaces scrolling
-        model: root.pagedWallpapers
 
-        delegate: Item {
-            width: gridView.cellWidth - root.cellSpacing
-            height: gridView.cellHeight - root.cellSpacing
+        columns: root.columns
+        rows: root.rows
 
-            readonly property bool isSelected: modelData === root.selectedWallpaper
-            readonly property bool isCurrent: modelData === root.currentWallpaperName
-            readonly property string fileName: modelData.split("/").pop()
+        columnSpacing: root.cellSpacing
+        rowSpacing: root.cellSpacing
 
-            Column {
-                anchors.fill: parent
-                spacing: 2
+        Repeater {
+            model: root.pagedWallpapers
 
-                Item {
-                    width: parent.width
-                    height: parent.height - fileNameText.height - 2
+            delegate: Item {
+                width: root.effectiveCellWidth
+                height: root.effectiveCellHeight
 
-                    Rectangle {
-                        anchors.fill: parent
-                        color: Config.Colors.md3.surface_container_lowest
-                        radius: 4
+                readonly property bool isSelected: modelData === root.selectedWallpaper
+                readonly property bool isCurrent: modelData === root.currentWallpaperName
+                readonly property string fileName: modelData.split("/").pop()
 
-                        border.width: (isCurrent || isSelected || mouseArea.containsMouse) ? 4 : 0
-                        border.color: isCurrent ? Config.Colors.md3.primary : Config.Colors.md3.tertiary
+                Column {
+                    anchors.fill: parent
+                    spacing: 2
 
-                        Behavior on border.width {
-                            NumberAnimation {
-                                duration: 100
-                            }
-                        }
-
-                        Image {
-                            anchors.fill: parent
-                            anchors.margins: parent.border.width
-                            source: "file://" + modelData
-                            fillMode: Image.PreserveAspectCrop
-                            asynchronous: true
-                            clip: true
-                        }
+                    Item {
+                        width: parent.width
+                        height: parent.height - fileNameText.height - 2
 
                         Rectangle {
-                            visible: isCurrent
+                            anchors.fill: parent
+                            color: Config.Colors.md3.surface_container_lowest
+                            radius: 4
 
-                            width: 24
-                            height: 24
-                            radius: width / 2
+                            border.width: (isCurrent || isSelected || mouseArea.containsMouse) ? 4 : 0
+                            border.color: isCurrent ? Config.Colors.md3.primary : Config.Colors.md3.tertiary
 
-                            anchors {
-                                top: parent.top
-                                right: parent.right
-                                topMargin: 4
-                                rightMargin: 4
+                            Behavior on border.width {
+                                NumberAnimation {
+                                    duration: 100
+                                }
                             }
 
-                            color: Config.Colors.md3.primary
-
-                            Widgets.Icon {
-                                anchors.centerIn: parent
-                                size: 14
-                                name: "common/check"
-                                color: Config.Colors.md3.surface_container_lowest
+                            Image {
+                                anchors.fill: parent
+                                anchors.margins: parent.border.width
+                                source: "file://" + modelData
+                                fillMode: Image.PreserveAspectCrop
+                                asynchronous: true
+                                clip: true
                             }
+
+                            Rectangle {
+                                visible: isCurrent
+
+                                width: 24
+                                height: 24
+                                radius: width / 2
+
+                                anchors {
+                                    top: parent.top
+                                    right: parent.right
+                                    topMargin: 6
+                                    rightMargin: 6
+                                }
+
+                                color: Config.Colors.md3.primary
+
+                                Widgets.Icon {
+                                    anchors.centerIn: parent
+                                    size: 14
+                                    name: "common/check"
+                                    color: Config.Colors.md3.surface_container_lowest
+                                }
+                            }
+                        }
+
+                        MouseArea {
+                            id: mouseArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+
+                            onClicked: root.wallpaperSelected(isSelected ? root.currentWallpaperName : modelData)
                         }
                     }
 
-                    MouseArea {
-                        id: mouseArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-
-                        onClicked: root.wallpaperSelected(isSelected ? currentWallpaperName : modelData)
+                    Text {
+                        id: fileNameText
+                        width: parent.width
+                        text: fileName
+                        color: Config.Colors.md3.on_surface
+                        horizontalAlignment: Text.AlignHCenter
+                        elide: Text.ElideMiddle
+                        font.pixelSize: 12
                     }
-                }
-
-                Text {
-                    id: fileNameText
-                    width: parent.width
-                    text: fileName
-                    color: Config.Colors.md3.on_surface
-                    horizontalAlignment: Text.AlignHCenter
-                    elide: Text.ElideMiddle
-                    font.pixelSize: 12
                 }
             }
         }
