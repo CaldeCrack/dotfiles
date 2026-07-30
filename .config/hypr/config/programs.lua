@@ -15,7 +15,8 @@ M.office = "onlyoffice-desktopeditors"
 M.volumeMixer = "pavucontrol"
 M.wifi = "kitty ~/.config/hypr/scripts/kitty-run.sh nmtui"
 
-M.bar = "ags run ~/.config/ags/app.tsx"
+M.bar = "qs -n"
+M.closeBar = "qs kill"
 
 M.mainMod = "SUPER"
 

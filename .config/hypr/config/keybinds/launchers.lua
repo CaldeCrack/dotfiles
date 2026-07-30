@@ -20,6 +20,6 @@ hl.bind(cfg.mainMod .. " + SHIFT + L", hl.dsp.exec_cmd("hyprlock"))
 hl.bind(cfg.mainMod .. " + SHIFT + P", hl.dsp.exec_cmd("hyprpicker -a -q"))
 
 -- Quickshell shortcuts
-hl.bind(cfg.mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("pkill -f ags"))
 hl.bind(cfg.mainMod .. " + B", hl.dsp.exec_cmd(cfg.bar))
+hl.bind(cfg.mainMod .. " + SHIFT + B", hl.dsp.exec_cmd(cfg.closeBar))
 hl.bind(cfg.mainMod .. " + RETURN", hl.dsp.exec_cmd("qs ipc call shortcuts toggle"))
