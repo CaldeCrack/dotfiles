@@ -1,4 +1,5 @@
 singleton Battery 1.0 Battery.qml
+singleton Media 1.0 Media.qml
 singleton SystemStats 1.0 SystemStats.qml
 singleton Time 1.0 Time.qml
 singleton Wallpaper 1.0 Wallpaper.qml

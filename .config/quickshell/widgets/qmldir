@@ -1,14 +1,15 @@
-PanelBase 1.0 PanelBase.qml
 BarButtonBase 1.0 BarButtonBase.qml
-SidebarBase 1.0 SidebarBase.qml
-Tooltip 1.0 Tooltip.qml
-singleton KeyIcons 1.0 KeyIcons.qml
+BatteryIndicator 1.0 BatteryIndicator.qml
+DismissablePopup 1.0 DismissablePopup.qml
+Icon 1.0 Icon.qml
 KeyCap 1.0 KeyCap.qml
 Keybind 1.0 Keybind.qml
 LinkChip 1.0 LinkChip.qml
-Icon 1.0 Icon.qml
-StatGauge 1.0 StatGauge.qml
+PanelBase 1.0 PanelBase.qml
+PanelIconButton 1.0 PanelIconButton.qml
+SidebarBase 1.0 SidebarBase.qml
 StatCardVertical 1.0 StatCardVertical.qml
+StatGauge 1.0 StatGauge.qml
 Thermometer 1.0 Thermometer.qml
-BatteryIndicator 1.0 BatteryIndicator.qml
-DismissablePopup 1.0 DismissablePopup.qml
+Tooltip 1.0 Tooltip.qml
+singleton KeyIcons 1.0 KeyIcons.qml

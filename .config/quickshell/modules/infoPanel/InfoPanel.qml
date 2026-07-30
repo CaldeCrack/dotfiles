@@ -233,11 +233,10 @@ Singleton {
                         visible: root.currentIndex === 0
                     }
 
-                    /*
                     Tabs.MediaTab {
                         anchors.fill: parent
                         visible: root.currentIndex === 1
-                      }*/
+                    }
 
                     Loader {
                         anchors.fill: parent
