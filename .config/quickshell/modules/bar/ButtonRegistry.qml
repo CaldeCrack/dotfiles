@@ -41,6 +41,10 @@ Singleton {
         id: weather
         Buttons.WeatherButton {}
     }
+    Component {
+        id: wallpaper
+        Buttons.WallpaperButton {}
+    }
     // Component { id: tray; Buttons.Tray {} }
     // Component { id: miscApps; Buttons.MiscAppsButton {} }
     // Component { id: controlPanel; Buttons.ControlPanelButton {} }
@@ -54,7 +58,8 @@ Singleton {
             // media: media,
             about: about,
             time: time,
-            weather: weather
+            weather: weather,
+            wallpaper: wallpaper
         // tray: tray,
         // miscApps: miscApps,
         // controlPanel: controlPanel,
