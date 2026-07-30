@@ -8,7 +8,7 @@ Widgets.BarButtonBase {
 
     // Which tab index this button opens — About is last in Info.InfoPanel's
     // tabModel (index 4).
-    readonly property int aboutTabIndex: 4
+    readonly property int aboutTabIndex: 2
 
     // The label shown in the button. \n splits it across up to 2 lines.
     property string label: "Calde\nCrack"

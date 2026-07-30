@@ -52,16 +52,16 @@ Singleton {
             icon: "common/music"
         },
         {
+            label: "About",
+            icon: "common/about"
+        },
+        {
             label: "Time",
             icon: "common/calendar"
         },
         {
             label: "Weather",
             icon: "weather/default"
-        },
-        {
-            label: "About",
-            icon: "common/about"
         },
     ]
 
@@ -83,162 +83,180 @@ Singleton {
         contentX: (width - root.panelWidth) / 2 - 8
         contentY: Config.Settings.bar.height + Config.Settings.bar.margin
 
-        ColumnLayout {
-            id: panelContent
+        // A real FocusScope, not just a plain Item — this is what makes
+        // "Escape blurs the wallpaper search field, then Escape again
+        // closes the panel" work. Per Qt Quick's FocusScope rules, when
+        // the item currently holding active focus within a scope clears
+        // its own focus (WallpaperSearchBar's TextInput does exactly this
+        // on its first Escape), active focus reverts to the nearest
+        // enclosing FocusScope — which, without this wrapper, was
+        // undefined (InfoPanel had no explicit scope at all), so the
+        // second Escape had nowhere reliable to land. Now it lands here.
+        FocusScope {
+            id: panelFocusScope
 
             width: root.panelWidth
             height: root.panelHeight
-            spacing: 0
+            focus: true
 
-            // ---- Tab bar -------------------------------------------------
+            Keys.onEscapePressed: root.close()
 
-            Item {
-                id: tabBar
+            ColumnLayout {
+                id: panelContent
 
-                Layout.fillWidth: true
-                Layout.preferredHeight: 60
+                anchors.fill: parent
+                spacing: 0
 
-                Row {
-                    id: tabRow
-                    anchors.fill: parent
+                // ---- Tab bar -------------------------------------------------
 
-                    Repeater {
-                        id: tabRepeater
-                        model: root.tabModel
+                Item {
+                    id: tabBar
 
-                        delegate: Item {
-                            id: tabDelegate
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 60
 
-                            required property var modelData
-                            required property int index
+                    Row {
+                        id: tabRow
+                        anchors.fill: parent
 
-                            width: tabRow.width / root.tabModel.length
-                            height: tabRow.height
+                        Repeater {
+                            id: tabRepeater
+                            model: root.tabModel
 
-                            readonly property bool selected: index === root.currentIndex
+                            delegate: Item {
+                                id: tabDelegate
 
-                            // Subtle background tint on hover, independent
-                            // of the selected-tab indicator below — margins
-                            // keep it from touching neighboring tabs/edges.
-                            Rectangle {
-                                anchors.fill: parent
-                                topLeftRadius: 16
-                                topRightRadius: 16
-                                color: tabMouse.containsMouse ? Config.Colors.md3.surface_container_high : "transparent"
-                            }
+                                required property var modelData
+                                required property int index
 
-                            Column {
-                                anchors.centerIn: parent
-                                spacing: 5
+                                width: tabRow.width / root.tabModel.length
+                                height: tabRow.height
 
-                                Widgets.Icon {
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    name: tabDelegate.modelData.icon
-                                    size: 22
-                                    color: tabDelegate.selected ? Config.Colors.md3.primary : Config.Colors.md3.on_surface_variant
+                                readonly property bool selected: index === root.currentIndex
+
+                                // Subtle background tint on hover, independent
+                                // of the selected-tab indicator below — margins
+                                // keep it from touching neighboring tabs/edges.
+                                Rectangle {
+                                    anchors.fill: parent
+                                    topLeftRadius: 16
+                                    topRightRadius: 16
+                                    color: tabMouse.containsMouse ? Config.Colors.md3.surface_container_high : "transparent"
                                 }
 
-                                Text {
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    text: tabDelegate.modelData.label
-                                    color: tabDelegate.selected ? Config.Colors.md3.primary : Config.Colors.md3.on_surface
-                                    font.bold: tabDelegate.selected
-                                    font.pixelSize: 14
+                                Column {
+                                    anchors.centerIn: parent
+                                    spacing: 5
+
+                                    Widgets.Icon {
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        name: tabDelegate.modelData.icon
+                                        size: 22
+                                        color: tabDelegate.selected ? Config.Colors.md3.primary : Config.Colors.md3.on_surface_variant
+                                    }
+
+                                    Text {
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        text: tabDelegate.modelData.label
+                                        color: tabDelegate.selected ? Config.Colors.md3.primary : Config.Colors.md3.on_surface
+                                        font.bold: tabDelegate.selected
+                                        font.pixelSize: 14
+                                    }
+                                }
+
+                                MouseArea {
+                                    id: tabMouse
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: root.currentIndex = tabDelegate.index
                                 }
                             }
+                        }
+                    }
 
-                            MouseArea {
-                                id: tabMouse
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: root.currentIndex = tabDelegate.index
+                    // Selected-tab indicator: thicker bar sitting just above
+                    // the separator line. Tracks the delegate's real x/width
+                    // (read off the Repeater, not the model) and slides
+                    // between tabs.
+                    Rectangle {
+                        id: indicator
+
+                        readonly property Item currentTab: tabRepeater.itemAt(root.currentIndex)
+
+                        height: 3
+                        radius: 1.5
+                        color: Config.Colors.md3.primary
+                        y: tabBar.height - height - 1 // 1px above the separator
+                        x: currentTab ? currentTab.x : 0
+                        width: currentTab ? currentTab.width : 0
+
+                        Behavior on x {
+                            NumberAnimation {
+                                duration: 150
+                                easing.type: Easing.OutCubic
+                            }
+                        }
+                        Behavior on width {
+                            NumberAnimation {
+                                duration: 150
+                                easing.type: Easing.OutCubic
                             }
                         }
                     }
-                }
 
-                // Selected-tab indicator: thicker bar sitting just above
-                // the separator line. Tracks the delegate's real x/width
-                // (read off the Repeater, not the model) and slides
-                // between tabs.
-                Rectangle {
-                    id: indicator
-
-                    readonly property Item currentTab: tabRepeater.itemAt(root.currentIndex)
-
-                    height: 3
-                    radius: 1.5
-                    color: Config.Colors.md3.primary
-                    y: tabBar.height - height - 1 // 1px above the separator
-                    x: currentTab ? currentTab.x : 0
-                    width: currentTab ? currentTab.width : 0
-
-                    Behavior on x {
-                        NumberAnimation {
-                            duration: 150
-                            easing.type: Easing.OutCubic
-                        }
-                    }
-                    Behavior on width {
-                        NumberAnimation {
-                            duration: 150
-                            easing.type: Easing.OutCubic
-                        }
+                    // Separator line between the tab bar and content.
+                    Rectangle {
+                        anchors.bottom: parent.bottom
+                        width: parent.width
+                        height: 1
+                        color: Config.Colors.md3.outline_variant
                     }
                 }
 
-                // Separator line between the tab bar and content.
-                Rectangle {
-                    anchors.bottom: parent.bottom
-                    width: parent.width
-                    height: 1
-                    color: Config.Colors.md3.outline_variant
-                }
-            }
+                // ---- Content area ----------------------------------------------
+                // Fixed size, clipped. Wallpaper + Media stay instantiated at all
+                // times (visible toggling only) so their state never resets when
+                // switching away. Time/Weather/About are behind Loaders and are
+                // only instantiated once their tab is actually selected.
 
-            // ---- Content area ----------------------------------------------
-            // Fixed size, clipped. Wallpaper + Media stay instantiated at all
-            // times (visible toggling only) so their state never resets when
-            // switching away. Time/Weather/About are behind Loaders and are
-            // only instantiated once their tab is actually selected.
+                Item {
+                    id: contentArea
 
-            Item {
-                id: contentArea
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.topMargin: 8
+                    clip: true
 
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.topMargin: 8
-                clip: true
+                    Tabs.WallpaperTab {
+                        anchors.fill: parent
+                        visible: root.currentIndex === 0
+                    }
 
-                Tabs.WallpaperTab {
-                    anchors.fill: parent
-                    visible: root.currentIndex === 0
-                }
+                    /*
+                    Tabs.MediaTab {
+                        anchors.fill: parent
+                        visible: root.currentIndex === 1
+                      }*/
 
-                /*
-                Tabs.MediaTab {
-                    anchors.fill: parent
-                    visible: root.currentIndex === 1
-                  }*/
+                    Loader {
+                        anchors.fill: parent
+                        active: root.currentIndex === 2
+                        visible: active
+                        sourceComponent: Tabs.AboutTab {}
+                    }
 
-                Loader {
-                    anchors.fill: parent
-                    active: root.currentIndex === 2
-                    visible: active
-                    sourceComponent: Tabs.TimeTab {}
-                }
+                    Loader {
+                        anchors.fill: parent
+                        active: root.currentIndex === 3
+                        visible: active
+                        sourceComponent: Tabs.TimeTab {}
+                    }
 
-                Tabs.WeatherTab {
-                    anchors.fill: parent
-                    visible: root.currentIndex === 3
-                }
-
-                Loader {
-                    anchors.fill: parent
-                    active: root.currentIndex === 4
-                    visible: active
-                    sourceComponent: Tabs.AboutTab {}
+                    Tabs.WeatherTab {
+                        anchors.fill: parent
+                        visible: root.currentIndex === 4
+                    }
                 }
             }
         }

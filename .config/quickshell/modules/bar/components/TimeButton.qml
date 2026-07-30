@@ -7,7 +7,7 @@ import qs.modules.infoPanel as Info
 Widgets.BarButtonBase {
     id: root
 
-    readonly property int timeTabIndex: 2
+    readonly property int timeTabIndex: 3
 
     readonly property string format: "hh:mm 󰇙 ddd dd MMM"
     property string label: Qt.formatDateTime(Services.Time.dateTime, format)

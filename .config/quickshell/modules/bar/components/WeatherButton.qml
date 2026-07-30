@@ -7,7 +7,7 @@ import qs.modules.infoPanel as Info
 Widgets.BarButtonBase {
     id: root
 
-    readonly property int weatherTabIndex: 3
+    readonly property int weatherTabIndex: 4
 
     readonly property bool loading: Services.Weather.current.tempC === undefined
     property string label: loading ? "--°C" : Services.Weather.current.tempC + "°C"
