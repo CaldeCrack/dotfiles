@@ -17,15 +17,17 @@ import qs.widgets as Widgets
 Item {
     id: root
 
-    property string iconName: ""
+    property string iconName: ""       // bundled icon (assets/icons/<name>.svg), tinted per checked/hover state
+    property string systemIconName: "" // real app/system icon via Icon.qml's systemIcon mode — never tinted (own branding colors). Takes priority over iconName when non-empty; iconName acts as the fallback.
     property real iconSize: 18
     property real padding: 8
     property bool checked: false
     property bool enabled: true
-    property var color: Colors.md3.on_surface
-    property var backgroundColor: "transparent"
-    property var hoveredColor: Colors.md3.on_surface
-    property var hoveredBackgroundColor: Colors.md3.surface_container_highest
+
+    property string color: Colors.md3.on_surface
+    property string backgroundColor: "transparent"
+    property string hoveredColor: Colors.md3.on_surface
+    property string hoveredBackgroundColor: Colors.md3.surface_container_highest
 
     signal clicked
 
@@ -49,8 +51,21 @@ Item {
         }
     }
 
+    // Real app/system icon, shown only when the caller actually resolved
+    // one (e.g. via Services.Media.resolveIconName). Never tinted — an
+    // app's real branding colors are the point.
     Widgets.Icon {
         anchors.centerIn: parent
+        visible: root.systemIconName.length > 0
+        systemIcon: root.systemIconName
+        size: root.iconSize
+    }
+
+    // Bundled icon, tinted per checked/hover state — the original/default
+    // mode, and the fallback whenever systemIconName is empty.
+    Widgets.Icon {
+        anchors.centerIn: parent
+        visible: root.systemIconName.length === 0
         name: root.iconName
         size: root.iconSize
         color: root.checked ? Colors.md3.on_primary_container : (root.hovered ? root.hoveredColor : root.color)
