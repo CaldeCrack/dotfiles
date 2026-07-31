@@ -66,8 +66,9 @@ Singleton {
         }
 
         function onLengthChanged() {
-            if (root.activePlayer.length > 0)
+            if (root.activePlayer.length && root.activePlayer.length > root.cachedLength) {
                 root.cachedLength = root.activePlayer.length;
+            }
         }
     }
 
