@@ -10,7 +10,7 @@ Item {
     property real blurAmount: 1.0
     property real blurMax: 64
     property real dimAmount: -0.35
-    property real radius: 18
+    property real radius: 16
 
     readonly property bool hasArt: Services.Media.artUrl.length > 0
 
@@ -19,6 +19,8 @@ Item {
         anchors.fill: parent
         visible: !root.hasArt
         radius: root.radius
+        border.color: Config.Colors.md3.primary
+        border.width: 1
 
         gradient: Gradient {
             orientation: Gradient.Vertical
@@ -82,6 +84,14 @@ Item {
 
             maskEnabled: true
             maskSource: maskShape
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            radius: root.radius
+            color: "transparent"
+            border.color: Config.Colors.md3.primary
+            border.width: 1
         }
     }
 }
