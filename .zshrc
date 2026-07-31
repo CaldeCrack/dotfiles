@@ -79,6 +79,7 @@ alias lgit='eza -la --no-user --header --git --icons=always'
 alias lc='eza -la --no-user --header --icons=always'
 alias l='eza'
 alias nv='nvim'
+alias c='clear'
 alias update='source ~/.zshrc'
 alias sudo='sudo '
 
