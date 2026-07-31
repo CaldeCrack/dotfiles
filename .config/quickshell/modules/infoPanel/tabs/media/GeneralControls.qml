@@ -1,6 +1,7 @@
 import QtQuick
 import qs.services as Services
 import qs.widgets as Widgets
+import qs.config as Config
 
 // One row: shuffle | previous | play/pause | next | loop. Shuffle and loop
 // live here rather than in ExtraActionsColumn — they're playback behavior,
@@ -51,6 +52,10 @@ Item {
             iconName: Services.Media.isPlaying ? "media/pause" : "media/play"
             iconSize: 24
             padding: 12
+            color: Config.Colors.md3.on_surface
+            backgroundColor: Config.Colors.md3.surface_container_high
+            hoveredColor: Config.Colors.md3.on_primary
+            hoveredBackgroundColor: Config.Colors.md3.primary
             enabled: Services.Media.available
             onClicked: Services.Media.playPause()
         }

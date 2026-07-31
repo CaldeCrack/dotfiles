@@ -22,8 +22,12 @@ Item {
     property real padding: 8
     property bool checked: false
     property bool enabled: true
+    property var color: Colors.md3.on_surface
+    property var backgroundColor: "transparent"
+    property var hoveredColor: Colors.md3.on_surface
+    property var hoveredBackgroundColor: Colors.md3.surface_container_highest
 
-    signal clicked()
+    signal clicked
 
     readonly property bool hovered: mouseArea.containsMouse
     readonly property bool pressed: mouseArea.pressed
@@ -36,18 +40,20 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: width / 2
-        color: root.checked
-            ? Colors.md3.primary_container
-            : (root.hovered ? Colors.md3.surface_container_high : "transparent")
+        color: root.checked ? Colors.md3.primary_container : (root.hovered ? root.hoveredBackgroundColor : root.backgroundColor)
 
-        Behavior on color { ColorAnimation { duration: 120 } }
+        Behavior on color {
+            ColorAnimation {
+                duration: 120
+            }
+        }
     }
 
     Widgets.Icon {
         anchors.centerIn: parent
         name: root.iconName
         size: root.iconSize
-        color: root.checked ? Colors.md3.on_primary_container : Colors.md3.on_surface
+        color: root.checked ? Colors.md3.on_primary_container : (root.hovered ? root.hoveredColor : root.color)
     }
 
     MouseArea {
