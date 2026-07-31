@@ -65,7 +65,7 @@
       },
       {
         "keybind": ["SUPER", "SHIFT", "B"],
-        "description": "Restart bar"
+        "description": "Kill bar"
       },
       {
         "keybind": ["SUPER", "W"],
