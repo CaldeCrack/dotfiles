@@ -18,11 +18,11 @@ Item {
     // dot/badge treatment — simplest starting point, revisit if "off" vs
     // "track" vs "playlist" need a more distinct visual than icon swap.
     readonly property var loopIconNames: ({
-            0: "media/repeat-off" // MprisLoopState.None      — TODO: confirm actual enum values
+            0: "media/repeat-off" // MprisLoopState.None
             ,
-            1: "media/repeat"     // MprisLoopState.Track
+            1: "media/repeat-one"     // MprisLoopState.Playlist
             ,
-            2: "media/repeat-one"  // MprisLoopState.Playlist
+            2: "media/repeat"  // MprisLoopState.Track
         })
 
     Row {
