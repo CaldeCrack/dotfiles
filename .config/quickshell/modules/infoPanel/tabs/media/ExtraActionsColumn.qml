@@ -4,9 +4,9 @@ import qs.widgets as Widgets
 import "extra" as Extra
 
 // Three buttons, tooltip on hover, popup to the right on click — only one
-// popup open at a time (activePopup tracks which). Only volume is wired
-// up for real right now, per the current build step; player/output are
-// stubbed with tooltips but no popup content yet.
+// popup open at a time (activePopup tracks which). Only volume and player
+// are wired up for real right now; output is stubbed with a tooltip but no
+// popup content yet.
 Item {
     id: root
 
@@ -38,17 +38,21 @@ Item {
             onClicked: root.activePopup = (root.activePopup === "volume" ? "" : "volume")
         }
 
-        // TODO: player selector popup not built yet — button + tooltip
-        // only, click currently just toggles activePopup with nothing to
-        // show for it.
+        // Shows the active player's real system icon (e.g. Spotify's own
+        // icon, Zen's own icon) via Services.Media.resolveIconName —
+        // falls back to the bundled media/music icon whenever that
+        // resolves to nothing (no active player, or the lookup failed).
         Widgets.PanelIconButton {
             id: playerButton
-            iconName: "media/music" // placeholder — confirm this exists in assets/icons/
+            iconName: "media/music"
+            systemIconName: Services.Media.available ? Services.Media.resolveIconName(Services.Media.activePlayer.desktopEntry) : ""
             checked: root.activePopup === "player"
             onClicked: root.activePopup = (root.activePopup === "player" ? "" : "player")
         }
 
-        // TODO: output device selector popup not built yet — same as above.
+        // TODO: output device selector popup not built yet — button +
+        // tooltip only, click currently just toggles activePopup with
+        // nothing to show for it.
         Widgets.PanelIconButton {
             id: outputButton
             iconName: "media/speaker" // placeholder — confirm this exists in assets/icons/
@@ -66,7 +70,7 @@ Item {
     }
     Widgets.Tooltip {
         target: playerButton
-        text: "Player"
+        text: "Players"
     }
     Widgets.Tooltip {
         target: outputButton
@@ -80,5 +84,11 @@ Item {
         volume: Services.Audio.volume
         muted: Services.Audio.muted
         onVolumeChangeRequested: newVolume => Services.Audio.setVolume(newVolume)
+    }
+
+    Extra.PlayerSelectorPopup {
+        anchorItem: playerButton
+        open: root.activePopup === "player"
+        onDismissRequested: root.activePopup = ""
     }
 }

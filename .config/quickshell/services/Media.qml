@@ -118,7 +118,14 @@ Singleton {
     }
 
     function seek(positionSeconds) {
-        if (available && canSeek)
+        // Deliberately not gated on canSeek: if mpd-mpris/Quickshell ever
+        // misreports that flag as false, gating here means this becomes a
+        // silent no-op — the backend position never actually changes, and
+        // the poll timer then correctly (from its point of view) snaps the
+        // UI back to the real, unchanged position. That's the "moves for a
+        // moment then reverts" symptom. Worst case with the gate removed:
+        // an unsupported player ignores the assignment harmlessly.
+        if (available)
             activePlayer.position = positionSeconds;
     }
 
@@ -137,5 +144,24 @@ Singleton {
         const order = [MprisLoopState.None, MprisLoopState.Track, MprisLoopState.Playlist];
         const idx = order.indexOf(activePlayer.loopState);
         activePlayer.loopState = order[(idx + 1) % order.length];
+    }
+
+    // --- Icon resolution ---------------------------------------------------
+    //
+    // MPRIS's `desktopEntry` is just the .desktop file's basename (e.g.
+    // "zen"), not an icon name — the real icon lives in that file's own
+    // Icon= key (e.g. "zen-browser" for Zen). byId() does an exact-match
+    // lookup against Quickshell's desktop entry index; heuristicLookup()
+    // is a fuzzier second choice for cases where the id doesn't match
+    // exactly (per Quickshell's own docs, it "may guess incorrectly," so
+    // it's deliberately not first choice). Returns "" (not the raw id) on
+    // failure — callers are expected to have their own bundled-icon
+    // fallback for that case rather than us guessing a system icon name
+    // that probably won't resolve either.
+    function resolveIconName(desktopEntryId) {
+        if (!desktopEntryId)
+            return "";
+        const entry = DesktopEntries.byId(desktopEntryId) || DesktopEntries.heuristicLookup(desktopEntryId);
+        return entry?.icon || "";
     }
 }
