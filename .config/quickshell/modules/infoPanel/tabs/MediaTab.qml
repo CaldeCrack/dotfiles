@@ -28,6 +28,10 @@ Item {
     readonly property int innerSpacing: 8
     readonly property int extraActionsWidth: 64
 
+    Media.BlurredBackground {
+        anchors.fill: parent
+    }
+
     // --- centered block: artwork + (metadata / controls / seekbar) --------
     Row {
         id: centeredBlock
@@ -65,17 +69,8 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
-            // Placeholder for Seekbar
-            Rectangle {
+            Media.Seekbar {
                 width: parent.width
-                height: 24
-                color: "#555555"
-                radius: 6
-                Text {
-                    anchors.centerIn: parent
-                    text: "seekbar"
-                    color: "white"
-                }
             }
         }
     }
