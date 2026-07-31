@@ -64,24 +64,11 @@ Item {
         }
     }
 
-    // --- extra actions: independent right-edge anchor, not part of the
-    //     centered block ---------------------------------------------------
-    Rectangle {
-        width: root.extraActionsWidth
+    Media.ExtraActionsColumn {
         anchors {
             right: parent.right
             rightMargin: root.blockSpacing
             verticalCenter: parent.verticalCenter
-        }
-        height: 180
-        color: "#2a2a2a"
-        radius: 6
-
-        Text {
-            anchors.centerIn: parent
-            text: "extra\nactions"
-            color: "white"
-            horizontalAlignment: Text.AlignHCenter
         }
     }
 }
