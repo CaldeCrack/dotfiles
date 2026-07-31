@@ -1,6 +1,7 @@
 import QtQuick
 import qs.services as Services
 import qs.widgets as Widgets
+import qs.config
 
 // Deliberately plain right now: no styling beyond basic text, no truncation
 // handling for very long titles/albums yet, no fade-in on track change.
@@ -19,7 +20,7 @@ Item {
         Widgets.MarqueeText {
             width: parent.width
             text: Services.Media.available ? (Services.Media.title || "Unknown title") : "Nothing playing"
-            color: "white"
+            color: Colors.md3.on_surface
             font.pixelSize: 18
             font.bold: true
         }
@@ -28,7 +29,7 @@ Item {
             width: parent.width
             visible: Services.Media.available
             text: Services.Media.artist || "Unknown artist"
-            color: "#cccccc"
+            color: Colors.md3.on_surface_variant
             font.pixelSize: 16
         }
 
@@ -36,7 +37,7 @@ Item {
             width: parent.width
             visible: Services.Media.available
             text: Services.Media.album || ""
-            color: "#999999"
+            color: Colors.md3.on_surface_variant
             font.pixelSize: 14
         }
     }
