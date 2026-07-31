@@ -73,28 +73,29 @@ Singleton {
 
     readonly property real length: available ? activePlayer.length : 0
 
-    // --- Position: polled, not pushed ---------------------------------------
+    // --- Position ------------------------------------------------------------
     //
-    // MPRIS only reports position on demand (plus a Seeked signal on
-    // explicit seeks) — it does not stream continuously. positionTimer is
-    // what makes the seekbar move smoothly while a track plays.
+    // Per Quickshell's own MprisPlayer docs: reading `position` always
+    // returns the correct current value, but the property deliberately
+    // does NOT emit reactive change notifications during normal playback
+    // (only on a nonlinear jump) — to avoid wasting CPU on a value nothing
+    // may be watching. That means a plain declarative binding to it, left
+    // alone, will only ever update once and then go stale — which is what
+    // was actually causing the "stuck at start after restart" bug: not a
+    // gating issue, but this property fundamentally not renotifying on its
+    // own. The documented fix is to periodically emit positionChanged()
+    // manually while something is actively monitoring it, which forces
+    // this binding to re-evaluate.
+    readonly property real position: available ? activePlayer.position : 0
 
-    property real position: available ? activePlayer.position : 0
-
-    // Flip true while the seekbar widget is being dragged, so the timer
-    // below doesn't overwrite `position` mid-gesture and fight the user's
-    // thumb. The seekbar owns flipping this back to false + calling seek()
-    // on release.
-    property bool seekOverride: false
-
+    // Only needs to run while playing — a paused position is static and
+    // already correct the moment it's read once, no forcing required.
     Timer {
         interval: 500
-        running: root.isPlaying && !root.seekOverride
+        running: root.isPlaying
         repeat: true
-        onTriggered: root.position = root.activePlayer.position
+        onTriggered: root.activePlayer.positionChanged()
     }
-
-    onActivePlayerChanged: position = available ? activePlayer.position : 0
 
     // --- Transport methods, thin pass-throughs ------------------------------
     //
