@@ -42,26 +42,84 @@ Singleton {
     // overridable via setActivePlayer() from the selector.
     property var activePlayer: mpdPlayer
 
+    Connections {
+        target: root.activePlayer
+
+        function onTrackTitleChanged() {
+            if (root.activePlayer.trackTitle)
+                root.cachedTitle = root.activePlayer.trackTitle;
+        }
+
+        function onTrackArtistChanged() {
+            if (root.activePlayer.trackArtist)
+                root.cachedArtist = root.activePlayer.trackArtist;
+        }
+
+        function onTrackAlbumChanged() {
+            if (root.activePlayer.trackAlbum)
+                root.cachedAlbum = root.activePlayer.trackAlbum;
+        }
+
+        function onTrackArtUrlChanged() {
+            if (root.activePlayer.trackArtUrl)
+                root.cachedArtUrl = root.activePlayer.trackArtUrl;
+        }
+
+        function onLengthChanged() {
+            if (root.activePlayer.length > 0)
+                root.cachedLength = root.activePlayer.length;
+        }
+    }
+
     // If the active player disappears (browser tab closed, mpd-mpris
     // restarted) fall back to MPD if it's there, else null — don't leave
     // activePlayer pointing at a dead object.
     onPlayersChanged: {
         if (activePlayer && players.indexOf(activePlayer) === -1)
-            activePlayer = mpdPlayer;
+            setActivePlayer(mpdPlayer);
     }
 
     function setActivePlayer(player) {
         activePlayer = player;
+
+        if (!player) {
+            cachedTitle = "";
+            cachedArtist = "";
+            cachedAlbum = "";
+            cachedArtUrl = "";
+            cachedLength = 0;
+            return;
+        }
+
+        cachedTitle = player.trackTitle || "";
+        cachedArtist = player.trackArtist || "";
+        cachedAlbum = player.trackAlbum || "";
+        cachedArtUrl = player.trackArtUrl || "";
+        cachedLength = player.length || 0;
     }
 
     readonly property bool available: activePlayer !== null
 
+    // --- Metadata cache ------------------------------------------------------
+    //
+    // Some browser MPRIS implementations (observed with Zen + YouTube Music)
+    // intermittently stop advertising optional metadata (notably trackArtUrl
+    // and length) without the track actually changing. Cache the last valid
+    // values so transient metadata regressions don't blank the UI.
+
+    property string cachedTitle: ""
+    property string cachedArtist: ""
+    property string cachedAlbum: ""
+    property string cachedArtUrl: ""
+    property real cachedLength: 0
+
     // --- Metadata, read-through -------------------------------------------
 
-    readonly property string title: available ? (activePlayer.trackTitle || "") : ""
-    readonly property string artist: available ? (activePlayer.trackArtist || "") : ""
-    readonly property string album: available ? (activePlayer.trackAlbum || "") : ""
-    readonly property string artUrl: available ? (activePlayer.trackArtUrl || "") : ""
+    readonly property string title: cachedTitle
+    readonly property string artist: cachedArtist
+    readonly property string album: cachedAlbum
+    readonly property string artUrl: cachedArtUrl
+    readonly property real length: cachedLength
 
     readonly property bool isPlaying: available && activePlayer.playbackState === MprisPlaybackState.Playing
     readonly property bool canGoNext: available && activePlayer.canGoNext
@@ -70,8 +128,6 @@ Singleton {
 
     readonly property bool shuffle: available && activePlayer.shuffle
     readonly property int loopState: available ? activePlayer.loopState : MprisLoopState.None
-
-    readonly property real length: available ? activePlayer.length : 0
 
     // --- Position ------------------------------------------------------------
     //
