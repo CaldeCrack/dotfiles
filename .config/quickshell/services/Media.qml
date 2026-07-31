@@ -42,6 +42,10 @@ Singleton {
     // overridable via setActivePlayer() from the selector.
     property var activePlayer: mpdPlayer
 
+    Component.onCompleted: {
+        setActivePlayer(mpdPlayer);
+    }
+
     Connections {
         target: root.activePlayer
 
