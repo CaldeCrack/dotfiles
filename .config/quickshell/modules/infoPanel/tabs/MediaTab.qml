@@ -38,19 +38,8 @@ Item {
         anchors.centerIn: parent
         spacing: root.blockSpacing
 
-        // Placeholder for ArtworkVisualizer — plain square for now, gets
-        // circle-masked once the artwork section itself is built.
-        Rectangle {
-            width: root.artworkSize
-            height: root.artworkSize
-            color: "#333333"
-            radius: 8 // temporary — real version will be a circle mask
-
-            Text {
-                anchors.centerIn: parent
-                text: "artwork"
-                color: "white"
-            }
+        Media.ArtworkVisualizer {
+            size: root.artworkSize
         }
 
         Column {
