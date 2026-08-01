@@ -1,5 +1,5 @@
 import QtQuick
-import "about" as About
+import "about"
 
 // About tab layout: left section (profile/system info) takes a fixed
 // proportion of the width; the remaining space is split into two stacked
@@ -22,7 +22,7 @@ Item {
         anchors.fill: parent
         spacing: root.sectionSpacing
 
-        About.ProfileSection {
+        ProfileSection {
             width: root.usableWidth * root.proportion
             height: parent.height
         }
@@ -37,12 +37,12 @@ Item {
                 anchors.fill: parent
                 spacing: root.sectionSpacing
 
-                About.DistroSection {
+                DistroSection {
                     width: parent.width
                     height: (parent.height - root.sectionSpacing) / 2
                 }
 
-                About.ShellSection {
+                ShellSection {
                     width: parent.width
                     height: (parent.height - root.sectionSpacing) / 2
                 }

@@ -1,5 +1,5 @@
 import QtQuick
-import "weather" as WeatherSections
+import "weather"
 
 // Weather tab layout: split top/bottom via `proportion`. The top section is
 // itself split left/right via `topSectionProportion` — only the left part
@@ -36,18 +36,18 @@ Item {
 
             readonly property real usableWidth: width - root.sectionSpacing
 
-            WeatherSections.CurrentWeatherSection {
+            CurrentWeatherSection {
                 width: topSection.usableWidth * root.topSectionProportion
                 height: parent.height
             }
 
-            WeatherSections.DailyForecast {
+            DailyForecast {
                 width: topSection.usableWidth * (1 - root.topSectionProportion)
                 height: parent.height
             }
         }
 
-        WeatherSections.HourlyForecast {
+        HourlyForecast {
             width: parent.width
             height: root.usableHeight * (1 - root.proportion)
         }

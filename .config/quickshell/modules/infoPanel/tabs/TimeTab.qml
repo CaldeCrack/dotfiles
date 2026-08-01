@@ -1,5 +1,5 @@
 import QtQuick
-import "time" as TimeSections
+import "time"
 
 // Time tab layout — same skeleton as AboutTab, mirrored: the single "big"
 // section sits on the right instead of the left, with the two stacked
@@ -23,12 +23,12 @@ Item {
         anchors.fill: parent
         spacing: root.sectionSpacing
 
-        TimeSections.Clock {
+        Clock {
             width: root.usableWidth * root.proportion
             height: parent.height
         }
 
-        TimeSections.Calendar {
+        Calendar {
             width: root.usableWidth * (1 - root.proportion)
             height: parent.height
         }
