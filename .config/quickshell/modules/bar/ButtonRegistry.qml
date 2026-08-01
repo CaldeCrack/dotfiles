@@ -2,7 +2,7 @@ pragma Singleton
 
 import Quickshell
 import QtQml
-import "components" as Buttons
+import "components"
 
 // Central registry mapping button id -> Component. Every bar section reads
 // from this single map, so a button is defined once here and becomes
@@ -18,38 +18,38 @@ Singleton {
 
     Component {
         id: distroButton
-        Buttons.DistroButton {}
+        DistroButton {}
     }
     Component {
         id: workspaces
-        Buttons.Workspaces {}
+        Workspaces {}
     }
     Component {
         id: systemStats
-        Buttons.SystemStatsButton {}
+        SystemStatsButton {}
     }
-    // Component { id: media; Buttons.MediaButton {} }
+    // Component { id: media; MediaButton {} }
     Component {
         id: about
-        Buttons.AboutButton {}
+        AboutButton {}
     }
     Component {
         id: time
-        Buttons.TimeButton {}
+        TimeButton {}
     }
     Component {
         id: weather
-        Buttons.WeatherButton {}
+        WeatherButton {}
     }
     Component {
         id: wallpaper
-        Buttons.WallpaperButton {}
+        WallpaperButton {}
     }
-    // Component { id: tray; Buttons.Tray {} }
-    // Component { id: miscApps; Buttons.MiscAppsButton {} }
-    // Component { id: controlPanel; Buttons.ControlPanelButton {} }
-    // Component { id: notifications; Buttons.NotificationsButton {} }
-    // Component { id: power; Buttons.PowerButton {} }
+    // Component { id: tray; Tray {} }
+    // Component { id: miscApps; MiscAppsButton {} }
+    // Component { id: controlPanel; ControlPanelButton {} }
+    // Component { id: notifications; NotificationsButton {} }
+    // Component { id: power; PowerButton {} }
 
     readonly property var componentMap: ({
             distro: distroButton,

@@ -1,5 +1,5 @@
 import QtQuick
-import "media" as Media
+import "media"
 
 Item {
     id: root
@@ -12,11 +12,11 @@ Item {
     readonly property int innerSpacing: 8
     readonly property int extraActionsWidth: 64
 
-    Media.BlurredBackground {
+    BlurredBackground {
         anchors.fill: parent
     }
 
-    Media.ExtraActionsColumn {
+    ExtraActionsColumn {
         id: extraActions
 
         anchors {
@@ -38,15 +38,15 @@ Item {
             verticalCenter: parent.verticalCenter
         }
 
-        Media.MetadataSection {
+        MetadataSection {
             width: parent.width
         }
 
-        Media.GeneralControls {
+        GeneralControls {
             anchors.horizontalCenter: parent.horizontalCenter
         }
 
-        Media.Seekbar {
+        Seekbar {
             width: parent.width
         }
     }
@@ -63,7 +63,7 @@ Item {
             bottom: parent.bottom
         }
 
-        Media.ArtworkVisualizer {
+        ArtworkVisualizer {
             size: root.artworkSize
 
             anchors.centerIn: parent
