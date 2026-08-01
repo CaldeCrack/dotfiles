@@ -23,10 +23,39 @@ Singleton {
     readonly property bool muted: sink?.audio?.muted ?? true
     readonly property real volume: (sink?.audio?.volume ?? 0) * 100
 
-    // Raw material for an output-device selector later — every sink node
-    // on the system. isSink + a non-null audio block filters out
+    // Raw material for the output-device selector — every sink node on
+    // the system. isSink + a non-null audio block filters out
     // source-only and non-audio nodes.
-    readonly property var availableSinks: Pipewire.nodes.values.filter(node => node.isSink && node.audio !== null)
+    //
+    // .values is required, not optional — Pipewire.nodes is an
+    // ObjectModel (same as Mpris.players elsewhere in this project), and
+    // calling .filter() directly on an ObjectModel doesn't work the way
+    // it would on a plain array; .values is Quickshell's documented way
+    // to view one reactively as a real list.
+    readonly property var availableSinks: Pipewire.nodes.values.filter(node => node.isSink && node.audio !== null && node.properties?.["device.api"] === "alsa")
+
+    // --- Icon selection: headphones vs speaker ------------------------------
+    //
+    // There's no direct "is this headphones" boolean on PwNode. Best
+    // available signal is the device.form-factor Pipewire property (when
+    // present — it's not guaranteed to be set depending on the driver/
+    // backend), with a text search over description/nickname/name as a
+    // fallback for cases where it's missing. Defaults to speaker on any
+    // inconclusive result, since misclassifying headphones as a speaker
+    // icon is a smaller mistake than the reverse for most setups.
+    function isHeadphoneNode(node) {
+        if (!node)
+            return false;
+        const formFactor = (node.properties?.["device.form-factor"] || "").toLowerCase();
+        if (formFactor.includes("headphone") || formFactor.includes("headset"))
+            return true;
+        const text = `${node.description || ""} ${node.nickname || ""} ${node.name || ""}`.toLowerCase();
+        return text.includes("headphone") || text.includes("headset");
+    }
+
+    function iconNameForSink(node) {
+        return isHeadphoneNode(node) ? "media/headphones" : "media/speaker";
+    }
 
     function setVolume(percent) {
         if (!sink?.ready || !sink?.audio)

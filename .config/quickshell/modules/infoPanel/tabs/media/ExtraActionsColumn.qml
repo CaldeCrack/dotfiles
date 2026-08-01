@@ -50,12 +50,9 @@ Item {
             onClicked: root.activePopup = (root.activePopup === "player" ? "" : "player")
         }
 
-        // TODO: output device selector popup not built yet — button +
-        // tooltip only, click currently just toggles activePopup with
-        // nothing to show for it.
         Widgets.PanelIconButton {
             id: outputButton
-            iconName: "media/speaker" // placeholder — confirm this exists in assets/icons/
+            iconName: Services.Audio.iconNameForSink(Services.Audio.sink)
             checked: root.activePopup === "output"
             onClicked: root.activePopup = (root.activePopup === "output" ? "" : "output")
         }
@@ -89,6 +86,12 @@ Item {
     Extra.PlayerSelectorPopup {
         anchorItem: playerButton
         open: root.activePopup === "player"
+        onDismissRequested: root.activePopup = ""
+    }
+
+    Extra.OutputSelectorPopup {
+        anchorItem: outputButton
+        open: root.activePopup === "output"
         onDismissRequested: root.activePopup = ""
     }
 }

@@ -9,12 +9,6 @@ import Quickshell.Services.Mpris
 // active player (mpd-mpris) while still exposing the full player list for
 // the extra-actions selector, and (2) paper over the fact that MPRIS
 // position doesn't tick on its own — something has to poll it.
-//
-// NOTE: property/method names on MprisPlayer below (trackTitle, loopState,
-// togglePlaying, etc.) are written against the Quickshell Mpris API as of
-// last check — this has shifted across Quickshell versions before, so if
-// something doesn't resolve, diff against `qs.Services.Mpris` docs/headers
-// for the version actually installed before assuming the logic is wrong.
 Singleton {
     id: root
 
