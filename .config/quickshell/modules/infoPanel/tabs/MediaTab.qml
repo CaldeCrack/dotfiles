@@ -1,5 +1,6 @@
 import QtQuick
 import "media"
+import qs.services
 
 Item {
     id: root
@@ -12,8 +13,19 @@ Item {
     readonly property int innerSpacing: 8
     readonly property int extraActionsWidth: 64
 
+    Binding {
+        target: Cava
+        property: "tabVisible"
+        value: root.visible
+    }
+
     BlurredBackground {
         anchors.fill: parent
+    }
+
+    AudioVisualizerBars {
+        anchors.fill: parent
+        visible: Cava.mode === "bars"
     }
 
     ExtraActionsColumn {
@@ -56,6 +68,9 @@ Item {
     Item {
         id: artworkRegion
 
+        width: ringVisualizer.implicitWidth
+        height: root.height
+
         anchors {
             left: parent.left
             right: infoColumn.left
@@ -67,6 +82,15 @@ Item {
             size: root.artworkSize
 
             anchors.centerIn: parent
+        }
+
+        AudioVisualizerRing {
+            id: ringVisualizer
+            anchors.centerIn: parent
+            visible: Cava.mode === "ring"
+            // Just outside ArtworkVisualizer's own outline ring
+            // (artwork radius + its ringWidth + a small gap).
+            innerRadius: root.artworkSize / 2 + 6
         }
     }
 }
