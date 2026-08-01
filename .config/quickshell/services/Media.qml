@@ -32,12 +32,40 @@ Singleton {
         return null;
     }
 
-    // Everything below reads through this. Defaults to MPD when present,
-    // overridable via setActivePlayer() from the selector.
-    property var activePlayer: mpdPlayer
+    property var activePlayer: null
 
-    Component.onCompleted: {
-        setActivePlayer(mpdPlayer);
+    function updateActivePlayer() {
+        // Don't override a player explicitly selected by the user.
+        if (activePlayer)
+            return;
+
+        if (mpdPlayer)
+            setActivePlayer(mpdPlayer);
+    }
+
+    // MPRIS may already have players when this singleton is created,
+    // such as when Quickshell is reloaded during development.
+    Timer {
+        interval: 100
+        running: true
+        repeat: false
+
+        onTriggered: root.updateActivePlayer()
+    }
+
+    Connections {
+        target: root.players
+
+        function onObjectInsertedPost() {
+            root.updateActivePlayer();
+        }
+
+        function onObjectRemovedPost() {
+            if (root.activePlayer && root.players.values().indexOf(root.activePlayer) === -1) {
+                root.activePlayer = null;
+                root.updateActivePlayer();
+            }
+        }
     }
 
     Connections {
@@ -68,14 +96,6 @@ Singleton {
                 root.cachedLength = root.activePlayer.length;
             }
         }
-    }
-
-    // If the active player disappears (browser tab closed, mpd-mpris
-    // restarted) fall back to MPD if it's there, else null — don't leave
-    // activePlayer pointing at a dead object.
-    onPlayersChanged: {
-        if (activePlayer && players.indexOf(activePlayer) === -1)
-            setActivePlayer(mpdPlayer);
     }
 
     function setActivePlayer(player) {
