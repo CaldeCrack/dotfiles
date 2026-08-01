@@ -9,8 +9,8 @@ import Quickshell
 // potentially drifting a tick apart from one another.
 //
 // Sits alongside the other services/ singletons, so import as:
-//   import qs.services as Services
-// then reference Services.Time.time / Services.Time.date directly — same
+//   import qs.services
+// then reference Time.time / Time.date directly — same
 // multi-singleton-per-folder convention as Colors / Settings.
 Singleton {
     id: root

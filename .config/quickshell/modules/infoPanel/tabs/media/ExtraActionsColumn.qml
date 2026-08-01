@@ -1,7 +1,7 @@
 import QtQuick
-import qs.services as Services
-import qs.widgets as Widgets
-import "extra" as Extra
+import qs.services
+import qs.widgets
+import "extra"
 
 // Three buttons, tooltip on hover, popup to the right on click — only one
 // popup open at a time (activePopup tracks which). Only volume and player
@@ -31,28 +31,28 @@ Item {
         id: column
         spacing: 12
 
-        Widgets.PanelIconButton {
+        PanelIconButton {
             id: volumeButton
-            iconName: root.volumeIconName(Services.Audio.volume, Services.Audio.muted)
+            iconName: root.volumeIconName(Audio.volume, Audio.muted)
             checked: root.activePopup === "volume"
             onClicked: root.activePopup = (root.activePopup === "volume" ? "" : "volume")
         }
 
         // Shows the active player's real system icon (e.g. Spotify's own
-        // icon, Zen's own icon) via Services.Media.resolveIconName —
+        // icon, Zen's own icon) via Media.resolveIconName —
         // falls back to the bundled media/music icon whenever that
         // resolves to nothing (no active player, or the lookup failed).
-        Widgets.PanelIconButton {
+        PanelIconButton {
             id: playerButton
             iconName: "media/music"
-            systemIconName: Services.Media.available ? Services.Media.resolveIconName(Services.Media.activePlayer.desktopEntry) : ""
+            systemIconName: Media.available ? Media.resolveIconName(Media.activePlayer.desktopEntry) : ""
             checked: root.activePopup === "player"
             onClicked: root.activePopup = (root.activePopup === "player" ? "" : "player")
         }
 
-        Widgets.PanelIconButton {
+        PanelIconButton {
             id: outputButton
-            iconName: Services.Audio.iconNameForSink(Services.Audio.sink)
+            iconName: Audio.iconNameForSink(Audio.sink)
             checked: root.activePopup === "output"
             onClicked: root.activePopup = (root.activePopup === "output" ? "" : "output")
         }
@@ -61,35 +61,35 @@ Item {
     // Tooltips are siblings, not children — PanelIconButton has no
     // default content slot (unlike BarButtonBase), and Tooltip is a
     // PopupWindow anchored via `target` rather than parent/child anyway.
-    Widgets.Tooltip {
+    Tooltip {
         target: volumeButton
         text: "Volume"
     }
-    Widgets.Tooltip {
+    Tooltip {
         target: playerButton
         text: "Players"
     }
-    Widgets.Tooltip {
+    Tooltip {
         target: outputButton
         text: "Output device"
     }
 
-    Extra.VolumePopup {
+    VolumePopup {
         anchorItem: volumeButton
         open: root.activePopup === "volume"
         onDismissRequested: root.activePopup = ""
-        volume: Services.Audio.volume
-        muted: Services.Audio.muted
-        onVolumeChangeRequested: newVolume => Services.Audio.setVolume(newVolume)
+        volume: Audio.volume
+        muted: Audio.muted
+        onVolumeChangeRequested: newVolume => Audio.setVolume(newVolume)
     }
 
-    Extra.PlayerSelectorPopup {
+    PlayerSelectorPopup {
         anchorItem: playerButton
         open: root.activePopup === "player"
         onDismissRequested: root.activePopup = ""
     }
 
-    Extra.OutputSelectorPopup {
+    OutputSelectorPopup {
         anchorItem: outputButton
         open: root.activePopup === "output"
         onDismissRequested: root.activePopup = ""

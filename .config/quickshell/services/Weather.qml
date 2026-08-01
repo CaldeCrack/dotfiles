@@ -11,8 +11,8 @@ import qs.config
 //
 // Sits alongside the other services/ singletons, same multi-singleton-per-
 // folder convention as Colors/Settings: import as
-//   import qs.services as Services
-// then reference Services.Weather.* directly.
+//   import qs.services
+// then reference Weather.* directly.
 Singleton {
     id: root
 

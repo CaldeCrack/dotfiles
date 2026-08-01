@@ -2,7 +2,7 @@ import QtQuick
 import qs.widgets
 import qs.config
 import qs.services
-import qs.modules.infoPanel as Info
+import qs.modules.infoPanel
 
 BarButtonBase {
     id: root
@@ -16,13 +16,13 @@ BarButtonBase {
 
     // Reflect whether the panel is currently open on this tab, so the
     // button gets BarButtonBase's checked styling for free.
-    checked: Info.InfoPanel.panelOpen && Info.InfoPanel.currentIndex === weatherTabIndex
+    checked: InfoPanel.panelOpen && InfoPanel.currentIndex === weatherTabIndex
 
     onClicked: {
         if (checked)
-            Info.InfoPanel.close();
+            InfoPanel.close();
         else
-            Info.InfoPanel.show(weatherTabIndex);
+            InfoPanel.show(weatherTabIndex);
     }
 
     Row {

@@ -1,6 +1,6 @@
 import QtQuick
-import qs.services as Services
-import qs.widgets as Widgets
+import qs.services
+import qs.widgets
 import qs.config
 
 // Deliberately plain right now: no styling beyond basic text, no truncation
@@ -17,26 +17,26 @@ Item {
         width: parent.width
         spacing: 2
 
-        Widgets.MarqueeText {
+        MarqueeText {
             width: parent.width
-            text: Services.Media.available ? (Services.Media.title || "Unknown title") : "Nothing playing"
+            text: Media.available ? (Media.title || "Unknown title") : "Nothing playing"
             color: Colors.md3.on_surface
             font.pixelSize: 18
             font.bold: true
         }
 
-        Widgets.MarqueeText {
+        MarqueeText {
             width: parent.width
-            visible: Services.Media.available
-            text: Services.Media.artist || "Unknown artist"
+            visible: Media.available
+            text: Media.artist || "Unknown artist"
             color: Colors.md3.on_surface_variant
             font.pixelSize: 16
         }
 
-        Widgets.MarqueeText {
+        MarqueeText {
             width: parent.width
-            visible: Services.Media.available
-            text: Services.Media.album || ""
+            visible: Media.available
+            text: Media.album || ""
             color: Colors.md3.on_surface_variant
             font.pixelSize: 14
         }
