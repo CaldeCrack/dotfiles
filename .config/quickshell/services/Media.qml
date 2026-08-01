@@ -61,7 +61,7 @@ Singleton {
         }
 
         function onObjectRemovedPost() {
-            if (root.activePlayer && root.players.values().indexOf(root.activePlayer) === -1) {
+            if (root.activePlayer && root.players.values.indexOf(root.activePlayer) === -1) {
                 root.activePlayer = null;
                 root.updateActivePlayer();
             }
