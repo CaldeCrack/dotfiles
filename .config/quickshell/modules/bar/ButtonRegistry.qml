@@ -28,7 +28,10 @@ Singleton {
         id: systemStats
         SystemStatsButton {}
     }
-    // Component { id: media; MediaButton {} }
+    Component {
+        id: media
+        MediaButton {}
+    }
     Component {
         id: about
         AboutButton {}
@@ -55,7 +58,7 @@ Singleton {
             distro: distroButton,
             workspaces: workspaces,
             systemStats: systemStats,
-            // media: media,
+            media: media,
             about: about,
             time: time,
             weather: weather,

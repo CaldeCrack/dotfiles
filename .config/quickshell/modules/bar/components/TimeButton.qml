@@ -9,7 +9,7 @@ BarButtonBase {
 
     readonly property int timeTabIndex: 3
 
-    readonly property string format: "hh:mm 󰇙 ddd dd MMM"
+    readonly property string format: "hh:mm:ss 󰇙 ddd dd MMM"
     property string label: Qt.formatDateTime(Time.dateTime, format)
 
     tooltipText: "Time"

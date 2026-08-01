@@ -6,6 +6,10 @@ Item {
     property alias text: label1.text
     property alias color: label1.color
     property alias font: label1.font
+    property alias verticalAlignment: label1.verticalAlignment
+    property alias horizontalAlignment: label1.horizontalAlignment
+    property alias lineHeight: label1.lineHeight
+    property alias lineHeightMode: label1.lineHeightMode
 
     property int gap: 48
     property real speed: 40 // pixels/sec
@@ -14,7 +18,7 @@ Item {
     implicitHeight: label1.implicitHeight
     clip: true
 
-    readonly property bool overflowing: label1.implicitWidth > root.width
+    readonly property bool overflowing: label1.contentWidth > root.width
 
     Item {
         id: content
@@ -24,6 +28,7 @@ Item {
 
         Text {
             id: label1
+            anchors.verticalCenter: parent.verticalCenter
 
             wrapMode: Text.NoWrap
             elide: Text.ElideNone
@@ -33,14 +38,20 @@ Item {
         Text {
             id: label2
             anchors.verticalCenter: parent.verticalCenter
-            x: label1.implicitWidth + root.gap
+            x: label1.contentWidth + root.gap
             text: label1.text
             color: label1.color
             font: label1.font
+
+            lineHeight: label1.lineHeight
+            lineHeightMode: label1.lineHeightMode
+            horizontalAlignment: label1.horizontalAlignment
+            verticalAlignment: label1.verticalAlignment
+
             visible: root.overflowing
         }
 
-        width: root.overflowing ? label1.implicitWidth * 2 + root.gap : label1.implicitWidth
+        width: root.overflowing ? label1.contentWidth * 2 + root.gap : label1.contentWidth
     }
 
     SequentialAnimation {
