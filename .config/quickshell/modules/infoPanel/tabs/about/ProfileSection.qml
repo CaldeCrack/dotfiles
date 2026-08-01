@@ -2,8 +2,8 @@ import QtQuick
 import QtQuick.Effects
 import Quickshell
 import Quickshell.Io
-import qs.widgets as Widgets
-import qs.config as Config
+import qs.widgets
+import qs.config
 
 // Left section of the About tab: circular profile picture, username,
 // uptime, and window manager. Fills whatever size AboutTab gives it.
@@ -13,8 +13,8 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: 16
-        color: Config.Colors.md3.surface_container
-        border.color: Config.Colors.md3.primary
+        color: Colors.md3.surface_container
+        border.color: Colors.md3.primary
     }
 
     // ---- Uptime (`uptime -p`) -------------------------------------------
@@ -58,7 +58,7 @@ Item {
             Image {
                 id: avatarImage
                 anchors.fill: parent
-                source: root.resolvePath(Config.Settings.general.profilePicture)
+                source: root.resolvePath(Settings.general.profilePicture)
                 fillMode: Image.PreserveAspectCrop
                 visible: false // excluded from normal compositing, used only as the mask's source texture
             }
@@ -87,7 +87,7 @@ Item {
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
             text: Quickshell.env("USER")
-            color: Config.Colors.md3.on_surface
+            color: Colors.md3.on_surface
             font.pixelSize: 28
             font.bold: true
         }
@@ -96,18 +96,18 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: 6
 
-            Widgets.Icon {
+            Icon {
                 id: uptimeIcon
                 anchors.verticalCenter: parent.verticalCenter
                 name: "common/clock"
                 size: 14
-                color: Config.Colors.md3.on_surface_variant
+                color: Colors.md3.on_surface_variant
             }
 
             Text {
                 anchors.verticalCenter: parent.verticalCenter
                 text: root.uptimeText
-                color: Config.Colors.md3.on_surface_variant
+                color: Colors.md3.on_surface_variant
                 font.pixelSize: 14
             }
         }
@@ -116,18 +116,18 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: 6
 
-            Widgets.Icon {
+            Icon {
                 id: wmIcon
                 anchors.verticalCenter: parent.verticalCenter
                 name: "common/wm"
                 size: 14
-                color: Config.Colors.md3.on_surface_variant
+                color: Colors.md3.on_surface_variant
             }
 
             Text {
                 anchors.verticalCenter: parent.verticalCenter
                 text: "WM: " + Quickshell.env("XDG_CURRENT_DESKTOP")
-                color: Config.Colors.md3.on_surface_variant
+                color: Colors.md3.on_surface_variant
                 font.pixelSize: 14
             }
         }

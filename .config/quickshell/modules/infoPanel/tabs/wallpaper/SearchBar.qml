@@ -1,6 +1,6 @@
 import QtQuick
-import qs.widgets as Widgets
-import qs.config as Config
+import qs.widgets
+import qs.config
 
 // Search field + open-folder / refresh / apply actions, plus an inline
 // clear button. Layout is right-anchored: the icon buttons claim fixed
@@ -30,7 +30,7 @@ Item {
         property bool enabled: true
         signal clicked
 
-        // Widgets.Tooltip requires its target to expose a `hovered` bool —
+        // Tooltip requires its target to expose a `hovered` bool —
         // BarButtonBase already does this natively, this is the same
         // contract for our own hover-tracking Item.
         readonly property bool hovered: hoverArea.containsMouse
@@ -46,11 +46,11 @@ Item {
             color: hoverArea.containsMouse && btn.enabled ? Qt.rgba(1, 1, 1, 0.08) : "transparent"
         }
 
-        Widgets.Icon {
+        Icon {
             anchors.centerIn: parent
             name: btn.iconName
             size: root.iconSize
-            color: btn.enabled ? Config.Colors.md3.on_surface : Config.Colors.md3.outline_variant
+            color: btn.enabled ? Colors.md3.on_surface : Colors.md3.outline_variant
         }
 
         MouseArea {
@@ -62,7 +62,7 @@ Item {
             onClicked: btn.clicked()
         }
 
-        Widgets.Tooltip {
+        Tooltip {
             target: btn
             text: btn.tooltipText
         }
@@ -81,7 +81,7 @@ Item {
             color: "transparent"
             radius: 4
             border.width: 1
-            border.color: searchField.activeFocus ? Config.Colors.md3.primary : Config.Colors.md3.on_surface_variant
+            border.color: searchField.activeFocus ? Colors.md3.primary : Colors.md3.on_surface_variant
         }
 
         TextInput {
@@ -90,7 +90,7 @@ Item {
             anchors.leftMargin: 8
             anchors.rightMargin: (clearButton.visible ? clearButton.width : 0) + 8
             verticalAlignment: TextInput.AlignVCenter
-            color: Config.Colors.md3.on_surface
+            color: Colors.md3.on_surface
             clip: true
 
             // Escape drops keyboard focus rather than being swallowed or
@@ -115,7 +115,7 @@ Item {
             anchors.leftMargin: 8
             anchors.verticalCenter: parent.verticalCenter
             text: "Search wallpapers..."
-            color: Config.Colors.md3.on_surface_variant
+            color: Colors.md3.on_surface_variant
             visible: searchField.text.length === 0
         }
 
@@ -138,11 +138,11 @@ Item {
                 color: clearHover.containsMouse ? Qt.rgba(1, 1, 1, 0.08) : "transparent"
             }
 
-            Widgets.Icon {
+            Icon {
                 anchors.centerIn: parent
                 name: "common/x"
                 size: root.iconSize
-                color: Config.Colors.md3.on_surface
+                color: Colors.md3.on_surface
             }
 
             MouseArea {
@@ -153,7 +153,7 @@ Item {
                 onClicked: searchField.text = ""
             }
 
-            Widgets.Tooltip {
+            Tooltip {
                 target: clearButton
                 text: "Clear"
             }

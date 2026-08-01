@@ -1,12 +1,12 @@
 import QtQuick
-import qs.config as Config
-import qs.services as Services
-import qs.widgets as Widgets
+import qs.config
+import qs.services
+import qs.widgets
 
 // "Current" here means this node is Pipewire's actual defaultAudioSink —
 // the one everything's actually playing through right now, not just a
 // preference hint.
-Widgets.AnchoredPopup {
+AnchoredPopup {
     id: root
 
     property real popupContentWidth: 240
@@ -21,10 +21,10 @@ Widgets.AnchoredPopup {
 
         Text {
             width: parent.width - parent.leftPadding - parent.rightPadding
-            text: "Outputs (" + Services.Audio.availableSinks.length + ")"
+            text: "Outputs (" + Audio.availableSinks.length + ")"
             font.bold: true
             font.pixelSize: 13
-            color: Config.Colors.md3.on_surface
+            color: Colors.md3.on_surface
             bottomPadding: 4
         }
 
@@ -32,7 +32,7 @@ Widgets.AnchoredPopup {
         // not an ObjectModel — no .values needed here, unlike the player
         // selector's Repeater.
         Repeater {
-            model: Services.Audio.availableSinks
+            model: Audio.availableSinks
 
             delegate: Item {
                 id: entry
@@ -41,12 +41,12 @@ Widgets.AnchoredPopup {
                 width: root.popupContentWidth - 24 // account for Column's left/right padding
                 height: 44
 
-                readonly property bool isCurrent: modelData === Services.Audio.sink
+                readonly property bool isCurrent: modelData === Audio.sink
 
                 Rectangle {
                     anchors.fill: parent
                     radius: 6
-                    color: mouseArea.containsMouse ? Config.Colors.md3.surface_container_high : "transparent"
+                    color: mouseArea.containsMouse ? Colors.md3.surface_container_high : "transparent"
                     Behavior on color {
                         ColorAnimation {
                             duration: 120
@@ -54,14 +54,14 @@ Widgets.AnchoredPopup {
                     }
                 }
 
-                Widgets.Icon {
+                Icon {
                     id: sinkIcon
                     anchors {
                         left: parent.left
                         leftMargin: 8
                         verticalCenter: parent.verticalCenter
                     }
-                    name: Services.Audio.iconNameForSink(entry.modelData)
+                    name: Audio.iconNameForSink(entry.modelData)
                     size: 22
                 }
 
@@ -78,7 +78,7 @@ Widgets.AnchoredPopup {
                     Text {
                         width: parent.width
                         text: entry.modelData.nickname || entry.modelData.description || entry.modelData.name
-                        color: Config.Colors.md3.on_surface
+                        color: Colors.md3.on_surface
                         font.pixelSize: 13
                         elide: Text.ElideRight
                     }
@@ -86,7 +86,7 @@ Widgets.AnchoredPopup {
                     Text {
                         width: parent.width
                         text: entry.isCurrent ? "Current" : "Available"
-                        color: entry.isCurrent ? Config.Colors.md3.primary : Config.Colors.md3.on_surface_variant
+                        color: entry.isCurrent ? Colors.md3.primary : Colors.md3.on_surface_variant
                         font.pixelSize: 11
                     }
                 }
@@ -96,7 +96,7 @@ Widgets.AnchoredPopup {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: Services.Audio.setDefaultSink(entry.modelData)
+                    onClicked: Audio.setDefaultSink(entry.modelData)
                 }
             }
         }

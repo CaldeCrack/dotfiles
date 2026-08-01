@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Effects
-import qs.config as Config
-import qs.services as Services
+import qs.config
+import qs.services
 
 Item {
     id: root
@@ -12,25 +12,25 @@ Item {
     property real dimAmount: -0.5
     property real radius: 16
 
-    readonly property bool hasArt: Services.Media.artUrl.length > 0
+    readonly property bool hasArt: Media.artUrl.length > 0
 
     // --- fallback ----------------------------------------------------------
     Rectangle {
         anchors.fill: parent
         visible: !root.hasArt
         radius: root.radius
-        border.color: Config.Colors.md3.primary
+        border.color: Colors.md3.primary
         border.width: 1
 
         gradient: Gradient {
             orientation: Gradient.Vertical
             GradientStop {
                 position: 0.0
-                color: Config.Colors.md3.primary_container
+                color: Colors.md3.primary_container
             }
             GradientStop {
                 position: 1.0
-                color: Config.Colors.md3.surface_container_lowest
+                color: Colors.md3.surface_container_lowest
             }
         }
     }
@@ -56,7 +56,7 @@ Item {
             layer.enabled: true
 
             asynchronous: true
-            source: root.hasArt ? Services.Media.artUrl : ""
+            source: root.hasArt ? Media.artUrl : ""
             fillMode: Image.PreserveAspectCrop
         }
 
@@ -90,7 +90,7 @@ Item {
             anchors.fill: parent
             radius: root.radius
             color: "transparent"
-            border.color: Config.Colors.md3.primary
+            border.color: Colors.md3.primary
             border.width: 1
         }
     }

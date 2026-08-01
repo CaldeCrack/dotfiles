@@ -1,7 +1,7 @@
 import QtQuick
-import qs.widgets as Widgets
-import qs.config as Config
-import qs.services as Services
+import qs.widgets
+import qs.config
+import qs.services
 
 // Left part of the Weather tab's top section — current conditions.
 // Split left/right: the important stuff (icon, current temp, description,
@@ -15,10 +15,10 @@ Item {
     // (secondary stats) column.
     readonly property real columnProportion: 0.55
 
-    readonly property var current: Services.Weather.current
+    readonly property var current: Weather.current
     readonly property bool loading: !current
 
-    // Services.Weather.current starts as an empty object before the first
+    // Weather.current starts as an empty object before the first
     // fetch resolves, so every field access below is potentially
     // undefined — this formats a value defensively with a placeholder
     // rather than showing "undefined" or "NaN" during that window.
@@ -75,8 +75,8 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: 12
-        color: Config.Colors.md3.surface_container
-        border.color: Config.Colors.md3.primary
+        color: Colors.md3.surface_container
+        border.color: Colors.md3.primary
     }
 
     Row {
@@ -103,11 +103,11 @@ Item {
                 anchors.left: parent.left
                 spacing: 12
 
-                Widgets.Icon {
+                Icon {
                     anchors.verticalCenter: parent.verticalCenter
                     name: root.current.iconName || "weather/cloudy"
                     size: 48
-                    color: Config.Colors.md3.on_surface
+                    color: Colors.md3.on_surface
                     opacity: loading ? 0.35 : 1
                 }
 
@@ -118,7 +118,7 @@ Item {
                     Text {
                         id: currTemp
                         text: root.fmt(root.current.tempC, "°C")
-                        color: Config.Colors.md3.on_surface
+                        color: Colors.md3.on_surface
                         font.pixelSize: 40
                         font.bold: true
                     }
@@ -126,7 +126,7 @@ Item {
                     Text {
                         anchors.horizontalCenter: currTemp.horizontalCenter
                         text: root.fmt(root.current.maxTempC, "°") + " / " + root.fmt(root.current.minTempC, "°")
-                        color: Config.Colors.md3.on_surface_variant
+                        color: Colors.md3.on_surface_variant
                         font.pixelSize: 14
                     }
                 }
@@ -140,7 +140,7 @@ Item {
                     left: parent.left
                 }
                 text: root.current.description || ""
-                color: Config.Colors.md3.on_surface
+                color: Colors.md3.on_surface
                 font.pixelSize: 16
                 wrapMode: Text.WordWrap
             }
@@ -151,8 +151,8 @@ Item {
                     bottom: parent.bottom
                 }
                 width: parent.width
-                text: Services.Weather.locationName
-                color: Config.Colors.md3.on_surface_variant
+                text: Weather.locationName
+                color: Colors.md3.on_surface_variant
                 font.pixelSize: 12
                 elide: Text.ElideRight
             }
@@ -172,7 +172,7 @@ Item {
                 width: parent.width
                 spacing: 6
 
-                Widgets.Icon {
+                Icon {
                     anchors.verticalCenter: parent.verticalCenter
                     name: "weather/thermometer"
                     size: 16
@@ -182,7 +182,7 @@ Item {
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     text: root.fmt(root.current.feelsLikeC, "°C feels")
-                    color: Config.Colors.md3.on_surface_variant
+                    color: Colors.md3.on_surface_variant
                     font.pixelSize: 14
                 }
             }
@@ -191,7 +191,7 @@ Item {
                 width: parent.width
                 spacing: 6
 
-                Widgets.Icon {
+                Icon {
                     anchors.verticalCenter: parent.verticalCenter
                     name: "weather/humidity"
                     size: 16
@@ -201,7 +201,7 @@ Item {
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     text: root.fmt(root.current.humidity, "% humidity")
-                    color: Config.Colors.md3.on_surface_variant
+                    color: Colors.md3.on_surface_variant
                     font.pixelSize: 14
                 }
             }
@@ -210,7 +210,7 @@ Item {
                 width: parent.width
                 spacing: 6
 
-                Widgets.Icon {
+                Icon {
                     anchors.verticalCenter: parent.verticalCenter
                     name: "weather/wind"
                     size: 16
@@ -220,7 +220,7 @@ Item {
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     text: root.fmt(root.current.windSpeedKmph, " km/h wind")
-                    color: Config.Colors.md3.on_surface_variant
+                    color: Colors.md3.on_surface_variant
                     font.pixelSize: 14
                 }
             }
@@ -232,14 +232,14 @@ Item {
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     text: root.windArrow(root.windDir8(root.current.windDir))
-                    color: Config.Colors.md3.on_surface
+                    color: Colors.md3.on_surface
                     font.pixelSize: 16
                 }
 
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     text: root.windDir8(root.current.windDir) + " wind direction"
-                    color: Config.Colors.md3.on_surface_variant
+                    color: Colors.md3.on_surface_variant
                     font.pixelSize: 14
                 }
             }

@@ -1,7 +1,7 @@
 import QtQuick
 
-import qs.config as Config
-import qs.widgets as Widgets
+import qs.config
+import qs.widgets
 
 // BarButtonBase
 // -------------
@@ -96,11 +96,11 @@ Item {
     property real verticalPadding: 6
     property real radius: height / 2
 
-    property color idleColor: Config.Colors.md3.surface
-    property color stateLayerColor: checked ? Config.Colors.md3.primary : Config.Colors.md3.on_surface
+    property color idleColor: Colors.md3.surface
+    property color stateLayerColor: checked ? Colors.md3.primary : Colors.md3.on_surface
     property real hoverOpacity: 0.08
     property real pressOpacity: 0.14
-    property color checkedBackgroundColor: Config.Colors.md3.primary_container
+    property color checkedBackgroundColor: Colors.md3.primary_container
 
     // --- state ------------------------------------------------------
     // hovered comes from a dedicated HoverHandler, not
@@ -137,7 +137,7 @@ Item {
     // wider content like a clock's text label. Height defaults to the
     // bar's own height so every button lines up regardless of content.
     implicitWidth: Math.max(implicitHeight, (primaryContent ? primaryContent.implicitWidth : 0) + horizontalPadding * 2)
-    implicitHeight: Config.Settings.bar.height - 4
+    implicitHeight: Settings.bar.height - 4
 
     Rectangle {
         anchors.fill: parent
@@ -199,7 +199,7 @@ Item {
         implicitHeight: root.primaryContent ? root.primaryContent.implicitHeight : 0
     }
 
-    Widgets.Tooltip {
+    Tooltip {
         target: root
         text: root.tooltipText
     }

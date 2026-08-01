@@ -1,14 +1,14 @@
 import QtQuick
-import qs.config as Config
-import qs.services as Services
-import qs.widgets as Widgets
+import qs.config
+import qs.services
+import qs.widgets
 
 // "Status" here means whether this entry is our own app-level selected
 // player (Media.activePlayer) — not raw MPRIS playback state (playing/
 // paused/stopped). That's what "active" actually refers to for the
 // purpose of this list: which player our shell is currently reading
 // metadata from and sending controls to.
-Widgets.AnchoredPopup {
+AnchoredPopup {
     id: root
 
     property real popupContentWidth: 240
@@ -23,10 +23,10 @@ Widgets.AnchoredPopup {
 
         Text {
             width: parent.width - parent.leftPadding - parent.rightPadding
-            text: "Players (" + Services.Media.players.values.length + ")"
+            text: "Players (" + Media.players.values.length + ")"
             font.bold: true
             font.pixelSize: 13
-            color: Config.Colors.md3.on_surface
+            color: Colors.md3.on_surface
             bottomPadding: 4
         }
 
@@ -35,7 +35,7 @@ Widgets.AnchoredPopup {
         // itself doesn't update reactively; `.values` is the documented
         // way to view it as a live-updating plain list.
         Repeater {
-            model: Services.Media.players.values
+            model: Media.players.values
 
             delegate: Item {
                 id: entry
@@ -44,14 +44,14 @@ Widgets.AnchoredPopup {
                 width: root.popupContentWidth - 24 // account for Column's left/right padding
                 height: 44
 
-                readonly property bool isActive: modelData === Services.Media.activePlayer
-                readonly property bool isMpd: modelData.dbusName === Services.Media.mpdBusName
-                readonly property string resolvedIcon: Services.Media.resolveIconName(modelData.desktopEntry)
+                readonly property bool isActive: modelData === Media.activePlayer
+                readonly property bool isMpd: modelData.dbusName === Media.mpdBusName
+                readonly property string resolvedIcon: Media.resolveIconName(modelData.desktopEntry)
 
                 Rectangle {
                     anchors.fill: parent
                     radius: 6
-                    color: mouseArea.containsMouse ? Config.Colors.md3.surface_container_high : "transparent"
+                    color: mouseArea.containsMouse ? Colors.md3.surface_container_high : "transparent"
                     Behavior on color {
                         ColorAnimation {
                             duration: 120
@@ -61,7 +61,7 @@ Widgets.AnchoredPopup {
 
                 // 1. Real resolved icon, when one was actually found —
                 //    applies to any player, MPD included.
-                Widgets.Icon {
+                Icon {
                     id: resolvedPlayerIcon
                     anchors {
                         left: parent.left
@@ -77,7 +77,7 @@ Widgets.AnchoredPopup {
                 //    GUI app, so it's unlikely to have its own resolvable
                 //    desktop-entry icon; media/music reads better than a
                 //    generic fallback here.
-                Widgets.Icon {
+                Icon {
                     anchors {
                         left: parent.left
                         leftMargin: 8
@@ -93,7 +93,7 @@ Widgets.AnchoredPopup {
                 //    file is more likely here than it not being a real
                 //    app, so a generic app icon fits better than assuming
                 //    it's music-related.
-                Widgets.Icon {
+                Icon {
                     id: genericFallbackIcon
                     anchors {
                         left: parent.left
@@ -118,7 +118,7 @@ Widgets.AnchoredPopup {
                     Text {
                         width: parent.width
                         text: entry.modelData.identity || entry.modelData.dbusName
-                        color: Config.Colors.md3.on_surface
+                        color: Colors.md3.on_surface
                         font.pixelSize: 13
                         elide: Text.ElideRight
                     }
@@ -126,7 +126,7 @@ Widgets.AnchoredPopup {
                     Text {
                         width: parent.width
                         text: entry.isActive ? "Active" : "Available"
-                        color: entry.isActive ? Config.Colors.md3.primary : Config.Colors.md3.on_surface_variant
+                        color: entry.isActive ? Colors.md3.primary : Colors.md3.on_surface_variant
                         font.pixelSize: 11
                     }
                 }
@@ -136,7 +136,7 @@ Widgets.AnchoredPopup {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: Services.Media.setActivePlayer(entry.modelData)
+                    onClicked: Media.setActivePlayer(entry.modelData)
                 }
             }
         }

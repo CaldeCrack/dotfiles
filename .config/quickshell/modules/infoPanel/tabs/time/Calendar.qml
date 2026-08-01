@@ -1,8 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import qs.config as Config
-import qs.services as Services
+import qs.config
+import qs.services
 
 // Big section (right side) of the Time tab — a month calendar.
 //
@@ -29,14 +29,14 @@ Item {
         Rectangle {
             anchors.fill: parent
             radius: width / 2
-            color: arrowMouse.containsMouse ? Config.Colors.md3.surface_container_highest : "transparent"
+            color: arrowMouse.containsMouse ? Colors.md3.surface_container_highest : "transparent"
         }
 
         Text {
             anchors.centerIn: parent
             text: arrowButton.glyph
             font.pixelSize: 20
-            color: Config.Colors.md3.on_surface_variant
+            color: Colors.md3.on_surface_variant
         }
 
         MouseArea {
@@ -51,8 +51,8 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: 16
-        color: Config.Colors.md3.surface_container
-        border.color: Config.Colors.md3.primary
+        color: Colors.md3.surface_container
+        border.color: Colors.md3.primary
     }
 
     // Bound reactively to the real current month/year until the user
@@ -61,8 +61,8 @@ Item {
     // noted elsewhere in this project, e.g. DismissablePopup's `open`),
     // which is exactly what's wanted here: it tracks "now" until you
     // deliberately look at a different month.
-    property int displayMonth: Services.Time.dateTime.getMonth()
-    property int displayYear: Services.Time.dateTime.getFullYear()
+    property int displayMonth: Time.dateTime.getMonth()
+    property int displayYear: Time.dateTime.getFullYear()
 
     // Pure data mutation, no animation/side effects — callers wrap these
     // (or an equivalent inline function) with gridContainer.animatedNavigate
@@ -106,8 +106,8 @@ Item {
 
         background: Rectangle {
             radius: 12
-            color: Config.Colors.md3.surface_container_high
-            border.color: Config.Colors.md3.outline_variant
+            color: Colors.md3.surface_container_high
+            border.color: Colors.md3.outline_variant
         }
 
         contentItem: ColumnLayout {
@@ -125,7 +125,7 @@ Item {
                     Layout.fillWidth: true
                     horizontalAlignment: Text.AlignHCenter
                     text: monthYearPicker.pickerYear
-                    color: Config.Colors.md3.on_surface
+                    color: Colors.md3.on_surface
                     font.pixelSize: 16
                     font.bold: true
                 }
@@ -154,12 +154,12 @@ Item {
                         implicitWidth: 64
                         implicitHeight: 36
                         radius: 8
-                        color: isSelected ? Config.Colors.md3.primary : (monthCellMouse.containsMouse ? Config.Colors.md3.surface_container_highest : "transparent")
+                        color: isSelected ? Colors.md3.primary : (monthCellMouse.containsMouse ? Colors.md3.surface_container_highest : "transparent")
 
                         Text {
                             anchors.centerIn: parent
                             text: Qt.locale().standaloneMonthName(monthCell.index, Locale.ShortFormat)
-                            color: monthCell.isSelected ? Config.Colors.md3.on_primary : Config.Colors.md3.on_surface
+                            color: monthCell.isSelected ? Colors.md3.on_primary : Colors.md3.on_surface
                         }
 
                         MouseArea {
@@ -223,14 +223,14 @@ Item {
                 Rectangle {
                     anchors.fill: parent
                     radius: height / 2
-                    color: titleMouse.containsMouse ? Config.Colors.md3.surface_container_highest : "transparent"
+                    color: titleMouse.containsMouse ? Colors.md3.surface_container_highest : "transparent"
                 }
 
                 Text {
                     id: titleText
                     anchors.centerIn: parent
                     text: Qt.locale().monthName(root.displayMonth) + " " + root.displayYear
-                    color: Config.Colors.md3.on_surface
+                    color: Colors.md3.on_surface
                     font.pixelSize: 18
                     font.bold: true
                 }
@@ -268,7 +268,7 @@ Item {
                 text: shortName
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                color: Config.Colors.md3.on_surface_variant
+                color: Colors.md3.on_surface_variant
                 font.pixelSize: 12
             }
         }
@@ -342,13 +342,13 @@ Item {
                         width: 28
                         height: 28
                         radius: width / 2
-                        color: dayDelegate.model.today ? Config.Colors.md3.primary : "transparent"
+                        color: dayDelegate.model.today ? Colors.md3.primary : "transparent"
                     }
 
                     Text {
                         anchors.centerIn: parent
                         text: dayDelegate.model.day
-                        color: dayDelegate.model.today ? Config.Colors.md3.on_primary : Config.Colors.md3.on_surface
+                        color: dayDelegate.model.today ? Colors.md3.on_primary : Colors.md3.on_surface
                         font.pixelSize: 13
                     }
                 }

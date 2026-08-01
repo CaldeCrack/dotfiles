@@ -1,5 +1,4 @@
 import QtQuick
-import qs.services as Services
 import "media" as Media
 
 Item {

@@ -1,5 +1,5 @@
 import QtQuick
-import qs.config as Config
+import qs.config
 import qs.modules.bar as Bar
 
 // Left-aligned section of the bar. Renders one entry per id in `model`, in
@@ -12,9 +12,9 @@ Row {
     id: root
 
     property var model: []
-    readonly property real slotSize: Config.Settings.bar.height - 4
+    readonly property real slotSize: Settings.bar.height - 4
 
-    spacing: Config.Settings.bar.spacing
+    spacing: Settings.bar.spacing
 
     Repeater {
         model: root.model
@@ -51,12 +51,12 @@ Row {
                 anchors.fill: parent
                 visible: wrapper.buttonComponent === undefined
                 radius: width / 2
-                color: Config.Colors.md3.surface_container_high
+                color: Colors.md3.surface_container_high
 
                 Text {
                     anchors.centerIn: parent
                     text: wrapper.modelData.charAt(0).toUpperCase()
-                    color: Config.Colors.md3.on_surface
+                    color: Colors.md3.on_surface
                     font.pixelSize: parent.height * 0.5
                 }
             }

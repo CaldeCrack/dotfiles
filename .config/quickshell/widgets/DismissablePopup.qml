@@ -2,7 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Wayland
 
-import qs.widgets as Widgets
+import qs.widgets
 
 // DismissablePopup
 // -----------------
@@ -38,7 +38,7 @@ import qs.widgets as Widgets
 //       // "edge" to anchor to internally since the window already spans
 //       // the whole screen
 //       contentX: width - panel.implicitWidth - 8
-//       contentY: Config.Settings.bar.height + 8
+//       contentY: Settings.bar.height + 8
 //
 //       Text { text: "popup content" }
 //   }
@@ -112,7 +112,7 @@ PanelWindow {
         anchors.fill: panel
     }
 
-    Widgets.PanelBase {
+    PanelBase {
         id: panel
         panelOpen: root.open
         onClosed: root.shown = false

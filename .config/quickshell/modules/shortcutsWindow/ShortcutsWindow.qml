@@ -3,8 +3,8 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
-import qs.config as Config
-import qs.widgets as Widgets
+import qs.config
+import qs.widgets
 
 // ShortcutsWindow
 // ---------------
@@ -14,7 +14,7 @@ import qs.widgets as Widgets
 // instantiated directly by ArchButton — see that file for why this isn't a
 // shared singleton.
 //
-// Keybinds come from Config.KeybindsLoader.categories (see
+// Keybinds come from KeybindsLoader.categories (see
 // config/KeybindsLoader.qml), rendered as 3 equal-width columns. Each
 // category's "column" (1-3) and "index" (order within that column) fields
 // in keybinds.json decide where it lands — any number of categories per
@@ -81,7 +81,7 @@ PanelWindow {
     // Dims everything behind the panel; click anywhere on it to dismiss.
     Rectangle {
         anchors.fill: parent
-        color: Config.Colors.md3.scrim
+        color: Colors.md3.scrim
         opacity: 0.5
 
         MouseArea {
@@ -98,12 +98,12 @@ PanelWindow {
         // edge) plus the usual vertical margin, so the card never sits
         // under the bar; the other three sides just use the configured
         // margins directly.
-        anchors.topMargin: Config.Settings.bar.height + Config.Settings.shortcutsWindow.verticalMargin
-        anchors.bottomMargin: Config.Settings.shortcutsWindow.verticalMargin
-        anchors.leftMargin: Config.Settings.shortcutsWindow.horizontalMargin
-        anchors.rightMargin: Config.Settings.shortcutsWindow.horizontalMargin
+        anchors.topMargin: Settings.bar.height + Settings.shortcutsWindow.verticalMargin
+        anchors.bottomMargin: Settings.shortcutsWindow.verticalMargin
+        anchors.leftMargin: Settings.shortcutsWindow.horizontalMargin
+        anchors.rightMargin: Settings.shortcutsWindow.horizontalMargin
         radius: 16
-        color: Config.Colors.md3.surface_container
+        color: Colors.md3.surface_container
 
         // Swallow clicks here so they don't fall through to the scrim
         // behind and close the panel.
@@ -125,12 +125,12 @@ PanelWindow {
                 text: "Cheat Sheet"
                 font.pixelSize: 20
                 font.bold: true
-                color: Config.Colors.md3.on_surface
+                color: Colors.md3.on_surface
             }
 
             // Simple hover-highlighted close button. Not built on
             // BarButtonBase since that's sized/styled specifically for the
-            // bar (implicitHeight defaults to Config.Settings.bar.height,
+            // bar (implicitHeight defaults to Settings.bar.height,
             // which has nothing to do with this panel). If more panels
             // end up needing this same close-button look, pull it into
             // its own widgets/PanelCloseButton.qml.
@@ -142,7 +142,7 @@ PanelWindow {
                 radius: width / 2
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
-                color: closeArea.containsMouse ? Config.Colors.md3.surface : Config.Colors.md3.surface_container
+                color: closeArea.containsMouse ? Colors.md3.surface : Colors.md3.surface_container
 
                 Behavior on opacity {
                     NumberAnimation {
@@ -153,7 +153,7 @@ PanelWindow {
                 Text {
                     anchors.centerIn: parent
                     text: "\u2715"
-                    color: Config.Colors.md3.on_surface
+                    color: Colors.md3.on_surface
                     font.pixelSize: 14
                 }
 
@@ -175,7 +175,7 @@ PanelWindow {
         // category defining its own.
         Component {
             id: keybindCell
-            Widgets.Keybind {
+            Keybind {
                 keys: parent.shortcut.keybind
             }
         }
@@ -184,7 +184,7 @@ PanelWindow {
             id: descriptionCell
             Text {
                 text: parent.shortcut.description
-                color: Config.Colors.md3.on_surface_variant
+                color: Colors.md3.on_surface_variant
                 verticalAlignment: Text.AlignVCenter
             }
         }
@@ -229,7 +229,7 @@ PanelWindow {
                     // no matching column (missing/out-of-range) simply
                     // won't render in any of the three — nothing crashes,
                     // it's just silently skipped.
-                    readonly property var categoriesForColumn: Config.KeybindsLoader.categories.filter(category => category.column === index + 1).sort((a, b) => a.index - b.index)
+                    readonly property var categoriesForColumn: KeybindsLoader.categories.filter(category => category.column === index + 1).sort((a, b) => a.index - b.index)
 
                     Repeater {
                         model: columnDelegate.categoriesForColumn
@@ -246,7 +246,7 @@ PanelWindow {
                                 text: categoryBlock.modelData.category
                                 font.bold: true
                                 font.pixelSize: 20
-                                color: Config.Colors.md3.on_surface
+                                color: Colors.md3.on_surface
                             }
 
                             GridLayout {

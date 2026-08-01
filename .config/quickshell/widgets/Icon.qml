@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls.impl
 import Quickshell
 
-import qs.config as Config
+import qs.config
 
 // Icon
 // ----
@@ -43,7 +43,7 @@ Item {
     property string systemIconFallback: ""
 
     property real size: 20
-    property color color: Config.Colors.md3.on_surface
+    property color color: Colors.md3.on_surface
 
     implicitWidth: size
     implicitHeight: size

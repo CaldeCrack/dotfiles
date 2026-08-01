@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
 
-import qs.config as Config
+import qs.config
 
 // Tooltip
 // -------
@@ -71,8 +71,8 @@ PopupWindow {
     property int edgeMargin: anchorTarget.implicitHeight + 2
     property int showDelay: 800
 
-    property color backgroundColor: Config.Colors.md3.inverse_surface
-    property color textColor: Config.Colors.md3.inverse_on_surface
+    property color backgroundColor: Colors.md3.inverse_surface
+    property color textColor: Colors.md3.inverse_on_surface
     property real radius: 6
     property real horizontalPadding: 8
     property real verticalPadding: 4

@@ -1,6 +1,6 @@
 import QtQuick
 import Quickshell
-import qs.widgets as Widgets
+import qs.widgets
 
 // Wraps DismissablePopup with the "anchor to a trigger button, positioned
 // to its right, vertically centered on it" logic shared by every popup in
@@ -14,7 +14,7 @@ import qs.widgets as Widgets
 // snap to the corner during its own closing fade animation, since
 // PanelBase's close transition keeps rendering for a moment after `open`
 // flips false.
-Widgets.DismissablePopup {
+DismissablePopup {
     id: root
 
     property Item anchorItem: null

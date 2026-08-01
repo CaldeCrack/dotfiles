@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Shapes
 import QtQuick.Effects
-import qs.config as Config
+import qs.config
 
 // Square stat tile: icon centered, a used/total label just below it, and a
 // circular gauge wrapped around both. Used for the 4 detail cells inside
@@ -22,10 +22,10 @@ Item {
     required property real percentage // 0-100, drives the gauge sweep
     required property string label    // e.g. "4.2/16 GB", "42%", "58°C"
 
-    property color backgroundColor: Config.Colors.md3.surface_container
-    property color borderColor: Config.Colors.md3.primary
-    property color trackColor: Config.Colors.md3.surface_container_highest
-    property color progressColor: Config.Colors.md3.primary
+    property color backgroundColor: Colors.md3.surface_container
+    property color borderColor: Colors.md3.primary
+    property color trackColor: Colors.md3.surface_container_highest
+    property color progressColor: Colors.md3.primary
 
     property real strokeWidth: 8
     property real iconSize: 28
@@ -142,7 +142,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             horizontalAlignment: Text.AlignHCenter
             text: root.label
-            color: Config.Colors.md3.on_surface
+            color: Colors.md3.on_surface
             font.pixelSize: 12
         }
     }

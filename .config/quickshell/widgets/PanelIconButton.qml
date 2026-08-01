@@ -1,6 +1,6 @@
 import QtQuick
 import qs.config
-import qs.widgets as Widgets
+import qs.widgets
 
 // Shared hover/press/checked chrome for icon-only buttons living inside
 // panel content (InfoPanel tabs, ControlPanel sliders, etc.) — NOT the bar.
@@ -9,7 +9,7 @@ import qs.widgets as Widgets
 // pill shape, and with no tooltip/BarButtonBase-specific concerns.
 //
 // Usage:
-//   Widgets.PanelIconButton {
+//   PanelIconButton {
 //       iconName: "media-play"
 //       checked: someToggleState
 //       onClicked: doSomething()
@@ -54,7 +54,7 @@ Item {
     // Real app/system icon, shown only when the caller actually resolved
     // one (e.g. via Services.Media.resolveIconName). Never tinted — an
     // app's real branding colors are the point.
-    Widgets.Icon {
+    Icon {
         anchors.centerIn: parent
         visible: root.systemIconName.length > 0
         systemIcon: root.systemIconName
@@ -63,7 +63,7 @@ Item {
 
     // Bundled icon, tinted per checked/hover state — the original/default
     // mode, and the fallback whenever systemIconName is empty.
-    Widgets.Icon {
+    Icon {
         anchors.centerIn: parent
         visible: root.systemIconName.length === 0
         name: root.iconName

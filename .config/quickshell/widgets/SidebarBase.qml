@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Effects
 
-import qs.config as Config
+import qs.config
 
 // SidebarBase
 // -----------
@@ -60,13 +60,13 @@ Item {
     property real sidebarWidth: 340
     property real contentPadding: 16
     property real radius: 0
-    property color color: Config.Colors.md3.surface_container
-    property color borderColor: Config.Colors.md3.outline_variant
+    property color color: Colors.md3.surface_container
+    property color borderColor: Colors.md3.outline_variant
     property real borderWidth: 1
 
     // --- shadow ------------------------------------------------------
     property bool shadowEnabled: true
-    property color shadowColor: Config.Colors.md3.shadow
+    property color shadowColor: Colors.md3.shadow
     property real shadowBlur: 0.2
     property real shadowOpacity: 1.0
     property real shadowSpread: 2

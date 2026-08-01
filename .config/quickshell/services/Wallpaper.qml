@@ -3,7 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import qs.config as Config
+import qs.config
 
 // No UI — scans the configured wallpaper directory and exposes the current
 // wallpaper (sourced from Colors.qml/matugen). Applying a new one shells
@@ -14,9 +14,9 @@ import qs.config as Config
 Singleton {
     id: root
 
-    readonly property string directory: Config.Settings.general.wallpaperDir.replace("~", Quickshell.env("HOME"))
+    readonly property string directory: Settings.general.wallpaperDir.replace("~", Quickshell.env("HOME"))
     readonly property string scriptPath: "~/.local/share/scripts/bg_carousel/bg_carousel.sh".replace("~", Quickshell.env("HOME"))
-    readonly property string currentWallpaper: Config.Colors.wallpaper
+    readonly property string currentWallpaper: Colors.wallpaper
 
     // Plain absolute paths, no "file://" prefix — kept consistent with
     // whatever Colors.wallpaper contains so equality checks (selection vs

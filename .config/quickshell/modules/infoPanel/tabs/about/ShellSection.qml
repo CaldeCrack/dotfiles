@@ -1,6 +1,6 @@
 import QtQuick
-import qs.config as Config
-import qs.widgets as Widgets
+import qs.config
+import qs.widgets
 
 // Shell info section of the About tab: placeholder logo, name, website
 // link, and docs/github chips. All data is hardcoded for now. LinkChip is
@@ -20,8 +20,8 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: 16
-        color: Config.Colors.md3.surface_container
-        border.color: Config.Colors.md3.primary
+        color: Colors.md3.surface_container
+        border.color: Colors.md3.primary
     }
 
     Row {
@@ -38,7 +38,7 @@ Item {
             width: 160
             height: 160
             radius: width / 2
-            color: Config.Colors.md3.tertiary
+            color: Colors.md3.tertiary
         }
 
         Column {
@@ -48,7 +48,7 @@ Item {
 
             Text {
                 text: root.shellName
-                color: Config.Colors.md3.on_surface
+                color: Colors.md3.on_surface
                 font.pixelSize: 24
                 font.bold: true
             }
@@ -61,7 +61,7 @@ Item {
                     width: parent.width
                     wrapMode: Text.WordWrap
                     text: root.shellWebsite
-                    color: Config.Colors.md3.primary
+                    color: Colors.md3.primary
                     font.pixelSize: 14
                     font.underline: shellWebsiteMouse.containsMouse
 
@@ -77,12 +77,12 @@ Item {
                 Row {
                     spacing: 4
 
-                    Widgets.LinkChip {
+                    LinkChip {
                         label: "   Docs"
                         url: root.shellDocsUrl
                     }
 
-                    Widgets.LinkChip {
+                    LinkChip {
                         label: "   GitHub"
                         url: root.shellGithubUrl
                     }

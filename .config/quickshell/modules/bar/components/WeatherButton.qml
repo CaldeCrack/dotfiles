@@ -1,18 +1,18 @@
 import QtQuick
-import qs.widgets as Widgets
-import qs.config as Config
-import qs.services as Services
+import qs.widgets
+import qs.config
+import qs.services
 import qs.modules.infoPanel as Info
 
-Widgets.BarButtonBase {
+BarButtonBase {
     id: root
 
     readonly property int weatherTabIndex: 4
 
-    readonly property bool loading: Services.Weather.current.tempC === undefined
-    property string label: loading ? "--°C" : Services.Weather.current.tempC + "°C"
+    readonly property bool loading: Weather.current.tempC === undefined
+    property string label: loading ? "--°C" : Weather.current.tempC + "°C"
 
-    tooltipText: loading ? "Loading..." : Services.Weather.current.description
+    tooltipText: loading ? "Loading..." : Weather.current.description
 
     // Reflect whether the panel is currently open on this tab, so the
     // button gets BarButtonBase's checked styling for free.
@@ -28,16 +28,16 @@ Widgets.BarButtonBase {
     Row {
         spacing: 4
 
-        Widgets.Icon {
-            name: Services.Weather.current.iconName || "weather/default"
+        Icon {
+            name: Weather.current.iconName || "weather/default"
             size: 16
-            color: Config.Colors.md3.on_surface
+            color: Colors.md3.on_surface
             opacity: loading ? 0.35 : 1
         }
 
         Text {
             text: root.label
-            color: Config.Colors.md3.on_surface
+            color: Colors.md3.on_surface
             font.pixelSize: root.height * 0.5
             font.bold: true
             horizontalAlignment: Text.AlignHCenter

@@ -1,6 +1,6 @@
 import QtQuick
 import Quickshell
-import qs.config as Config
+import qs.config
 
 // Top-level bar window. Anchored to the top edge, sized/margined/rounded
 // entirely from config. Buttons are declared here only as ordered id lists;
@@ -16,17 +16,17 @@ PanelWindow {
     }
 
     margins {
-        top: Config.Settings.bar.margin
-        left: Config.Settings.bar.margin
-        right: Config.Settings.bar.margin
+        top: Settings.bar.margin
+        left: Settings.bar.margin
+        right: Settings.bar.margin
     }
 
-    implicitHeight: Config.Settings.bar.height
+    implicitHeight: Settings.bar.height
     color: "transparent"
 
     // Reserve space for the bar itself plus the gap above it so other
     // windows/layer-shell surfaces don't slide underneath it.
-    exclusiveZone: implicitHeight + Config.Settings.bar.margin
+    exclusiveZone: implicitHeight + Settings.bar.margin
 
     // Ordered id lists — the only thing that needs to change to reorder,
     // add, or move a button between sections. Ids are resolved against
@@ -38,8 +38,8 @@ PanelWindow {
     Rectangle {
         id: background
         anchors.fill: parent
-        radius: Config.Settings.bar.radius
-        color: Config.Colors.md3.surface_container
+        radius: Settings.bar.radius
+        color: Colors.md3.surface_container
     }
 
     LeftSection {

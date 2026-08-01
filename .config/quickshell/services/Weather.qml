@@ -3,14 +3,14 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import qs.config as Config
+import qs.config
 
 // Weather service — fetches from wttr.in's JSON API (?format=j1), no API
-// key required. Location/units come from Config.Settings.weather. Refetches
+// key required. Location/units come from Settings.weather. Refetches
 // on a timer, and refresh() is exposed for a manual/on-demand trigger.
 //
 // Sits alongside the other services/ singletons, same multi-singleton-per-
-// folder convention as Config.Colors/Config.Settings: import as
+// folder convention as Colors/Settings: import as
 //   import qs.services as Services
 // then reference Services.Weather.* directly.
 Singleton {
@@ -66,8 +66,8 @@ Singleton {
     }
 
     function buildUrl() {
-        const location = encodeURIComponent(Config.Settings.weather.location);
-        const units = Config.Settings.weather.units === "imperial" ? "u" : Config.Settings.weather.units === "metric" ? "m" : "";
+        const location = encodeURIComponent(Settings.weather.location);
+        const units = Settings.weather.units === "imperial" ? "u" : Settings.weather.units === "metric" ? "m" : "";
         const unitsParam = units ? "&" + units : "";
         return "https://wttr.in/" + location + "?format=j1" + unitsParam;
     }
@@ -147,7 +147,7 @@ Singleton {
         raw = data;
 
         const area = data.nearest_area && data.nearest_area[0];
-        locationName = area ? [area.areaName[0].value, area.country[0].value].filter(Boolean).join(", ") : Config.Settings.weather.location;
+        locationName = area ? [area.areaName[0].value, area.country[0].value].filter(Boolean).join(", ") : Settings.weather.location;
 
         const days = data.weather || [];
         const todayEntry = days[0];

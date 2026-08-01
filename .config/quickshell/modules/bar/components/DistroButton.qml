@@ -1,7 +1,7 @@
 import QtQuick
-import qs.config as Config
-import qs.widgets as Widgets
-import qs.modules.shortcutsWindow as ShortcutsWindow
+import qs.config
+import qs.widgets
+import qs.modules.shortcutsWindow
 
 // ArchButton
 // ----------
@@ -9,7 +9,7 @@ import qs.modules.shortcutsWindow as ShortcutsWindow
 // instance directly, the same "just nest it" pattern BarButtonBase itself
 // uses for its Tooltip — nothing else needs to open this panel, so a
 // shared singleton/service would just be indirection with no payoff.
-Widgets.BarButtonBase {
+BarButtonBase {
     id: root
 
     tooltipText: "I use Arch btw"
@@ -20,10 +20,10 @@ Widgets.BarButtonBase {
         text: "󰣇"
         font.bold: true
         font.pixelSize: root.height * 0.5
-        color: Config.Colors.md3.on_surface
+        color: Colors.md3.on_surface
     }
 
-    ShortcutsWindow.ShortcutsWindow {
+    ShortcutsWindow {
         id: shortcuts
     }
 }

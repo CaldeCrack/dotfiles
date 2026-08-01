@@ -1,5 +1,5 @@
 import QtQuick
-import qs.config as Config
+import qs.config
 
 // Left: current wallpaper filename + icon. Center: pagination (prev arrow /
 // current-total display / next arrow). Pure display + input relay — page
@@ -26,13 +26,13 @@ Item {
             width: 16
             height: 16
             radius: 8
-            color: Config.Colors.md3.primary
+            color: Colors.md3.primary
             anchors.verticalCenter: parent.verticalCenter
         }
 
         Text {
             text: root.currentWallpaperName
-            color: Config.Colors.md3.on_surface
+            color: Colors.md3.on_surface
             anchors.verticalCenter: parent.verticalCenter
         }
     }
@@ -52,7 +52,7 @@ Item {
             Text {
                 anchors.centerIn: parent
                 text: "<"
-                color: root.currentPage > 0 ? Config.Colors.md3.on_surface : Config.Colors.md3.on_surface_variant
+                color: root.currentPage > 0 ? Colors.md3.on_surface : Colors.md3.on_surface_variant
             }
 
             MouseArea {
@@ -69,7 +69,7 @@ Item {
         Text {
             anchors.verticalCenter: parent.verticalCenter
             text: (root.currentPage + 1) + " / " + root.totalPages
-            color: Config.Colors.md3.on_surface
+            color: Colors.md3.on_surface
         }
 
         Rectangle {
@@ -82,7 +82,7 @@ Item {
             Text {
                 anchors.centerIn: parent
                 text: ">"
-                color: root.currentPage < root.totalPages - 1 ? Config.Colors.md3.on_surface : Config.Colors.md3.on_surface_variant
+                color: root.currentPage < root.totalPages - 1 ? Colors.md3.on_surface : Colors.md3.on_surface_variant
             }
 
             MouseArea {

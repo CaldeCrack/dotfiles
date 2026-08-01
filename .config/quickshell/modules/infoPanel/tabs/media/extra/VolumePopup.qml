@@ -1,11 +1,11 @@
 import QtQuick
-import qs.config as Config
-import qs.widgets as Widgets
+import qs.config
+import qs.widgets
 
 // Volume state is passed in from the caller (ExtraActionsColumn, backed by
 // the real Audio service). This popup only ever reports what the user did
 // via volumeChangeRequested; it doesn't own the real value itself.
-Widgets.AnchoredPopup {
+AnchoredPopup {
     id: root
 
     property real volume: 50
@@ -22,7 +22,7 @@ Widgets.AnchoredPopup {
         leftPadding: 16
         rightPadding: 16
 
-        Widgets.VerticalSlider {
+        VerticalSlider {
             id: slider
             anchors.horizontalCenter: parent.horizontalCenter
             length: 120
@@ -44,7 +44,7 @@ Widgets.AnchoredPopup {
             width: parent.width - parent.leftPadding - parent.rightPadding
             horizontalAlignment: Text.AlignHCenter
             text: Math.round(root.volume) + "%"
-            color: Config.Colors.md3.on_surface
+            color: Colors.md3.on_surface
             font.pixelSize: 12
         }
     }

@@ -1,9 +1,9 @@
 import QtQuick
-import qs.config as Config
-import qs.widgets as Widgets
-import qs.services as Services
+import qs.config
+import qs.widgets
+import qs.services
 
-Widgets.BarButtonBase {
+BarButtonBase {
     id: root
 
     onClicked: root.checked ? close() : open(root)
@@ -30,7 +30,7 @@ Widgets.BarButtonBase {
         height: icon.size
         readonly property bool hovered: hoverArea.hovered
 
-        Widgets.Icon {
+        Icon {
             id: icon
             name: wrap.iconName
             size: 16
@@ -40,21 +40,21 @@ Widgets.BarButtonBase {
             id: hoverArea
         }
 
-        Widgets.Tooltip {
+        Tooltip {
             target: wrap
             anchorTarget: root
             text: Math.round(wrap.value) + "%"
         }
     }
 
-    Widgets.DismissablePopup {
+    DismissablePopup {
         id: popup
 
         open: root.checked
         onDismissRequested: root.checked = false
 
         contentX: root.x
-        contentY: Config.Settings.bar.height
+        contentY: Settings.bar.height
 
         // Memory is conventionally shown in binary GiB (matches free/htop),
         // disk capacity in decimal GB (matches how drives are marketed/df -H).
@@ -107,7 +107,7 @@ Widgets.BarButtonBase {
             spacing: popup.statSpacing
 
             // Temperature.
-            Widgets.StatCardVertical {
+            StatCardVertical {
                 width: popup.statCellSize
                 height: popup.statCellSize * 2 + popup.statSpacing
 
@@ -148,8 +148,8 @@ Widgets.BarButtonBase {
 
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
-                            text: Math.round(Services.SystemStats.temperature) + "°C"
-                            color: Config.Colors.md3.primary
+                            text: Math.round(SystemStats.temperature) + "°C"
+                            color: Colors.md3.primary
                             font.pixelSize: 20
                             font.bold: true
                         }
@@ -160,15 +160,15 @@ Widgets.BarButtonBase {
 
                             Text {
                                 id: fahrenheitLabel
-                                text: Math.round(popup.toFahrenheit(Services.SystemStats.temperature)) + "°F"
-                                color: Config.Colors.md3.on_surface
+                                text: Math.round(popup.toFahrenheit(SystemStats.temperature)) + "°F"
+                                color: Colors.md3.on_surface
                                 font.pixelSize: 10
                             }
 
                             Text {
                                 id: kelvinLabel
-                                text: Math.round(popup.toKelvin(Services.SystemStats.temperature)) + "K"
-                                color: Config.Colors.md3.on_surface
+                                text: Math.round(popup.toKelvin(SystemStats.temperature)) + "K"
+                                color: Colors.md3.on_surface
                                 font.pixelSize: 10
                             }
                         }
@@ -178,12 +178,12 @@ Widgets.BarButtonBase {
                     // anchored to the bottom — the empty space above (not
                     // taken by tempLabels) is deliberate breathing room, not
                     // unclaimed layout.
-                    Widgets.Thermometer {
+                    Thermometer {
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.bottom: parent.bottom
                         height: parent.height * 0.8
                         width: height
-                        percentage: popup.tempPercentage(Services.SystemStats.temperature)
+                        percentage: popup.tempPercentage(SystemStats.temperature)
                     }
                 }
             }
@@ -194,41 +194,41 @@ Widgets.BarButtonBase {
                 rowSpacing: popup.statSpacing
                 columnSpacing: popup.statSpacing
 
-                Widgets.StatGauge {
+                StatGauge {
                     width: popup.statCellSize
                     height: popup.statCellSize
                     iconName: "hardware/cpu"
-                    percentage: Services.SystemStats.cpuUsage
-                    label: (Services.SystemStats.cpuMaxFrequencyMHz / 1000).toFixed(1) + " GHz\n" + Services.SystemStats.cpuCoreCount + " cores"
+                    percentage: SystemStats.cpuUsage
+                    label: (SystemStats.cpuMaxFrequencyMHz / 1000).toFixed(1) + " GHz\n" + SystemStats.cpuCoreCount + " cores"
                 }
 
-                Widgets.StatGauge {
+                StatGauge {
                     width: popup.statCellSize
                     height: popup.statCellSize
                     iconName: "hardware/memory-stick"
-                    percentage: Services.SystemStats.memoryUsage
-                    label: popup.formatGiB(Services.SystemStats.memoryTotalBytes)
+                    percentage: SystemStats.memoryUsage
+                    label: popup.formatGiB(SystemStats.memoryTotalBytes)
                 }
 
-                Widgets.StatGauge {
+                StatGauge {
                     width: popup.statCellSize
                     height: popup.statCellSize
                     iconName: "hardware/hard-drive"
-                    percentage: Services.SystemStats.diskUsage
-                    label: popup.formatGB(Services.SystemStats.diskTotalBytes)
+                    percentage: SystemStats.diskUsage
+                    label: popup.formatGB(SystemStats.diskTotalBytes)
                 }
 
-                Widgets.StatGauge {
+                StatGauge {
                     width: popup.statCellSize
                     height: popup.statCellSize
                     iconName: "hardware/gpu"
-                    percentage: Services.SystemStats.gpuUsage
-                    label: popup.formatVramTotal(Services.SystemStats.gpuTotalVramBytes)
+                    percentage: SystemStats.gpuUsage
+                    label: popup.formatVramTotal(SystemStats.gpuTotalVramBytes)
                 }
             }
 
             // Battery — fill glyph plus a percentage label above it.
-            Widgets.StatCardVertical {
+            StatCardVertical {
                 width: popup.statCellSize
                 height: popup.statCellSize * 2 + popup.statSpacing
 
@@ -236,18 +236,18 @@ Widgets.BarButtonBase {
                     anchors.top: parent.top
                     anchors.topMargin: 16
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: Math.round(Services.Battery.percentage) + "%"
-                    color: Config.Colors.md3.primary
+                    text: Math.round(Battery.percentage) + "%"
+                    color: Colors.md3.primary
                     font.pixelSize: 32
                     font.bold: true
                 }
 
-                Widgets.BatteryIndicator {
+                BatteryIndicator {
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: parent.bottom
                     height: parent.height * 0.74
                     width: height
-                    percentage: Services.Battery.percentage
+                    percentage: Battery.percentage
                 }
             }
         }
@@ -258,23 +258,23 @@ Widgets.BarButtonBase {
 
         StatIcon {
             iconName: "hardware/cpu"
-            value: Services.SystemStats.cpuUsage
+            value: SystemStats.cpuUsage
         }
 
         StatIcon {
             iconName: "hardware/memory-stick"
-            value: Services.SystemStats.memoryUsage
+            value: SystemStats.memoryUsage
         }
 
         StatIcon {
             iconName: "hardware/hard-drive"
-            value: Services.SystemStats.diskUsage
+            value: SystemStats.diskUsage
         }
 
         StatIcon {
-            visible: Services.Battery.available
-            iconName: Services.Battery.iconName
-            value: Services.Battery.percentage
+            visible: Battery.available
+            iconName: Battery.iconName
+            value: Battery.percentage
         }
     }
 }

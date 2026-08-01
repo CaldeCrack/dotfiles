@@ -1,6 +1,6 @@
 import QtQuick
-import qs.config as Config
-import qs.widgets as Widgets
+import qs.config
+import qs.widgets
 
 // Distro info section of the About tab: logo, name, homepage link, and
 // docs/github/forums chips. All data is hardcoded for now. LinkChip is a
@@ -24,8 +24,8 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: 16
-        color: Config.Colors.md3.surface_container
-        border.color: Config.Colors.md3.primary
+        color: Colors.md3.surface_container
+        border.color: Colors.md3.primary
     }
 
     Row {
@@ -58,7 +58,7 @@ Item {
 
             Text {
                 text: root.distroName
-                color: Config.Colors.md3.on_surface
+                color: Colors.md3.on_surface
                 font.pixelSize: 24
                 font.bold: true
             }
@@ -73,7 +73,7 @@ Item {
                     width: parent.width
                     wrapMode: Text.WordWrap
                     text: root.distroHomepage
-                    color: Config.Colors.md3.primary
+                    color: Colors.md3.primary
                     font.pixelSize: 14
                     font.underline: distroHomepageMouse.containsMouse
 
@@ -92,18 +92,18 @@ Item {
                     Row {
                         spacing: 4
 
-                        Widgets.LinkChip {
+                        LinkChip {
                             label: "   Docs"
                             url: root.distroDocsUrl
                         }
 
-                        Widgets.LinkChip {
+                        LinkChip {
                             label: "   GitHub"
                             url: root.distroGithubUrl
                         }
                     }
                     Row {
-                        Widgets.LinkChip {
+                        LinkChip {
                             label: "󱜸   Forums"
                             url: root.distroForumsUrl
                         }

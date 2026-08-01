@@ -1,7 +1,7 @@
 import QtQuick
-import qs.services as Services
-import qs.widgets as Widgets
-import qs.config as Config
+import qs.services
+import qs.widgets
+import qs.config
 
 // Paged grid of wallpaper thumbnails. Clicking one only highlights it and
 // emits wallpaperSelected — it does NOT apply anything itself; applying
@@ -23,16 +23,16 @@ Item {
     readonly property int rows: 2
     readonly property int cellSpacing: 8
     readonly property int itemsPerPage: columns * rows
-    readonly property string currentWallpaperName: Services.Wallpaper.currentWallpaper
+    readonly property string currentWallpaperName: Wallpaper.currentWallpaper
 
     readonly property real effectiveCellWidth: (width - (columns - 1) * cellSpacing) / columns
     readonly property real effectiveCellHeight: (height - (rows - 1) * cellSpacing) / rows
 
     readonly property var filteredWallpapers: {
         if (!root.filterText)
-            return Services.Wallpaper.wallpapers;
+            return Wallpaper.wallpapers;
         const needle = root.filterText.toLowerCase();
-        return Services.Wallpaper.wallpapers.filter(path => path.toLowerCase().includes(needle));
+        return Wallpaper.wallpapers.filter(path => path.toLowerCase().includes(needle));
     }
 
     readonly property int totalPages: Math.max(1, Math.ceil(filteredWallpapers.length / itemsPerPage))
@@ -84,11 +84,11 @@ Item {
 
                         Rectangle {
                             anchors.fill: parent
-                            color: Config.Colors.md3.surface_container_lowest
+                            color: Colors.md3.surface_container_lowest
                             radius: 4
 
                             border.width: (isCurrent || isSelected || mouseArea.containsMouse) ? 4 : 0
-                            border.color: isCurrent ? Config.Colors.md3.primary : Config.Colors.md3.tertiary
+                            border.color: isCurrent ? Colors.md3.primary : Colors.md3.tertiary
 
                             Behavior on border.width {
                                 NumberAnimation {
@@ -119,13 +119,13 @@ Item {
                                     rightMargin: 6
                                 }
 
-                                color: Config.Colors.md3.primary
+                                color: Colors.md3.primary
 
-                                Widgets.Icon {
+                                Icon {
                                     anchors.centerIn: parent
                                     size: 14
                                     name: "common/check"
-                                    color: Config.Colors.md3.surface_container_lowest
+                                    color: Colors.md3.surface_container_lowest
                                 }
                             }
                         }
@@ -144,7 +144,7 @@ Item {
                         id: fileNameText
                         width: parent.width
                         text: fileName
-                        color: Config.Colors.md3.on_surface
+                        color: Colors.md3.on_surface
                         horizontalAlignment: Text.AlignHCenter
                         elide: Text.ElideMiddle
                         font.pixelSize: 12
@@ -157,7 +157,7 @@ Item {
     Text {
         anchors.centerIn: parent
         text: "No wallpapers found"
-        color: Config.Colors.md3.on_surface_variant
+        color: Colors.md3.on_surface_variant
         visible: root.pagedWallpapers.length === 0
     }
 }

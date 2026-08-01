@@ -1,8 +1,8 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Shapes
-import qs.config as Config
-import qs.services as Services
+import qs.config
+import qs.services
 
 // Left column of the Time tab — vertical clock section, filling the whole
 // remaining space next to the calendar. Top: weekday + day number. Middle:
@@ -14,8 +14,8 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: 16
-        color: Config.Colors.md3.surface_container
-        border.color: Config.Colors.md3.primary
+        color: Colors.md3.surface_container
+        border.color: Colors.md3.primary
     }
 
     // Circular progress ring. Track + progress arcs, based on the
@@ -26,8 +26,8 @@ Item {
         id: gauge
 
         property real percentage: 0 // 0-100
-        property color trackColor: Config.Colors.md3.surface_container_highest
-        property color progressColor: Config.Colors.md3.primary
+        property color trackColor: Colors.md3.surface_container_highest
+        property color progressColor: Colors.md3.primary
         property real strokeWidth: 8
         property real startAngle: -80
         property real totalSweep: 340
@@ -99,15 +99,15 @@ Item {
                 // classic Qt gotcha where QLocale's day index (1=Monday..
                 // 7=Sunday) doesn't match JS Date.getDay() (0=Sunday..
                 // 6=Saturday).
-                text: Qt.formatDate(Services.Time.dateTime, "dddd")
-                color: Config.Colors.md3.on_surface_variant
+                text: Qt.formatDate(Time.dateTime, "dddd")
+                color: Colors.md3.on_surface_variant
                 font.pixelSize: 30
             }
 
             Text {
                 Layout.alignment: Qt.AlignHCenter
-                text: Services.Time.dateTime.getDate()
-                color: Config.Colors.md3.on_surface
+                text: Time.dateTime.getDate()
+                color: Colors.md3.on_surface
                 font.pixelSize: 40
                 font.bold: true
             }
@@ -126,7 +126,7 @@ Item {
                 width: Math.min(parent.width, parent.height)
                 height: width
 
-                percentage: ((Services.Time.dateTime.getHours() + Services.Time.dateTime.getMinutes() / 60) / 24) * 100
+                percentage: ((Time.dateTime.getHours() + Time.dateTime.getMinutes() / 60) / 24) * 100
             }
 
             ColumnLayout {
@@ -135,24 +135,24 @@ Item {
 
                 Text {
                     Layout.alignment: Qt.AlignHCenter
-                    text: Qt.formatTime(Services.Time.dateTime, "HH")
-                    color: Config.Colors.md3.primary
+                    text: Qt.formatTime(Time.dateTime, "HH")
+                    color: Colors.md3.primary
                     font.pixelSize: 40
                     font.bold: true
                 }
 
                 Text {
                     Layout.alignment: Qt.AlignHCenter
-                    text: Qt.formatTime(Services.Time.dateTime, "mm")
-                    color: Config.Colors.md3.secondary
+                    text: Qt.formatTime(Time.dateTime, "mm")
+                    color: Colors.md3.secondary
                     font.pixelSize: 40
                     font.bold: true
                 }
 
                 Text {
                     Layout.alignment: Qt.AlignHCenter
-                    text: Qt.formatTime(Services.Time.dateTime, "ss")
-                    color: Config.Colors.md3.on_surface_variant
+                    text: Qt.formatTime(Time.dateTime, "ss")
+                    color: Colors.md3.on_surface_variant
                     font.pixelSize: 22
                     topPadding: 2
                 }
@@ -167,15 +167,15 @@ Item {
 
             Text {
                 Layout.alignment: Qt.AlignHCenter
-                text: Qt.formatDate(Services.Time.dateTime, "MMMM")
-                color: Config.Colors.md3.on_surface_variant
+                text: Qt.formatDate(Time.dateTime, "MMMM")
+                color: Colors.md3.on_surface_variant
                 font.pixelSize: 30
             }
 
             Text {
                 Layout.alignment: Qt.AlignHCenter
-                text: Services.Time.dateTime.getFullYear()
-                color: Config.Colors.md3.on_surface
+                text: Time.dateTime.getFullYear()
+                color: Colors.md3.on_surface
                 font.pixelSize: 40
                 font.bold: true
             }

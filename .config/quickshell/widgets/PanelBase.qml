@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Effects
 
-import qs.config as Config
+import qs.config
 
 // PanelBase
 // ---------
@@ -28,15 +28,15 @@ Item {
     readonly property alias contentItem: contentContainer
 
     // --- appearance ------------------------------------------------------
-    property color color: Config.Colors.md3.surface
-    property color borderColor: Config.Colors.md3.outline_variant
+    property color color: Colors.md3.surface
+    property color borderColor: Colors.md3.outline_variant
     property real borderWidth: 1
     property real radius: 24
     property real contentPadding: 8
 
     // --- shadow ------------------------------------------------------
     property bool shadowEnabled: true
-    property color shadowColor: Config.Colors.md3.shadow
+    property color shadowColor: Colors.md3.shadow
     property real shadowBlur: 0.2
     property real shadowOpacity: 1.0
     property real shadowSpread: 2

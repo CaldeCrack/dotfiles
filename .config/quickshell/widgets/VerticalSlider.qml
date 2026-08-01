@@ -1,5 +1,5 @@
 import QtQuick
-import qs.config as Config
+import qs.config
 
 // Generic vertical slider — drag or click anywhere on the track to set
 // `value` within [min, max]. Fill grows from the bottom (top = max,
@@ -35,9 +35,7 @@ Item {
     implicitWidth: Math.max(trackWidth, handleRadius * 2 * handleHoverScale)
     implicitHeight: length
 
-    readonly property real progress: max > min
-        ? Math.max(0, Math.min(1, (value - min) / (max - min)))
-        : 0
+    readonly property real progress: max > min ? Math.max(0, Math.min(1, (value - min) / (max - min))) : 0
 
     // Handle y measured from the top — progress:1 (max) sits at y:0,
     // progress:0 (min) sits at y:height.
@@ -50,7 +48,7 @@ Item {
         width: root.trackWidth
         height: root.handleY
         radius: root.trackRadius
-        color: Config.Colors.md3.surface_container_highest
+        color: Colors.md3.surface_container_highest
     }
 
     // --- filled portion: bottom segment, below the handle -------------------
@@ -60,7 +58,7 @@ Item {
         width: root.trackWidth
         height: root.height - root.handleY
         radius: root.trackRadius
-        color: Config.Colors.md3.primary
+        color: Colors.md3.primary
     }
 
     // --- handle, grows on hover/drag (hover scoped to the handle itself,
@@ -72,11 +70,14 @@ Item {
         width: root.handleRadius * 2
         height: root.handleRadius * 2
         radius: root.handleRadius
-        color: Config.Colors.md3.primary
+        color: Colors.md3.primary
         scale: (handleHoverArea.hovered || root.dragging) ? root.handleHoverScale : 1.0
 
         Behavior on scale {
-            NumberAnimation { duration: 120; easing.type: Easing.OutBack }
+            NumberAnimation {
+                duration: 120
+                easing.type: Easing.OutBack
+            }
         }
     }
 

@@ -1,8 +1,8 @@
 import QtQuick
 import QtQuick.Effects
-import qs.config as Config
-import qs.services as Services
-import qs.widgets as Widgets
+import qs.config
+import qs.services
+import qs.widgets
 
 // Circular artwork: square Image, cover-fit, masked round via MultiEffect
 // (same "square image, round mask" trick as blur — a plain solid-color
@@ -31,7 +31,7 @@ Item {
     implicitWidth: size
     implicitHeight: size
 
-    readonly property bool hasArt: Services.Media.artUrl.length > 0
+    readonly property bool hasArt: Media.artUrl.length > 0
 
     Item {
         id: artworkClip
@@ -58,7 +58,7 @@ Item {
             visible: false
             layer.enabled: true
             asynchronous: true
-            source: root.hasArt ? Services.Media.artUrl : ""
+            source: root.hasArt ? Media.artUrl : ""
             // Cover-fit + centered, cropping overflow rather than letterboxing.
             fillMode: Image.PreserveAspectCrop
         }
@@ -81,7 +81,7 @@ Item {
             // playback state.
             RotationAnimation on rotation {
                 running: true
-                paused: !Services.Media.isPlaying
+                paused: !Media.isPlaying
                 from: 0
                 to: 360
                 duration: root.spinDuration
@@ -96,13 +96,13 @@ Item {
             anchors.fill: parent
             radius: width / 2
             visible: !root.hasArt
-            color: Config.Colors.md3.surface_container_high
+            color: Colors.md3.surface_container_high
 
-            Widgets.Icon {
+            Icon {
                 anchors.centerIn: parent
                 name: "media/music-note"
                 size: parent.width * 0.35
-                color: Config.Colors.md3.on_surface_variant
+                color: Colors.md3.on_surface_variant
             }
         }
     }
@@ -114,6 +114,6 @@ Item {
         radius: width / 2
         color: "transparent"
         border.width: root.ringWidth
-        border.color: Config.Colors.md3.primary
+        border.color: Colors.md3.primary
     }
 }

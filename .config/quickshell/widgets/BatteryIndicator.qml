@@ -1,6 +1,6 @@
 import QtQuick
-import qs.config as Config
-import qs.widgets as Widgets
+import qs.config
+import qs.widgets
 
 // Battery glyph with a dynamic fill level, same idea as Thermometer but
 // simpler: the body here is a straight-sided rounded rect (no bulb curve),
@@ -17,8 +17,8 @@ Item {
 
     required property real percentage
 
-    property color fillColor: Config.Colors.md3.primary
-    property color outlineColor: Config.Colors.md3.on_surface
+    property color fillColor: Colors.md3.primary
+    property color outlineColor: Colors.md3.on_surface
 
     // Convenience for quick testing — same pattern as Icon.qml's own
     // `size` and Thermometer's.
@@ -63,7 +63,7 @@ Item {
         height: root._fillHeightUnits * root._scale
     }
 
-    Widgets.Icon {
+    Icon {
         anchors.fill: parent
         name: "battery/vertical"
         size: root.size

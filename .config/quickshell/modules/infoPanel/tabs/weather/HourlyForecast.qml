@@ -1,15 +1,15 @@
 import QtQuick
 import QtQuick.Layouts
 
-import qs.config as Config
-import qs.services as Services
-import qs.widgets as Widgets
+import qs.config
+import qs.services
+import qs.widgets
 
 Item {
     id: root
 
-    property var hourlyForecast: Services.Weather.hourlyForecast
-    readonly property string lastFetchTimeString: Services.Weather.lastFetchTimeString
+    property var hourlyForecast: Weather.hourlyForecast
+    readonly property string lastFetchTimeString: Weather.lastFetchTimeString
 
     readonly property bool loading: !hourlyForecast || hourlyForecast.length === 0
 
@@ -54,8 +54,8 @@ Item {
             Rectangle {
                 anchors.fill: parent
                 radius: 16
-                color: Config.Colors.md3.surface_container
-                border.color: Config.Colors.md3.primary
+                color: Colors.md3.surface_container
+                border.color: Colors.md3.primary
             }
 
             Row {
@@ -78,7 +78,7 @@ Item {
                                 Layout.alignment: Qt.AlignHCenter
 
                                 text: modelData.time
-                                color: Config.Colors.md3.on_surface
+                                color: Colors.md3.on_surface
                                 font.pixelSize: 20
                                 font.bold: true
                             }
@@ -87,12 +87,12 @@ Item {
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
 
-                                Widgets.Icon {
+                                Icon {
                                     anchors.centerIn: parent
 
                                     name: modelData.iconName || "weather/cloudy"
                                     size: 48
-                                    color: Config.Colors.md3.on_surface
+                                    color: Colors.md3.on_surface
                                     opacity: root.loading ? 0.35 : 1
                                 }
                             }
@@ -101,7 +101,7 @@ Item {
                                 Layout.alignment: Qt.AlignHCenter
 
                                 text: modelData.tempC + "°C"
-                                color: Config.Colors.md3.on_surface_variant
+                                color: Colors.md3.on_surface_variant
                                 font.pixelSize: 18
                                 opacity: root.loading ? 0.35 : 1
                             }
@@ -111,7 +111,7 @@ Item {
 
                                 spacing: 2
 
-                                Widgets.Icon {
+                                Icon {
                                     name: "weather/humidity"
                                     size: 18
                                     color: "#85c1dc"
@@ -120,7 +120,7 @@ Item {
 
                                 Text {
                                     text: (modelData.humidity || "--") + "%"
-                                    color: Config.Colors.md3.on_surface_variant
+                                    color: Colors.md3.on_surface_variant
                                     font.pixelSize: 18
                                     opacity: root.loading ? 0.35 : 1
                                 }
@@ -134,7 +134,7 @@ Item {
 
                             width: 1
                             visible: index < root.displayForecast.length - 1
-                            color: Config.Colors.md3.outline_variant
+                            color: Colors.md3.outline_variant
                         }
                     }
                 }
@@ -150,8 +150,8 @@ Item {
             Rectangle {
                 anchors.fill: parent
                 radius: 16
-                color: Config.Colors.md3.surface_container
-                border.color: Config.Colors.md3.primary
+                color: Colors.md3.surface_container
+                border.color: Colors.md3.primary
             }
 
             Item {
@@ -169,7 +169,7 @@ Item {
 
                         text: "Last updated at\n" + root.lastFetchTimeString
 
-                        color: Config.Colors.md3.on_surface
+                        color: Colors.md3.on_surface
                         font.pixelSize: 18
                         font.bold: true
                     }
@@ -181,7 +181,7 @@ Item {
                         height: 40
                         radius: width / 2
 
-                        color: mouseArea.containsMouse ? Config.Colors.md3.surface_container_highest : Config.Colors.md3.surface_container
+                        color: mouseArea.containsMouse ? Colors.md3.surface_container_highest : Colors.md3.surface_container
 
                         Behavior on color {
                             ColorAnimation {
@@ -189,14 +189,14 @@ Item {
                             }
                         }
 
-                        Widgets.Icon {
+                        Icon {
                             id: refreshIcon
 
                             anchors.centerIn: parent
 
                             name: "common/refresh"
                             size: 28
-                            color: Config.Colors.md3.primary
+                            color: Colors.md3.primary
 
                             RotationAnimator {
                                 target: refreshIcon
@@ -204,14 +204,14 @@ Item {
                                 to: -360
                                 duration: 1000
                                 loops: Animation.Infinite
-                                running: Services.Weather.loading
+                                running: Weather.loading
                             }
 
                             Connections {
-                                target: Services.Weather
+                                target: Weather
 
                                 function onLoadingChanged() {
-                                    if (!Services.Weather.loading)
+                                    if (!Weather.loading)
                                         refreshIcon.rotation = 0;
                                 }
                             }
@@ -223,11 +223,11 @@ Item {
                             anchors.fill: parent
 
                             hoverEnabled: true
-                            cursorShape: Services.Weather.loading ? Qt.ArrowCursor : Qt.PointingHandCursor
+                            cursorShape: Weather.loading ? Qt.ArrowCursor : Qt.PointingHandCursor
 
                             onClicked: {
-                                if (!Services.Weather.loading)
-                                    Services.Weather.refresh();
+                                if (!Weather.loading)
+                                    Weather.refresh();
                             }
                         }
                     }

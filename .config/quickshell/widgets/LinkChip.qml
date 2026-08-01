@@ -1,5 +1,5 @@
 import QtQuick
-import qs.config as Config
+import qs.config
 
 // Small pill-shaped clickable label, used for the docs/github/website/etc
 // links in DistroSection and ShellSection. Lives alongside them in about/
@@ -15,14 +15,14 @@ Rectangle {
     implicitWidth: chipText.implicitWidth + 20
     implicitHeight: chipText.implicitHeight + 4
     radius: height / 2
-    border.color: Config.Colors.md3.primary
-    color: chipMouse.containsMouse ? Config.Colors.md3.secondary_container : Config.Colors.md3.surface_container_high
+    border.color: Colors.md3.primary
+    color: chipMouse.containsMouse ? Colors.md3.secondary_container : Colors.md3.surface_container_high
 
     Text {
         id: chipText
         anchors.centerIn: parent
         text: chip.label
-        color: Config.Colors.md3.on_secondary_container
+        color: Colors.md3.on_secondary_container
         font.pixelSize: 14
     }
 

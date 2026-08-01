@@ -1,13 +1,13 @@
 import QtQuick
 import QtQuick.Layouts
-import qs.widgets as Widgets
-import qs.config as Config
-import qs.services as Services
+import qs.widgets
+import qs.config
+import qs.services
 
 Item {
     id: root
 
-    readonly property var forecast: Services.Weather.dailyForecast
+    readonly property var forecast: Weather.dailyForecast
     readonly property bool loading: !forecast || forecast.length === 0
     readonly property var placeholderForecast: [
         {
@@ -28,8 +28,8 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: 12
-        color: Config.Colors.md3.surface_container
-        border.color: Config.Colors.md3.primary
+        color: Colors.md3.surface_container
+        border.color: Colors.md3.primary
     }
 
     ColumnLayout {
@@ -40,7 +40,7 @@ Item {
         Text {
             text: "Daily Forecast"
 
-            color: Config.Colors.md3.on_surface
+            color: Colors.md3.on_surface
             font.pixelSize: 18
             font.bold: true
         }
@@ -74,7 +74,7 @@ Item {
 
                         text: placeholder ? modelData.dayName : (isToday ? "Today" : modelData.dayName)
 
-                        color: Config.Colors.md3.on_surface
+                        color: Colors.md3.on_surface
                         opacity: placeholder ? 0.35 : 1.0
 
                         font.pixelSize: 16
@@ -90,7 +90,7 @@ Item {
                         RowLayout {
                             spacing: 2
 
-                            Widgets.Icon {
+                            Icon {
                                 Layout.alignment: Qt.AlignVCenter
                                 name: "weather/humidity"
                                 size: 20
@@ -102,18 +102,18 @@ Item {
                                 Layout.alignment: Qt.AlignVCenter
                                 text: placeholder ? "--%" : (modelData.humidity || "--") + "%"
 
-                                color: Config.Colors.md3.on_surface
+                                color: Colors.md3.on_surface
                                 opacity: placeholder ? 0.5 : 1
 
                                 font.pixelSize: 14
                             }
                         }
 
-                        Widgets.Icon {
+                        Icon {
                             name: placeholder ? "weather/cloudy" : modelData.iconName
 
                             size: 20
-                            color: Config.Colors.md3.on_surface
+                            color: Colors.md3.on_surface
                             opacity: placeholder ? 0.35 : 1
                         }
 
@@ -123,7 +123,7 @@ Item {
 
                             text: placeholder ? "--°" : root.fmt(modelData.maxTempC)
 
-                            color: Config.Colors.md3.on_surface
+                            color: Colors.md3.on_surface
                             opacity: placeholder ? 0.5 : 1
 
                             font.pixelSize: 16
@@ -136,7 +136,7 @@ Item {
 
                             text: placeholder ? "--°" : root.fmt(modelData.minTempC)
 
-                            color: Config.Colors.md3.on_surface_variant
+                            color: Colors.md3.on_surface_variant
                             opacity: placeholder ? 0.5 : 1
 
                             font.pixelSize: 16

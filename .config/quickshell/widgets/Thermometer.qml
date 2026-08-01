@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Effects
-import qs.config as Config
+import qs.config
 
 // Renders the thermometer glyph with a dynamic fill level.
 //
@@ -16,8 +16,8 @@ Item {
 
     required property real percentage
 
-    property color fillColor: Config.Colors.md3.primary
-    property color tubeColor: Config.Colors.md3.on_surface
+    property color fillColor: Colors.md3.primary
+    property color tubeColor: Colors.md3.on_surface
     property real tubeStrokeWidth: 1.4
 
     // Convenience property for square sizing.

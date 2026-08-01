@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Effects
-import qs.config as Config
+import qs.config
 
 // Tall stat tile — same card chrome as StatGauge (background, border, hover
 // glow) but no gauge ring: used for stats that don't have a natural
@@ -19,9 +19,9 @@ import qs.config as Config
 Item {
     id: root
 
-    property color backgroundColor: Config.Colors.md3.surface_container
-    property color borderColor: Config.Colors.md3.primary
-    property color glowColor: Config.Colors.md3.primary
+    property color backgroundColor: Colors.md3.surface_container
+    property color borderColor: Colors.md3.primary
+    property color glowColor: Colors.md3.primary
     property real cornerRadius: 20
 
     readonly property bool hovered: hoverHandler.hovered

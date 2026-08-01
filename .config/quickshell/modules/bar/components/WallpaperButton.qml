@@ -1,12 +1,12 @@
 import QtQuick
-import qs.widgets as Widgets
-import qs.config as Config
-import qs.modules.infoPanel as Info
+import qs.widgets
+import qs.config
+import qs.modules.infoPanel
 
-Widgets.BarButtonBase {
+BarButtonBase {
     id: root
 
-    // Which tab index this button opens — About is last in Info.InfoPanel's
+    // Which tab index this button opens
     readonly property int wallpaperTabIndex: 0
 
     // The label shown in the button. \n splits it across up to 2 lines.
@@ -14,18 +14,18 @@ Widgets.BarButtonBase {
 
     // Reflect whether the panel is currently open on this tab, so the
     // button gets BarButtonBase's checked styling for free.
-    checked: Info.InfoPanel.panelOpen && Info.InfoPanel.currentIndex === wallpaperTabIndex
+    checked: InfoPanel.panelOpen && InfoPanel.currentIndex === wallpaperTabIndex
 
     onClicked: {
         if (checked)
-            Info.InfoPanel.close();
+            InfoPanel.close();
         else
-            Info.InfoPanel.show(wallpaperTabIndex);
+            InfoPanel.show(wallpaperTabIndex);
     }
 
-    Widgets.Icon {
+    Icon {
         name: "common/wallpaper"
         size: 16
-        color: Config.Colors.md3.on_surface
+        color: Colors.md3.on_surface
     }
 }

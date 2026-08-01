@@ -11,7 +11,7 @@ import Quickshell
 // Sits alongside the other services/ singletons, so import as:
 //   import qs.services as Services
 // then reference Services.Time.time / Services.Time.date directly — same
-// multi-singleton-per-folder convention as Config.Colors / Config.Settings.
+// multi-singleton-per-folder convention as Colors / Settings.
 Singleton {
     id: root
 

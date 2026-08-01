@@ -1,9 +1,9 @@
 import QtQuick
-import qs.config as Config
-import qs.widgets as Widgets
-import qs.services as Services
+import qs.config
+import qs.widgets
+import qs.services
 
-Widgets.BarButtonBase {
+BarButtonBase {
     id: root
     horizontalPadding: 4
     hoverOpacity: 0
@@ -16,25 +16,25 @@ Widgets.BarButtonBase {
         spacing: 1
 
         Repeater {
-            model: Services.Workspaces.workspaces
+            model: Workspaces.workspaces
 
             delegate: Item {
                 id: segment
 
                 required property var modelData
                 readonly property int wsId: modelData.id
-                readonly property bool active: wsId === Services.Workspaces.activeId
+                readonly property bool active: wsId === Workspaces.activeId
                 readonly property bool hovered: hoverArea.containsMouse
                 readonly property real activeWidthMultiplier: segment.active ? 1.6 : 1
 
-                width: (Config.Settings.bar.height - 8) * activeWidthMultiplier
-                height: Config.Settings.bar.height - 8
+                width: (Settings.bar.height - 8) * activeWidthMultiplier
+                height: Settings.bar.height - 8
 
                 Rectangle {
                     id: highlight
                     anchors.fill: parent
                     radius: height / 2
-                    color: segment.active ? Config.Colors.md3.primary : Config.Colors.md3.on_surface
+                    color: segment.active ? Colors.md3.primary : Colors.md3.on_surface
                     opacity: segment.active ? 1 : (segment.hovered ? 0.12 : 0)
 
                     Behavior on opacity {
@@ -48,7 +48,7 @@ Widgets.BarButtonBase {
                     id: label
                     anchors.centerIn: parent
                     text: segment.wsId
-                    color: segment.active ? Config.Colors.md3.on_primary : Config.Colors.md3.on_surface
+                    color: segment.active ? Colors.md3.on_primary : Colors.md3.on_surface
                     font.pixelSize: 12
                 }
 
@@ -58,7 +58,7 @@ Widgets.BarButtonBase {
                     hoverEnabled: true
                     acceptedButtons: Qt.LeftButton
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: Services.Workspaces.focus(segment.wsId)
+                    onClicked: Workspaces.focus(segment.wsId)
                 }
             }
         }

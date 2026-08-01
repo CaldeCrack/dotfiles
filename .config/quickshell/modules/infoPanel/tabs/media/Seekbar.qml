@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Shapes
-import qs.config as Config
-import qs.services as Services
+import qs.config
+import qs.services
 
 // Layout:
 //   [-------------------- track --------------------]
@@ -17,12 +17,8 @@ import qs.services as Services
 // hover-wrapper trick documented for composite bar buttons, applied here
 // so hovering anywhere else on the bar doesn't trigger the grow.
 //
-// Dragging still doesn't touch Services.Media at all until release — see
+// Dragging still doesn't touch Media at all until release — see
 // dragging/dragPosition below.
-//
-// NOTE: PathPolyline / Shape.CurveRenderer are Qt 6.6+ QtQuick.Shapes
-// additions — if your Qt predates that, PathPolyline won't resolve and
-// the wave needs rebuilding with individual PathLine segments instead.
 Item {
     id: root
 
@@ -43,7 +39,7 @@ Item {
     property bool dragging: false
     property real dragPosition: 0
 
-    readonly property real displayPosition: dragging ? dragPosition : Services.Media.position
+    readonly property real displayPosition: dragging ? dragPosition : Media.position
 
     function formatTime(totalSeconds) {
         if (!totalSeconds || totalSeconds < 0 || isNaN(totalSeconds))
@@ -64,7 +60,7 @@ Item {
         }
         height: Math.max(root.trackHeight, root.handleRadius * 2 * root.handleHoverScale)
 
-        readonly property real progress: Services.Media.length > 0 ? Math.max(0, Math.min(1, root.displayPosition / Services.Media.length)) : 0
+        readonly property real progress: Media.length > 0 ? Math.max(0, Math.min(1, root.displayPosition / Media.length)) : 0
 
         // Handle center x — spans the full 0..width range so the circle's
         // *center* lands exactly at the track's start/end.
@@ -77,7 +73,7 @@ Item {
             width: Math.max(0, parent.width - trackArea.handleX)
             height: root.trackHeight
             radius: root.trackRadius
-            color: Config.Colors.md3.surface_container_highest
+            color: Colors.md3.surface_container_highest
         }
 
         // --- played portion: animated sine wave -------------------------------
@@ -90,7 +86,7 @@ Item {
                 to: root.waveWavelength
                 duration: root.waveAnimDuration
                 loops: Animation.Infinite
-                running: Services.Media.isPlaying
+                running: Media.isPlaying
             }
 
             readonly property real capPad: root.trackHeight / 2
@@ -104,7 +100,7 @@ Item {
             antialiasing: true
 
             ShapePath {
-                strokeColor: Config.Colors.md3.primary
+                strokeColor: Colors.md3.primary
                 strokeWidth: root.trackHeight
                 fillColor: "transparent"
                 capStyle: ShapePath.RoundCap
@@ -146,7 +142,7 @@ Item {
             width: root.handleRadius * 2
             height: root.handleRadius * 2
             radius: root.handleRadius
-            color: Config.Colors.md3.primary
+            color: Colors.md3.primary
             scale: (handleHoverArea.hovered || root.dragging) ? root.handleHoverScale : 1.0
 
             Behavior on scale {
@@ -184,7 +180,7 @@ Item {
 
             function positionFromX(x) {
                 const ratio = Math.max(0, Math.min(1, x / trackArea.width));
-                return ratio * Services.Media.length;
+                return ratio * Media.length;
             }
 
             onPressed: mouse => {
@@ -198,7 +194,7 @@ Item {
             }
 
             onReleased: mouse => {
-                Services.Media.seek(root.dragPosition);
+                Media.seek(root.dragPosition);
                 root.dragging = false;
             }
         }
@@ -213,7 +209,7 @@ Item {
             left: parent.left
         }
         text: root.formatTime(root.displayPosition)
-        color: Config.Colors.md3.on_surface_variant
+        color: Colors.md3.on_surface_variant
         font.pixelSize: 11
     }
 
@@ -223,8 +219,8 @@ Item {
             topMargin: root.labelVerticalSpacing
             right: parent.right
         }
-        text: root.formatTime(Services.Media.length)
-        color: Config.Colors.md3.on_surface_variant
+        text: root.formatTime(Media.length)
+        color: Colors.md3.on_surface_variant
         font.pixelSize: 11
     }
 }

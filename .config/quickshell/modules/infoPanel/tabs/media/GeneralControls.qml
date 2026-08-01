@@ -1,7 +1,7 @@
 import QtQuick
-import qs.services as Services
-import qs.widgets as Widgets
-import qs.config as Config
+import qs.services
+import qs.widgets
+import qs.config
 
 // One row: shuffle | previous | play/pause | next | loop. Shuffle and loop
 // live here rather than in ExtraActionsColumn — they're playback behavior,
@@ -30,49 +30,49 @@ Item {
         anchors.centerIn: parent
         spacing: 12
 
-        Widgets.PanelIconButton {
+        PanelIconButton {
             anchors.verticalCenter: parent.verticalCenter
-            iconName: Services.Media.shuffle ? "media/shuffle" : "media/shuffle-off"
+            iconName: Media.shuffle ? "media/shuffle" : "media/shuffle-off"
             iconSize: 16
-            enabled: Services.Media.available
-            onClicked: Services.Media.toggleShuffle()
+            enabled: Media.available
+            onClicked: Media.toggleShuffle()
         }
 
-        Widgets.PanelIconButton {
+        PanelIconButton {
             anchors.verticalCenter: parent.verticalCenter
             iconName: "media/previous"
-            enabled: Services.Media.canGoPrevious
-            onClicked: Services.Media.previous()
+            enabled: Media.canGoPrevious
+            onClicked: Media.previous()
         }
 
         // Primary action — bigger than its neighbors, no checked state
         // (play/pause is reflected via icon swap, not a toggle highlight).
-        Widgets.PanelIconButton {
+        PanelIconButton {
             anchors.verticalCenter: parent.verticalCenter
-            iconName: Services.Media.isPlaying ? "media/pause" : "media/play"
+            iconName: Media.isPlaying ? "media/pause" : "media/play"
             iconSize: 24
             padding: 12
-            color: Config.Colors.md3.on_surface
-            backgroundColor: Config.Colors.md3.surface_container_high
-            hoveredColor: Config.Colors.md3.on_primary
-            hoveredBackgroundColor: Config.Colors.md3.primary
-            enabled: Services.Media.available
-            onClicked: Services.Media.playPause()
+            color: Colors.md3.on_surface
+            backgroundColor: Colors.md3.surface_container_high
+            hoveredColor: Colors.md3.on_primary
+            hoveredBackgroundColor: Colors.md3.primary
+            enabled: Media.available
+            onClicked: Media.playPause()
         }
 
-        Widgets.PanelIconButton {
+        PanelIconButton {
             anchors.verticalCenter: parent.verticalCenter
             iconName: "media/next"
-            enabled: Services.Media.canGoNext
-            onClicked: Services.Media.next()
+            enabled: Media.canGoNext
+            onClicked: Media.next()
         }
 
-        Widgets.PanelIconButton {
+        PanelIconButton {
             anchors.verticalCenter: parent.verticalCenter
-            iconName: root.loopIconNames[Services.Media.loopState] ?? "media/repeat-off"
+            iconName: root.loopIconNames[Media.loopState] ?? "media/repeat-off"
             iconSize: 16
-            enabled: Services.Media.available
-            onClicked: Services.Media.cycleLoop()
+            enabled: Media.available
+            onClicked: Media.cycleLoop()
         }
     }
 }

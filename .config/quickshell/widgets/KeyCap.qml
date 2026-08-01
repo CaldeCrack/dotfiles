@@ -1,5 +1,5 @@
 import QtQuick
-import qs.config as Config
+import qs.config
 
 Item {
     id: root
@@ -19,7 +19,7 @@ Item {
 
         height: parent.height
         radius: 6
-        color: Config.Colors.md3.primary
+        color: Colors.md3.primary
     }
 
     // Top face
@@ -33,8 +33,8 @@ Item {
         }
 
         radius: 6
-        color: Config.Colors.md3.surface_container
-        border.color: Config.Colors.md3.primary
+        color: Colors.md3.surface_container
+        border.color: Colors.md3.primary
 
         Text {
             id: label
@@ -43,7 +43,7 @@ Item {
             text: KeyIcons.display(root.key)
             font.family: "PixelMPlus12"
             font.pixelSize: 12
-            color: Config.Colors.md3.on_surface
+            color: Colors.md3.on_surface
         }
     }
 }
