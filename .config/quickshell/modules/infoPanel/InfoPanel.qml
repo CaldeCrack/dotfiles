@@ -4,15 +4,15 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import qs.widgets as Widgets
-import qs.config as Config
-import "tabs" as Tabs
+import qs.widgets
+import qs.config
+import "tabs"
 
 // Singleton so there can only ever be one InfoPanel window in the shell —
 // every bar button (wallpaper/media/time/weather/about) reaches this same
 // instance via InfoPanel.show(tabIndex) instead of each owning its own
 // popup. Import as `import qs.modules.infoPanel`, then call
-// `InfoPanel.show(n)` directly — same pattern as Config.Colors/Config.Settings,
+// `InfoPanel.show(n)` directly — same pattern as Colors/Settings,
 // no namespace prefix needed since this folder holds a single singleton type.
 Singleton {
     id: root
@@ -70,7 +70,7 @@ Singleton {
     // exclusive keyboard focus for Escape) — it lives as a child of the
     // singleton rather than being the singleton's own root, since a
     // Singleton's root type can't be a window/popup itself.
-    Widgets.DismissablePopup {
+    DismissablePopup {
         id: popup
 
         open: root.panelOpen
@@ -81,7 +81,7 @@ Singleton {
         // (left/middle/right), swap this for a passed-in anchorX from
         // show(tabIndex, anchorX) and clamp it to keep the panel on-screen.
         contentX: (width - root.panelWidth) / 2 - 8
-        contentY: Config.Settings.bar.height + Config.Settings.bar.margin
+        contentY: Settings.bar.height + Settings.bar.margin
 
         // A real FocusScope, not just a plain Item — this is what makes
         // "Escape blurs the wallpaper search field, then Escape again
@@ -141,24 +141,24 @@ Singleton {
                                     anchors.fill: parent
                                     topLeftRadius: 16
                                     topRightRadius: 16
-                                    color: tabMouse.containsMouse ? Config.Colors.md3.surface_container_high : "transparent"
+                                    color: tabMouse.containsMouse ? Colors.md3.surface_container_high : "transparent"
                                 }
 
                                 Column {
                                     anchors.centerIn: parent
                                     spacing: 5
 
-                                    Widgets.Icon {
+                                    Icon {
                                         anchors.horizontalCenter: parent.horizontalCenter
                                         name: tabDelegate.modelData.icon
                                         size: 22
-                                        color: tabDelegate.selected ? Config.Colors.md3.primary : Config.Colors.md3.on_surface_variant
+                                        color: tabDelegate.selected ? Colors.md3.primary : Colors.md3.on_surface_variant
                                     }
 
                                     Text {
                                         anchors.horizontalCenter: parent.horizontalCenter
                                         text: tabDelegate.modelData.label
-                                        color: tabDelegate.selected ? Config.Colors.md3.primary : Config.Colors.md3.on_surface
+                                        color: tabDelegate.selected ? Colors.md3.primary : Colors.md3.on_surface
                                         font.bold: tabDelegate.selected
                                         font.pixelSize: 14
                                     }
@@ -186,10 +186,27 @@ Singleton {
 
                         height: 3
                         radius: 1.5
-                        color: Config.Colors.md3.primary
+                        color: Colors.md3.primary
                         y: tabBar.height - height - 1 // 1px above the separator
                         x: currentTab ? currentTab.x : 0
                         width: currentTab ? currentTab.width : 0
+
+                        function updateGeometry() {
+                            const tab = tabRepeater.itemAt(root.currentIndex);
+                            if (!tab)
+                                return;
+                            x = tab.x;
+                            width = tab.width;
+                        }
+
+                        Component.onCompleted: Qt.callLater(updateGeometry)
+
+                        Connections {
+                            target: root
+                            function onCurrentIndexChanged() {
+                                indicator.updateGeometry();
+                            }
+                        }
 
                         Behavior on x {
                             NumberAnimation {
@@ -210,7 +227,7 @@ Singleton {
                         anchors.bottom: parent.bottom
                         width: parent.width
                         height: 1
-                        color: Config.Colors.md3.outline_variant
+                        color: Colors.md3.outline_variant
                     }
                 }
 
@@ -228,12 +245,12 @@ Singleton {
                     Layout.topMargin: 8
                     clip: true
 
-                    Tabs.WallpaperTab {
+                    WallpaperTab {
                         anchors.fill: parent
                         visible: root.currentIndex === 0
                     }
 
-                    Tabs.MediaTab {
+                    MediaTab {
                         anchors.fill: parent
                         visible: root.currentIndex === 1
                     }
@@ -242,17 +259,17 @@ Singleton {
                         anchors.fill: parent
                         active: root.currentIndex === 2
                         visible: active
-                        sourceComponent: Tabs.AboutTab {}
+                        sourceComponent: AboutTab {}
                     }
 
                     Loader {
                         anchors.fill: parent
                         active: root.currentIndex === 3
                         visible: active
-                        sourceComponent: Tabs.TimeTab {}
+                        sourceComponent: TimeTab {}
                     }
 
-                    Tabs.WeatherTab {
+                    WeatherTab {
                         anchors.fill: parent
                         visible: root.currentIndex === 4
                     }
