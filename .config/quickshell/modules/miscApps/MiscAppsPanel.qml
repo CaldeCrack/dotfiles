@@ -1,11 +1,37 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Quickshell
 import qs.widgets
 import qs.config
+import qs.modules.miscApps.actions as Actions
 
 DismissablePopup {
     id: root
+
+    // DismissablePopup has no `closed` signal of its own — the animation-
+    // aware signal is internal (PanelBase.closed, consumed by
+    // DismissablePopup's own `onClosed: root.shown = false`). `shown` is
+    // what's exposed externally, and it only flips false after that same
+    // close animation finishes, so this still avoids flashing the home
+    // view mid-fade.
+    onShownChanged: if (!shown)
+        nav.reset()
+
+    // For actions that capture the screen or start recording (color
+    // picker, screenshot, record): the popup closing isn't actually the
+    // problem — dismissRequested() plays PanelBase's normal fade fine.
+    // The issue is hyprpicker/hyprshot/wf-recorder starting almost
+    // instantly and grabbing the screen before that fade (or the
+    // compositor unmapping the surface) has actually finished, which is
+    // timing this QML side can't fully guarantee either way. Delaying the
+    // command itself with a real sleep in the spawned shell sidesteps
+    // that uncertainty entirely, rather than trying to force this window
+    // to hide synchronously.
+    function runAfterDismiss(command) {
+        dismissRequested();
+        Quickshell.execDetached(["sh", "-c", "sleep 0.4 && " + command]);
+    }
 
     NavStack {
         id: nav
@@ -35,7 +61,9 @@ DismissablePopup {
                 UtilityButton {
                     iconName: "media/colorpicker"
                     label: "Color Picker"
-                    onClicked: nav.push(colorPickerView, "Color Picker")
+                    // No sub-view for this one — just fire the picker and
+                    // close, same as clicking outside the popup would.
+                    onClicked: root.runAfterDismiss("hyprpicker -a -q")
                 }
 
                 UtilityButton {
@@ -47,32 +75,23 @@ DismissablePopup {
         }
     }
 
-    // Placeholder sub-views — each button above swaps the popup content for
-    // one of these via NavStack. Replace the Text with real controls per
-    // utility; the back arrow + title in the header come from NavStack for
-    // free.
+    // Sub-views — each button above swaps the popup content for one of
+    // these via NavStack. The back arrow + title in the header come from
+    // NavStack for free.
     Item {
         Component {
             id: screenshotView
-            Text {
-                text: "Screenshot options placeholder"
-                color: Colors.md3.on_surface
+
+            Actions.ScreenshotOptions {
+                onOptionSelected: command => root.runAfterDismiss(command)
             }
         }
 
         Component {
             id: recordView
-            Text {
-                text: "Record options placeholder"
-                color: Colors.md3.on_surface
-            }
-        }
 
-        Component {
-            id: colorPickerView
-            Text {
-                text: "Color picker options placeholder"
-                color: Colors.md3.on_surface
+            Actions.RecordOptions {
+                onOptionSelected: command => root.runAfterDismiss(command)
             }
         }
 
