@@ -53,8 +53,7 @@ BarButtonBase {
         open: root.checked
         onDismissRequested: root.checked = false
 
-        contentX: root.x
-        contentY: Settings.bar.height
+        target: root
 
         // Memory is conventionally shown in binary GiB (matches free/htop),
         // disk capacity in decimal GB (matches how drives are marketed/df -H).

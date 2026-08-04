@@ -1,7 +1,7 @@
 import QtQuick
 import qs.widgets
 import qs.config
-import qs.modules.miscApps as MiscApps
+import qs.modules.miscApps
 
 BarButtonBase {
     id: root
@@ -15,11 +15,11 @@ BarButtonBase {
         size: 16
     }
 
-    MiscApps.MiscAppsPanel {
+    MiscAppsPanel {
         id: popup
         open: false
         onDismissRequested: open = false
 
-        contentY: Settings.bar.height
+        target: root
     }
 }

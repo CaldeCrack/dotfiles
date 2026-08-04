@@ -7,8 +7,6 @@ import qs.config
 DismissablePopup {
     id: root
 
-    contentX: root.width - panel.implicitWidth - 16
-
     NavStack {
         id: nav
 
