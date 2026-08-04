@@ -49,7 +49,10 @@ Singleton {
         WallpaperButton {}
     }
     // Component { id: tray; Tray {} }
-    // Component { id: miscApps; MiscAppsButton {} }
+    Component {
+        id: miscApps
+        MiscAppsButton {}
+    }
     // Component { id: controlPanel; ControlPanelButton {} }
     // Component { id: notifications; NotificationsButton {} }
     // Component { id: power; PowerButton {} }
@@ -62,9 +65,9 @@ Singleton {
             about: about,
             time: time,
             weather: weather,
-            wallpaper: wallpaper
-        // tray: tray,
-        // miscApps: miscApps,
+            wallpaper: wallpaper,
+            // tray: tray,
+            miscApps: miscApps
         // controlPanel: controlPanel,
         // notifications: notifications,
         // power: power
