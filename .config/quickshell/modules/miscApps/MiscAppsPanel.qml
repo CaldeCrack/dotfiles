@@ -4,6 +4,7 @@ import QtQuick
 import Quickshell
 import qs.widgets
 import qs.config
+import qs.services
 import qs.modules.miscApps.actions as Actions
 
 DismissablePopup {
@@ -25,12 +26,27 @@ DismissablePopup {
     // instantly and grabbing the screen before that fade (or the
     // compositor unmapping the surface) has actually finished, which is
     // timing this QML side can't fully guarantee either way. Delaying the
-    // command itself with a real sleep in the spawned shell sidesteps
-    // that uncertainty entirely, rather than trying to force this window
-    // to hide synchronously.
-    function runAfterDismiss(command) {
+    // action itself by a real wall-clock amount sidesteps that
+    // uncertainty, rather than trying to force this window to hide
+    // synchronously.
+    function runAfterDismiss(action) {
         dismissRequested();
-        Quickshell.execDetached(["sh", "-c", "sleep 0.4 && " + command]);
+        dismissDelay.action = action;
+        dismissDelay.restart();
+    }
+
+    Item {
+        Timer {
+            id: dismissDelay
+            interval: 400
+            repeat: false
+            property var action: null
+            onTriggered: {
+                if (action)
+                    action();
+                action = null;
+            }
+        }
     }
 
     NavStack {
@@ -63,7 +79,7 @@ DismissablePopup {
                     label: "Color Picker"
                     // No sub-view for this one — just fire the picker and
                     // close, same as clicking outside the popup would.
-                    onClicked: root.runAfterDismiss("hyprpicker -a -q")
+                    onClicked: root.runAfterDismiss(() => Quickshell.execDetached(["hyprpicker", "-a", "-q"]))
                 }
 
                 UtilityButton {
@@ -83,7 +99,7 @@ DismissablePopup {
             id: screenshotView
 
             Actions.ScreenshotOptions {
-                onOptionSelected: command => root.runAfterDismiss(command)
+                onOptionSelected: command => root.runAfterDismiss(() => Quickshell.execDetached(["sh", "-c", command]))
             }
         }
 
@@ -91,7 +107,10 @@ DismissablePopup {
             id: recordView
 
             Actions.RecordOptions {
-                onOptionSelected: command => root.runAfterDismiss(command)
+                // Recording.start() itself is the delayed action here —
+                // same reasoning as the screenshot/color-picker commands,
+                // just going through the service instead of execDetached.
+                onRecordRequested: mode => root.runAfterDismiss(() => Recording.start(mode))
             }
         }
 

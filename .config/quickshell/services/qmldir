@@ -2,6 +2,7 @@ singleton Audio 1.0 Audio.qml
 singleton Battery 1.0 Battery.qml
 singleton Cava 1.0 Cava.qml
 singleton Media 1.0 Media.qml
+singleton Recording 1.0 Recording.qml
 singleton SystemStats 1.0 SystemStats.qml
 singleton Time 1.0 Time.qml
 singleton Wallpaper 1.0 Wallpaper.qml

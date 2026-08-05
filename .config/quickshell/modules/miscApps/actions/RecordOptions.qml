@@ -1,44 +1,41 @@
 import QtQuick
 import qs.widgets
 import qs.config
+import qs.services
 
 Column {
     id: root
 
-    // Same contract as ScreenshotOptions — emits the shell command,
-    // doesn't run or dismiss anything itself.
-    signal optionSelected(string command)
-
-    // Persists only for as long as this view is loaded — NavStack resets
-    // its Loader's sourceComponent on pop/reset, so this reverts to false
-    // each time Record is reopened rather than remembering the last
-    // choice. Fine for now; promote to a real setting if that turns out
-    // to be annoying.
-    property bool audioEnabled: false
-
-    readonly property string _audioFlag: audioEnabled ? " --audio=alsa_output.pci-0000_00_1f.3.analog-stereo.monitor" : ""
-    readonly property string _outputPath: "\"$HOME/Videos/recording_$(date +%Y-%m-%d_%H-%M-%S).mp4\""
+    // Screen/Region report which mode was picked — they don't call
+    // Recording.start() themselves. Same reason ScreenshotOptions only
+    // reports a command instead of running it: the popup needs to delay
+    // the actual capture until after it's visually gone, and that timing
+    // decision belongs to whoever owns the popup, not this view.
+    signal recordRequested(string mode)
 
     spacing: 4
 
+    // Audio is the one row that doesn't go through recordRequested — it's
+    // a live preference on the service, not an action, so it toggles
+    // Recording.audioEnabled directly and the popup stays open.
     RecordOption {
-        iconName: audioEnabled ? "media/volume-2" : "media/volume-x"
+        iconName: Recording.audioEnabled ? "media/volume-2" : "media/volume-x"
         label: "Audio"
         toggle: true
-        checked: root.audioEnabled
-        onClicked: root.audioEnabled = !root.audioEnabled
+        checked: Recording.audioEnabled
+        onClicked: Recording.toggleAudio()
     }
 
     RecordOption {
         iconName: "common/monitor"
         label: "Screen"
-        onClicked: root.optionSelected("wf-recorder -f " + root._outputPath + root._audioFlag)
+        onClicked: root.recordRequested("screen")
     }
 
     RecordOption {
         iconName: "common/selection"
         label: "Region"
-        onClicked: root.optionSelected("wf-recorder -g \"$(slurp)\" -f " + root._outputPath + root._audioFlag)
+        onClicked: root.recordRequested("region")
     }
 
     component RecordOption: Item {
