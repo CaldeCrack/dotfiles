@@ -144,7 +144,7 @@ DismissablePopup {
 
         Rectangle {
             anchors.fill: parent
-            radius: 8
+            radius: 16
             color: utilityButton.pressed ? Colors.md3.surface_container_high : utilityButton.hovered ? Colors.md3.surface_container : "transparent"
 
             Behavior on color {
