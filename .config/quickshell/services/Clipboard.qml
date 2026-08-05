@@ -85,9 +85,25 @@ Singleton {
     signal imagePreviewFailed(string id, string reason)
 
     property var _imageQueue: []
-    property string _cacheDir: Quickshell.env("HOME") + "/.cache/quickshell/clipboard-previews"
+    property var _imagePreviewPaths: ({})
+    property string _cacheDir: Quickshell.cachePath("clipboard-previews")
 
     function requestImagePreview(id) {
+        const key = String(id);
+
+        // Already decoded — cliphist decode redirects with `>`, which
+        // truncates the destination file the instant it starts. Re-
+        // running it for an id we've already cached would truncate a
+        // file an Image element might still be mid-read on (asynchronous
+        // loading), corrupting it out from under a successful load. A
+        // delegate re-requesting the same id (recreated after a filter
+        // change, scrolled back into view, etc.) just gets told about
+        // the existing path instead of triggering a redundant decode.
+        if (Object.prototype.hasOwnProperty.call(_imagePreviewPaths, key)) {
+            imagePreviewReady(key, _imagePreviewPaths[key]);
+            return;
+        }
+
         const entry = _rawEntries.find(e => e.id === id);
         if (!entry) {
             imagePreviewFailed(id, "unknown entry");
@@ -97,6 +113,12 @@ Singleton {
             imagePreviewFailed(id, "not an image entry");
             return;
         }
+
+        // Also guard against the same id being queued twice before the
+        // first request has even started (e.g. two delegates for it
+        // existing briefly during a model reset).
+        if (_imageQueue.includes(id))
+            return;
 
         _imageQueue.push(id);
         _pumpImageQueue();
@@ -115,7 +137,7 @@ Singleton {
         }
 
         const path = _cacheDir + "/" + id + "." + entry._imageExt;
-        imageProcess._currentId = id;
+        imageProcess._currentId = String(id);
         imageProcess._currentPath = path;
         // Same stdin form as select()/remove() — decode has no id argument.
         _runShellTracked(imageProcess, "mkdir -p " + _shellQuote(_cacheDir) + " && printf '%s\\t' " + _shellQuote(String(id)) + " | cliphist decode > " + _shellQuote(path));
@@ -215,21 +237,29 @@ Singleton {
 
     Process {
         id: imageProcess
+
         property string _currentId: ""
         property string _currentPath: ""
 
+        stderr: StdioCollector {
+            onStreamFinished: {
+                if (text.length > 0)
+                    console.log("Clipboard image error:", text);
+            }
+        }
+
         onExited: exitCode => {
-            if (exitCode === 0)
+            if (exitCode === 0) {
+                root._imagePreviewPaths = Object.assign({}, root._imagePreviewPaths, {
+                    [_currentId]: _currentPath
+                });
+
                 root.imagePreviewReady(_currentId, _currentPath);
-            else
+            } else {
                 root.imagePreviewFailed(_currentId, "cliphist decode exited with code " + exitCode);
+            }
 
             root._pumpImageQueue();
         }
     }
-
-    // No Component.onCompleted here — Singleton doesn't fire it. Whatever
-    // first uses this service (ClipboardOptions.qml's own onCompleted, in
-    // practice) is responsible for calling refresh() to populate entries
-    // initially.
 }

@@ -53,10 +53,10 @@ DismissablePopup {
         id: nav
 
         Column {
-            spacing: 8
+            spacing: 4
 
             Row {
-                spacing: 8
+                spacing: 4
 
                 UtilityButton {
                     iconName: "media/screenshot"
@@ -72,7 +72,7 @@ DismissablePopup {
             }
 
             Row {
-                spacing: 8
+                spacing: 4
 
                 UtilityButton {
                     iconName: "media/colorpicker"
@@ -85,7 +85,7 @@ DismissablePopup {
                 UtilityButton {
                     iconName: "common/clipboard"
                     label: "Clipboard"
-                    onClicked: nav.push(clipboardView, "Clipboard")
+                    onClicked: nav.push(clipboardView, "Clipboard History")
                 }
             }
         }
@@ -122,6 +122,7 @@ DismissablePopup {
                 // clipboard has no visible-in-capture race to work around
                 // like the color picker/screenshot/record actions do.
                 onEntrySelected: root.dismissRequested()
+                onEscapePressed: root.dismissRequested()
             }
         }
     }
@@ -145,7 +146,7 @@ DismissablePopup {
         Rectangle {
             anchors.fill: parent
             radius: 16
-            color: utilityButton.pressed ? Colors.md3.surface_container_high : utilityButton.hovered ? Colors.md3.surface_container : "transparent"
+            color: utilityButton.pressed ? Colors.md3.surface_container_highest : utilityButton.hovered ? Colors.md3.surface_container_high : Colors.md3.surface_container
 
             Behavior on color {
                 ColorAnimation {
@@ -161,14 +162,14 @@ DismissablePopup {
             Icon {
                 anchors.horizontalCenter: parent.horizontalCenter
                 name: utilityButton.iconName
-                size: 20
+                size: 32
             }
 
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: utilityButton.label
                 color: Colors.md3.on_surface
-                font.pixelSize: 11
+                font.pixelSize: 12
             }
         }
 
