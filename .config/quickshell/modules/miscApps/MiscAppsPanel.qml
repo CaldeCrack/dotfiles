@@ -5,7 +5,7 @@ import Quickshell
 import qs.widgets
 import qs.config
 import qs.services
-import qs.modules.miscApps.actions as Actions
+import qs.modules.miscApps.actions
 
 DismissablePopup {
     id: root
@@ -98,7 +98,7 @@ DismissablePopup {
         Component {
             id: screenshotView
 
-            Actions.ScreenshotOptions {
+            ScreenshotOptions {
                 onOptionSelected: command => root.runAfterDismiss(() => Quickshell.execDetached(["sh", "-c", command]))
             }
         }
@@ -106,7 +106,7 @@ DismissablePopup {
         Component {
             id: recordView
 
-            Actions.RecordOptions {
+            RecordOptions {
                 // Recording.start() itself is the delayed action here —
                 // same reasoning as the screenshot/color-picker commands,
                 // just going through the service instead of execDetached.
@@ -116,9 +116,12 @@ DismissablePopup {
 
         Component {
             id: clipboardView
-            Text {
-                text: "Clipboard options placeholder"
-                color: Colors.md3.on_surface
+
+            ClipboardOptions {
+                // Plain dismiss, no delayed action — copying to the
+                // clipboard has no visible-in-capture race to work around
+                // like the color picker/screenshot/record actions do.
+                onEntrySelected: root.dismissRequested()
             }
         }
     }
