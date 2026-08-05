@@ -60,8 +60,8 @@ Column {
 
         Rectangle {
             anchors.fill: parent
-            radius: 6
-            color: option.hovered ? Colors.md3.surface_container : "transparent"
+            radius: 16
+            color: option.hovered ? Colors.md3.surface_container_highest : Colors.md3.surface_container
 
             Behavior on color {
                 ColorAnimation {
@@ -97,9 +97,9 @@ Column {
             anchors.right: parent.right
             anchors.rightMargin: 10
             anchors.verticalCenter: parent.verticalCenter
-            width: 10
-            height: 10
-            radius: 5
+            width: 12
+            height: 12
+            radius: 6
             color: option.checked ? Colors.md3.primary : Colors.md3.outline_variant
 
             Behavior on color {

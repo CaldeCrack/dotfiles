@@ -45,8 +45,8 @@ Column {
 
         Rectangle {
             anchors.fill: parent
-            radius: 6
-            color: option.hovered ? Colors.md3.surface_container : "transparent"
+            radius: 16
+            color: option.hovered ? Colors.md3.surface_container_highest : Colors.md3.surface_container
 
             Behavior on color {
                 ColorAnimation {

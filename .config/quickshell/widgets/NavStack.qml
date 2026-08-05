@@ -70,7 +70,7 @@ Item {
 
     Column {
         id: column
-        spacing: 8
+        spacing: 4
 
         Item {
             id: header
@@ -95,7 +95,7 @@ Item {
 
                 Rectangle {
                     anchors.fill: parent
-                    radius: 6
+                    radius: 16
                     color: backMouseArea.containsMouse ? Colors.md3.surface_container : "transparent"
 
                     Behavior on color {
@@ -126,7 +126,7 @@ Item {
                 anchors.centerIn: parent
                 text: root.currentTitle
                 color: Colors.md3.on_surface
-                font.pixelSize: 13
+                font.pixelSize: 14
                 font.bold: true
             }
         }
