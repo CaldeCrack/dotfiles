@@ -39,6 +39,13 @@ Item {
     // --- fetch state -----------------------------------------------------
     property bool fetching: false
     property string lastFetchLog: ""
+    // The data file's actual mtime, queried by refresh() (which also
+    // means it's populated on first load, not just after an explicit
+    // fetch()) — this answers "when was the data on disk last
+    // regenerated", surviving shell restarts, rather than "when did this
+    // session last click Fetch". null if the file doesn't exist yet or
+    // the stat failed.
+    property var lastFetchedAt: null
 
     signal fetchCompleted(int count)
     signal fetchFailed(string reason)
@@ -51,6 +58,14 @@ Item {
     function refresh() {
         loadProcess.command = ["cat", dataPath];
         loadProcess.running = true;
+
+        // `stat -c %Y` is GNU coreutils syntax (Linux) — fine for the
+        // Arch/Hyprland target here, but not portable to BSD/macOS stat
+        // if this shell ever runs there. 2>/dev/null so a missing file
+        // (never fetched yet) just yields empty output instead of stderr
+        // noise, handled below by the NaN check.
+        statProcess.command = ["sh", "-c", "stat -c %Y " + _shellQuote(dataPath) + " 2>/dev/null"];
+        statProcess.running = true;
     }
 
     // Re-runs the generator script (fetch-emoji-data.sh /
@@ -123,6 +138,17 @@ Item {
     }
 
     Process {
+        id: statProcess
+
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const seconds = parseInt(text.trim(), 10);
+                root.lastFetchedAt = isNaN(seconds) ? null : new Date(seconds * 1000);
+            }
+        }
+    }
+
+    Process {
         id: fetchProcess
 
         stdout: StdioCollector {
@@ -140,6 +166,9 @@ Item {
             root.fetching = false;
 
             if (exitCode === 0) {
+                // refresh() re-queries the mtime too, so lastFetchedAt
+                // ends up reflecting the file's real, just-updated
+                // timestamp rather than "whenever this function ran".
                 root.refresh();
                 root.fetchCompleted(root.totalCount);
             } else {

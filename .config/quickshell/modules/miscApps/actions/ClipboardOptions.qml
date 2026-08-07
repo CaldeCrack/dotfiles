@@ -185,7 +185,7 @@ Column {
             rightPadding: 8
             text: root.entries.length === 0 ? "0 / 0" : (root.selectedIndex + 1) + " / " + root.entries.length
             color: Colors.md3.on_surface_variant
-            font.pixelSize: 11
+            font.pixelSize: 12
         }
     }
 

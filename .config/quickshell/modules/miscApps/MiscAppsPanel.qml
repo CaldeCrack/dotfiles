@@ -5,7 +5,7 @@ import Quickshell
 import qs.widgets
 import qs.config
 import qs.services
-import qs.modules.miscApps.actions
+import "actions"
 
 DismissablePopup {
     id: root
@@ -85,7 +85,23 @@ DismissablePopup {
                 UtilityButton {
                     iconName: "common/clipboard"
                     label: "Clipboard"
-                    onClicked: nav.push(clipboardView, "Clipboard History")
+                    onClicked: nav.push(clipboardView, "Clipboard")
+                }
+            }
+
+            Row {
+                spacing: 4
+
+                UtilityButton {
+                    iconName: "common/emoji"
+                    label: "Emojis"
+                    onClicked: nav.push(emojiView, "Emoji Picker")
+                }
+
+                UtilityButton {
+                    iconName: "common/nerdfont"
+                    label: "Glyphs"
+                    onClicked: nav.push(nerdFontView, "Nerd Font Glyphs")
                 }
             }
         }
@@ -125,6 +141,24 @@ DismissablePopup {
                 onEscapePressed: root.dismissRequested()
             }
         }
+
+        Component {
+            id: emojiView
+
+            EmojiOptions {
+                onEntrySelected: root.dismissRequested()
+                onEscapePressed: root.dismissRequested()
+            }
+        }
+
+        Component {
+            id: nerdFontView
+
+            NerdFontOptions {
+                onEntrySelected: root.dismissRequested()
+                onEscapePressed: root.dismissRequested()
+            }
+        }
     }
 
     // Local to this popup's home view — not promoted to widgets/ since
@@ -140,8 +174,8 @@ DismissablePopup {
         readonly property bool hovered: mouseArea.containsMouse
         readonly property bool pressed: mouseArea.pressed
 
-        implicitWidth: 88
-        implicitHeight: 72
+        implicitWidth: 76
+        implicitHeight: 76
 
         Rectangle {
             anchors.fill: parent
@@ -162,7 +196,7 @@ DismissablePopup {
             Icon {
                 anchors.horizontalCenter: parent.horizontalCenter
                 name: utilityButton.iconName
-                size: 32
+                size: 30
             }
 
             Text {

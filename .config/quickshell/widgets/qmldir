@@ -10,6 +10,7 @@ MarqueeText 1.0 MarqueeText.qml
 NavStack 1.0 NavStack.qml
 PanelBase 1.0 PanelBase.qml
 PanelIconButton 1.0 PanelIconButton.qml
+PickerGrid 1.0 PickerGrid.qml
 SidebarBase 1.0 SidebarBase.qml
 StatCardVertical 1.0 StatCardVertical.qml
 StatGauge 1.0 StatGauge.qml
