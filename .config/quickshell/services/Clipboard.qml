@@ -181,6 +181,34 @@ Singleton {
         return m ? m[1].toLowerCase() : null;
     }
 
+    // Chromium/Electron-based apps (browsers, and webview-based apps like
+    // Photopea or WhatsApp Web) write an HTML representation to the
+    // clipboard alongside their plain-text one, and cliphist captures
+    // that HTML as its own entry — not marked "binary", so it'd otherwise
+    // show up as an ordinary text entry, verbatim markup and all.
+    // Rendering that raw markup in a plain Text element is also what was
+    // producing "Invalid base url in img tag": Text auto-detects HTML-ish
+    // content and tries to resolve any <img src="..."> inside it, and a
+    // browser blob: URL isn't resolvable outside the page that made it.
+    // These aren't useful clipboard history anyway — dismiss them at
+    // parse time so they never become an entry at all, rather than
+    // trying to render them safely.
+    function _isJunkHtmlClipboard(preview) {
+        // Chromium always prepends this exact meta tag when writing HTML
+        // to the clipboard — the precise, reliable signature.
+        if (/^<meta\s+http-equiv=["']content-type["']/i.test(preview))
+            return true;
+
+        // Broader fallback: any HTML-looking entry carrying an <img> tag
+        // with a blob: source specifically — the shape that actually
+        // triggers the QML warning — in case some other app produces
+        // similar HTML clipboard content without the exact meta prefix.
+        if (/<img\b[^>]*\bsrc=["']blob:/i.test(preview))
+            return true;
+
+        return false;
+    }
+
     function _parseLine(line) {
         const tabIndex = line.indexOf("\t");
         if (tabIndex === -1)
@@ -189,6 +217,9 @@ Singleton {
         const id = parseInt(line.slice(0, tabIndex), 10);
         const preview = line.slice(tabIndex + 1);
         if (isNaN(id))
+            return null;
+
+        if (_isJunkHtmlClipboard(preview))
             return null;
 
         const imageExt = _imageExtension(preview);
