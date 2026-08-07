@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import qs.widgets
 import qs.config
 import qs.services
@@ -45,6 +46,53 @@ DismissablePopup {
                 if (action)
                     action();
                 action = null;
+            }
+        }
+    }
+
+    // Jumps straight to a sub-view, bypassing the home grid — used by the
+    // IPC handler below (a compositor keybind has already picked which
+    // utility it wants, so there's no reason to show the grid first and
+    // make the user click again). nav.reset() first so this always lands
+    // cleanly on the requested view: if the popup was already open on
+    // some other view, "back" from here should lead to home, not to
+    // whatever was open before.
+    //
+    // Setting `open` here directly is safe specifically because
+    // MiscAppsButton.qml only ever assigns it imperatively
+    // (`popup.open = !popup.open`), never binds it live (`open:
+    // someCondition`) — see DismissablePopup's own header comment on why
+    // writing to `open` from outside would be unsafe if it did.
+    function openView(component, title) {
+        open = true;
+        nav.reset();
+        nav.push(component, title);
+    }
+
+    // Compositor keybinds call these via:
+    //   qs ipc call miscApps clipboard
+    //   qs ipc call miscApps emoji
+    //   qs ipc call miscApps glyphs
+    // (`qs ipc show` lists them). Only meaningful with a single bar
+    // instance — if this shell ever runs a MiscAppsButton/MiscAppsPanel
+    // per monitor, every instance would try to register the same
+    // "miscApps" target and collide. Fine for now per your "just open it
+    // like the nav stack GUI would" ask; flag if multi-monitor bars ever
+    // become a thing.
+    Item {
+        IpcHandler {
+            target: "miscApps"
+
+            function clipboard(): void {
+                root.openView(clipboardView, "Clipboard");
+            }
+
+            function emoji(): void {
+                root.openView(emojiView, "Emoji");
+            }
+
+            function glyphs(): void {
+                root.openView(nerdFontView, "Glyphs");
             }
         }
     }
