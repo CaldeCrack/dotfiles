@@ -9,7 +9,6 @@ hl.bind(cfg.mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(cfg.office))
 hl.bind(cfg.mainMod .. " + CTRL + V", hl.dsp.exec_cmd(cfg.volumeMixer))
 hl.bind(cfg.mainMod .. " + CTRL + W", hl.dsp.exec_cmd(cfg.wifi))
 hl.bind(cfg.mainMod .. " + R", hl.dsp.exec_cmd("pkill " .. cfg.menuName .. " ; " .. cfg.menu))
-hl.bind(cfg.mainMod .. " + SHIFT + R", hl.dsp.exec_cmd("pkill " .. cfg.menuName .. " ; " .. cfg.emojiMenu))
 hl.bind(cfg.mainMod .. " + escape", hl.dsp.exec_cmd("pkill " .. cfg.menuName .. " ; " .. cfg.powerMenu))
 
 -- Hyprlock
