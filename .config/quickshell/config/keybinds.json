@@ -29,11 +29,15 @@
         "description": "App Launcher"
       },
       {
-        "keybind": ["SUPER", "SHIFT", "R"],
-        "description": "Emoji menu"
+        "keybind": ["SUPER", "."],
+        "description": "Emoji Picker"
       },
       {
-        "keybind": ["SUPER", "."],
+        "keybind": ["SUPER", "SHIFT", "."],
+        "description": "Nerd Font Glyphs"
+      },
+      {
+        "keybind": ["SUPER", "V"],
         "description": "Clipboard menu"
       },
             {
@@ -111,11 +115,11 @@
         "description": "Close"
       },
       {
-        "keybind": ["SUPER", "K"],
-        "description": "Kill"
+        "keybind": ["SUPER", "SHIFT", "C"],
+        "description": "Force close"
       },
       {
-        "keybind": ["SUPER", "V"],
+        "keybind": ["SUPER", "ALT", "SPACE"],
         "description": "Float"
       },
       {
