@@ -48,7 +48,10 @@ Singleton {
         id: wallpaper
         WallpaperButton {}
     }
-    // Component { id: tray; Tray {} }
+    Component {
+        id: tray
+        TrayButton {}
+    }
     Component {
         id: miscApps
         MiscAppsButton {}
@@ -66,7 +69,7 @@ Singleton {
             time: time,
             weather: weather,
             wallpaper: wallpaper,
-            // tray: tray,
+            tray: tray,
             miscApps: miscApps
         // controlPanel: controlPanel,
         // notifications: notifications,

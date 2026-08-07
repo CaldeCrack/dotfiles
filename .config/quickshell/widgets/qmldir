@@ -16,5 +16,6 @@ StatCardVertical 1.0 StatCardVertical.qml
 StatGauge 1.0 StatGauge.qml
 Thermometer 1.0 Thermometer.qml
 Tooltip 1.0 Tooltip.qml
+TrayIcon 1.0 TrayIcon.qml
 VerticalSlider 1.0 VerticalSlider.qml
 singleton KeyIcons 1.0 KeyIcons.qml

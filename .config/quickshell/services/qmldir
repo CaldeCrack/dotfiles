@@ -9,6 +9,7 @@ singleton NerdFont 1.0 NerdFont.qml
 singleton Recording 1.0 Recording.qml
 singleton SystemStats 1.0 SystemStats.qml
 singleton Time 1.0 Time.qml
+singleton Tray 1.0 Tray.qml
 singleton Wallpaper 1.0 Wallpaper.qml
 singleton Weather 1.0 Weather.qml
 singleton Workspaces 1.0 Workspaces.qml
