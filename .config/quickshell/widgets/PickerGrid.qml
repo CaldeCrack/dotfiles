@@ -47,6 +47,7 @@ Column {
     // doesn't fire Component.onCompleted (see DataPicker.qml) — same
     // reason ClipboardOptions.qml calls Clipboard.refresh() itself.
     Component.onCompleted: {
+        source.searchQuery = "";
         source.refresh();
         grid.forceActiveFocus();
     }
@@ -128,7 +129,10 @@ Column {
         Keys.onDownPressed: root.selectedIndex = Math.min(root.entries.length - 1, root.selectedIndex + root.columns)
         Keys.onReturnPressed: root._activateSelected()
         Keys.onEnterPressed: root._activateSelected()
-        Keys.onEscapePressed: root.escapePressed()
+        Keys.onEscapePressed: {
+            searchInput.text = "";
+            root.escapePressed();
+        }
 
         delegate: GridEntry {}
     }

@@ -33,6 +33,7 @@ Column {
     // Clipboard (a Singleton) doesn't fire its own Component.onCompleted,
     // so whatever first shows this view is responsible for populating it.
     Component.onCompleted: {
+        Clipboard.searchQuery = "";
         Clipboard.refresh();
         list.forceActiveFocus();
     }
