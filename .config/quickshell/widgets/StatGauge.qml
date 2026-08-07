@@ -60,26 +60,6 @@ Item {
         border.color: root.borderColor
     }
 
-    // Soft glow on hover. Symmetric spread (no offset), same convention as
-    // PanelBase's shadow — a directional shadow here would look like a
-    // light source instead of a "this is highlighted" glow.
-    MultiEffect {
-        anchors.fill: background
-        source: background
-        autoPaddingEnabled: true
-        shadowEnabled: true
-        shadowColor: root.progressColor
-        shadowBlur: 0.4
-        shadowOpacity: root.hovered ? 0.95 : 0
-
-        Behavior on shadowOpacity {
-            NumberAnimation {
-                duration: 150
-                easing.type: Easing.OutCubic
-            }
-        }
-    }
-
     Shape {
         id: gauge
         anchors.fill: parent

@@ -46,25 +46,6 @@ Item {
         border.color: root.borderColor
     }
 
-    // Same symmetric hover glow as StatGauge — no directional offset, this
-    // is feedback, not a light source.
-    MultiEffect {
-        anchors.fill: background
-        source: background
-        autoPaddingEnabled: true
-        shadowEnabled: true
-        shadowColor: root.glowColor
-        shadowBlur: 0.4
-        shadowOpacity: root.hovered ? 0.95 : 0
-
-        Behavior on shadowOpacity {
-            NumberAnimation {
-                duration: 150
-                easing.type: Easing.OutCubic
-            }
-        }
-    }
-
     Item {
         id: contentContainer
         anchors.fill: parent
