@@ -19,7 +19,16 @@ Singleton {
 
     // ---- Public API -------------------------------------------------
 
+    // Set by show() right before currentIndex changes, so contentArea's
+    // transition handler can tell "this change came from a bar button"
+    // apart from "the user clicked a different tab inside the already-open
+    // panel" — only the latter should animate. Consumed (reset to false)
+    // the moment it's read.
+    property bool _suppressNextTransition: false
+
     function show(tabIndex) {
+        if (tabIndex !== currentIndex)
+            _suppressNextTransition = true;
         currentIndex = tabIndex;
         panelOpen = true;
     }
@@ -232,10 +241,22 @@ Singleton {
                 }
 
                 // ---- Content area ----------------------------------------------
-                // Fixed size, clipped. Wallpaper + Media stay instantiated at all
-                // times (visible toggling only) so their state never resets when
-                // switching away. Time/Weather/About are behind Loaders and are
-                // only instantiated once their tab is actually selected.
+                // Fixed size, clipped. All 5 tabs are real sibling items that
+                // stay permanently visible: true — switching tabs slides them
+                // via x rather than toggling visibility, since imperatively
+                // touching .visible mid-animation would permanently break a
+                // declarative `visible: root.currentIndex === n` binding (the
+                // same one-way-binding rule noted elsewhere in this file, e.g.
+                // DismissablePopup's `open`). clip: true on this Item is what
+                // actually hides whichever tabs are currently parked
+                // off-screen to either side.
+                //
+                // Wallpaper/Media/Weather stay instantiated at all times (an
+                // empty activate()/deactivate() — they were already meant to
+                // never reset). About/Time are still Loader-backed and only
+                // instantiated while active, via their slot's activate()/
+                // deactivate(), which now also gate the actual mount/unmount
+                // instead of a currentIndex-driven binding.
 
                 Item {
                     id: contentArea
@@ -245,33 +266,215 @@ Singleton {
                     Layout.topMargin: 8
                     clip: true
 
-                    WallpaperTab {
-                        anchors.fill: parent
-                        visible: root.currentIndex === 0
+                    // previousIndex is deliberately NOT `property int
+                    // previousIndex: root.currentIndex` — that would be a
+                    // live binding, and QML re-evaluates dependent bindings
+                    // as part of the same synchronous write that changes
+                    // root.currentIndex, before this file's Connections
+                    // handler below even runs. That meant reading
+                    // previousIndex inside the handler already reflected
+                    // the NEW index, so fromIndex === toIndex every time
+                    // and animateTransition() silently no-op'd via its
+                    // early return — content never moved off whatever
+                    // slot was active at startup. Plain imperative
+                    // assignment (set once in Component.onCompleted, then
+                    // only ever updated at the end of the handler) avoids
+                    // that entirely.
+                    property int previousIndex: 0
+
+                    function slotFor(index) {
+                        switch (index) {
+                        case 0:
+                            return slotWallpaper;
+                        case 1:
+                            return slotMedia;
+                        case 2:
+                            return slotAbout;
+                        case 3:
+                            return slotTime;
+                        case 4:
+                            return slotWeather;
+                        }
+                        return null;
                     }
 
-                    MediaTab {
-                        anchors.fill: parent
-                        visible: root.currentIndex === 1
+                    // Instantly places `index`'s slot at rest and parks
+                    // every other slot off-screen, with no animation — used
+                    // for the very first tab shown and for tabs opened via
+                    // a bar button (see the suppress-flag handling below).
+                    function snapToIndex(index) {
+                        outgoingAnim.complete();
+                        incomingAnim.complete();
+
+                        for (let i = 0; i < root.tabModel.length; i++) {
+                            const slot = slotFor(i);
+                            if (!slot)
+                                continue;
+                            if (i === index) {
+                                slot.x = 0;
+                                slot.activate();
+                            } else {
+                                slot.x = width;
+                                slot.deactivate();
+                            }
+                        }
                     }
 
-                    Loader {
-                        anchors.fill: parent
-                        active: root.currentIndex === 2
-                        visible: active
-                        sourceComponent: AboutTab {}
+                    function animateTransition(fromIndex, toIndex) {
+                        if (fromIndex === toIndex)
+                            return;
+
+                        // Snap any in-flight transition to its resting state
+                        // first (rather than leaving a stale target/position
+                        // behind) — handles rapid tab clicking cleanly since
+                        // this also runs each animation's onStopped cleanup
+                        // synchronously before we reassign targets below.
+                        outgoingAnim.complete();
+                        incomingAnim.complete();
+
+                        const direction = toIndex > fromIndex ? 1 : -1; // 1 = slide left (moving to a later tab), -1 = slide right
+                        const outgoing = slotFor(fromIndex);
+                        const incoming = slotFor(toIndex);
+                        if (!outgoing || !incoming)
+                            return;
+
+                        incoming.activate();
+                        incoming.x = direction * width;
+
+                        outgoingAnim.target = outgoing;
+                        outgoingAnim.from = 0;
+                        outgoingAnim.to = -direction * width;
+
+                        incomingAnim.target = incoming;
+                        incomingAnim.from = direction * width;
+                        incomingAnim.to = 0;
+
+                        outgoingAnim.restart();
+                        incomingAnim.restart();
                     }
 
-                    Loader {
-                        anchors.fill: parent
-                        active: root.currentIndex === 3
-                        visible: active
-                        sourceComponent: TimeTab {}
+                    Component.onCompleted: {
+                        previousIndex = root.currentIndex;
+                        snapToIndex(root.currentIndex);
                     }
 
-                    WeatherTab {
-                        anchors.fill: parent
-                        visible: root.currentIndex === 4
+                    Connections {
+                        target: root
+                        function onCurrentIndexChanged() {
+                            if (root._suppressNextTransition) {
+                                root._suppressNextTransition = false;
+                                contentArea.snapToIndex(root.currentIndex);
+                            } else {
+                                contentArea.animateTransition(contentArea.previousIndex, root.currentIndex);
+                            }
+                            contentArea.previousIndex = root.currentIndex;
+                        }
+                    }
+
+                    NumberAnimation {
+                        id: outgoingAnim
+                        property: "x"
+                        duration: 220
+                        easing.type: Easing.OutCubic
+                        onStopped: if (target)
+                            target.deactivate()
+                    }
+
+                    NumberAnimation {
+                        id: incomingAnim
+                        property: "x"
+                        duration: 220
+                        easing.type: Easing.OutCubic
+                    }
+
+                    Item {
+                        id: slotWallpaper
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        width: parent.width
+
+                        function activate() {
+                        }
+                        function deactivate() {
+                        }
+
+                        WallpaperTab {
+                            anchors.fill: parent
+                        }
+                    }
+
+                    Item {
+                        id: slotMedia
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        width: parent.width
+
+                        function activate() {
+                        }
+                        function deactivate() {
+                        }
+
+                        MediaTab {
+                            anchors.fill: parent
+                        }
+                    }
+
+                    Item {
+                        id: slotAbout
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        width: parent.width
+
+                        function activate() {
+                            aboutLoader.active = true;
+                        }
+                        function deactivate() {
+                            aboutLoader.active = false;
+                        }
+
+                        Loader {
+                            id: aboutLoader
+                            anchors.fill: parent
+                            active: false
+                            sourceComponent: AboutTab {}
+                        }
+                    }
+
+                    Item {
+                        id: slotTime
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        width: parent.width
+
+                        function activate() {
+                            timeLoader.active = true;
+                        }
+                        function deactivate() {
+                            timeLoader.active = false;
+                        }
+
+                        Loader {
+                            id: timeLoader
+                            anchors.fill: parent
+                            active: false
+                            sourceComponent: TimeTab {}
+                        }
+                    }
+
+                    Item {
+                        id: slotWeather
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        width: parent.width
+
+                        function activate() {
+                        }
+                        function deactivate() {
+                        }
+
+                        WeatherTab {
+                            anchors.fill: parent
+                        }
                     }
                 }
             }
