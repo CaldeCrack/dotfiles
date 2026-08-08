@@ -195,6 +195,14 @@
       {
         "keybind": ["SUPER", "-"],
         "description": "Zoom out"
+      },
+      {
+        "keybind": ["SUPER", "R"],
+        "description": "Toggle screen recording"
+      },
+      {
+        "keybind": ["SUPER", "SHIFT", "R"],
+        "description": "Toggle region recording"
       }
     ]
   },

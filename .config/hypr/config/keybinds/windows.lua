@@ -3,7 +3,7 @@ local cfg = require("config.programs")
 -- Core window management
 hl.bind(cfg.mainMod .. " + C", hl.dsp.window.close())
 hl.bind(cfg.mainMod .. " + K", hl.dsp.window.kill())
-hl.bind(cfg.mainMod .. " + ALT + SPACE", hl.dsp.window.float())
+hl.bind(cfg.mainMod .. " + ALT + F", hl.dsp.window.float())
 hl.bind(cfg.mainMod .. " + P", function()
 	hl.dispatch(hl.dsp.window.float())
 	hl.dispatch(hl.dsp.window.pin())

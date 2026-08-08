@@ -27,7 +27,10 @@ BarButtonBase {
         target: root
 
         Column {
-            spacing: 10
+            spacing: 4
+            leftPadding: 4
+            rightPadding: 4
+            topPadding: 4
 
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -50,19 +53,21 @@ BarButtonBase {
                 width: stopLabel.implicitWidth + 24
                 height: stopLabel.implicitHeight + 12
                 radius: height / 2
-                color: stopArea.pressed ? Colors.md3.error_container : Colors.md3.error
+                color: stopArea.pressed ? Colors.md3.surface_container_highest : (stopArea.containsMouse ? Colors.md3.surface_container_high : Colors.md3.surface_container)
 
                 Text {
                     id: stopLabel
                     anchors.centerIn: parent
                     text: "Stop"
-                    color: Colors.md3.on_error
+                    color: Colors.md3.on_surface
                     font.bold: true
                 }
 
                 MouseArea {
                     id: stopArea
                     anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
                     onClicked: {
                         Recording.stop();
                         popup.open = false;

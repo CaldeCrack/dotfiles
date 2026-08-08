@@ -46,6 +46,26 @@ Singleton {
     signal recordingStopped(string path)
     signal recordingFailed(string reason)
 
+    Item {
+        IpcHandler {
+            target: "recording"
+
+            function toggleScreen(): void {
+                if (!root.recording)
+                    root.start("screen");
+                else
+                    root.stop();
+            }
+
+            function toggleRegion(): void {
+                if (!root.recording)
+                    root.start("region");
+                else
+                    root.stop();
+            }
+        }
+    }
+
     function toggleAudio() {
         audioEnabled = !audioEnabled;
     }
