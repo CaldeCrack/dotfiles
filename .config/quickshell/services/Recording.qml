@@ -66,9 +66,9 @@ Singleton {
             // slurp needs a real shell to expand $(...) — everything else
             // here is a plain argv list, so this is the one case that
             // goes through sh -c.
-            process.command = ["sh", "-c", "wf-recorder -g \"$(slurp)\" -f '" + _outputPath + "'" + audioArg];
+            process.command = ["sh", "-c", "wf-recorder -g \"$(slurp)\" -c libx264rgb -f '" + _outputPath + "'" + audioArg];
         } else {
-            const args = ["wf-recorder", "-f", _outputPath];
+            const args = ["wf-recorder", "-c", "libx264rgb", "-f", _outputPath];
             if (audioEnabled)
                 args.push("--audio=" + audioSource);
             process.command = args;

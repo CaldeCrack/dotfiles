@@ -33,7 +33,7 @@ PanelWindow {
     // ButtonRegistry.componentMap by each section.
     readonly property var leftButtons: ["distro", "systemStats", "workspaces"]
     readonly property var middleButtons: ["wallpaper", "media", "about", "time", "weather"]
-    readonly property var rightButtons: ["tray", "miscApps", "controlPanel", "notifications", "power"]
+    readonly property var rightButtons: ["recording", "tray", "miscApps", "controlPanel", "notifications", "power"]
 
     Rectangle {
         id: background

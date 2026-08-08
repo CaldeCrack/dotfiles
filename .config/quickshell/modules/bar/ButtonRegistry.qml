@@ -49,6 +49,11 @@ Singleton {
         WallpaperButton {}
     }
     Component {
+        id: recording
+        RecordingButton {}
+    }
+
+    Component {
         id: tray
         TrayButton {}
     }
@@ -69,6 +74,7 @@ Singleton {
             time: time,
             weather: weather,
             wallpaper: wallpaper,
+            recording: recording,
             tray: tray,
             miscApps: miscApps
         // controlPanel: controlPanel,
