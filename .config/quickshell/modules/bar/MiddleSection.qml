@@ -56,22 +56,23 @@ Row {
             required property string modelData
 
             implicitWidth: {
-                if (buttonComponent === undefined)
-                    return root.slotSize;
-
-                if (!loader.item)
+                if ((buttonComponent === undefined) || !loader.item)
                     return root.slotSize;
 
                 return loader.item.visible ? loader.item.implicitWidth : 0;
             }
+            implicitHeight: {
+                if ((buttonComponent === undefined) || !loader.item)
+                    return root.slotSize;
 
-            implicitHeight: buttonComponent !== undefined ? loader.implicitHeight : root.slotSize
+                return loader.item.visible ? loader.item.implicitHeight : 0;
+            }
 
             readonly property var buttonComponent: Bar.ButtonRegistry.componentMap[modelData]
 
             Loader {
                 id: loader
-                anchors.fill: parent
+                anchors.centerIn: parent
                 active: wrapper.buttonComponent !== undefined
                 sourceComponent: wrapper.buttonComponent
             }
