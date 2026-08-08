@@ -21,7 +21,16 @@ Row {
 
             readonly property var buttonComponent: Bar.ButtonRegistry.componentMap[modelData]
 
-            implicitWidth: buttonComponent !== undefined ? loader.implicitWidth : root.slotSize
+            implicitWidth: {
+                if (buttonComponent === undefined)
+                    return root.slotSize;
+
+                if (!loader.item)
+                    return root.slotSize;
+
+                return loader.item.visible ? loader.item.implicitWidth : 0;
+            }
+
             implicitHeight: buttonComponent !== undefined ? loader.implicitHeight : root.slotSize
 
             Loader {
