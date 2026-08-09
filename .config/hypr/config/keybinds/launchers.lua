@@ -10,9 +10,6 @@ hl.bind(cfg.mainMod .. " + CTRL + V", hl.dsp.exec_cmd(cfg.volumeMixer))
 hl.bind(cfg.mainMod .. " + CTRL + W", hl.dsp.exec_cmd(cfg.wifi))
 hl.bind(cfg.mainMod .. " + SPACE", hl.dsp.exec_cmd("pkill " .. cfg.menuName .. " ; " .. cfg.menu))
 
--- Hyprlock
-hl.bind(cfg.mainMod .. " + SHIFT + L", hl.dsp.exec_cmd("hyprlock"))
-
 -- Hyprpicker
 hl.bind(cfg.mainMod .. " + SHIFT + P", hl.dsp.exec_cmd("hyprpicker -a -q"))
 

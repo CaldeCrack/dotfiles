@@ -1,5 +1,9 @@
--- Handle Lid switch
-hl.bind("switch:on:Lid Switch", hl.dsp.exec_cmd("loginctl suspend"), { locked = true })
+local cfg = require("config.programs")
+
+-- Session
+hl.bind("switch:on:Lid Switch", hl.dsp.exec_cmd("systemctl suspend"), { locked = true })
+hl.bind(cfg.mainMod .. " + L", hl.dsp.exec_cmd("sh -c 'loginctl lock-session $XDG_SESSION_ID'"))
+hl.bind(cfg.mainMod .. " + SHIFT + L", hl.dsp.exec_cmd("systemctl suspend"))
 
 -- Volume (bindel: locked + repeating)
 hl.bind(
