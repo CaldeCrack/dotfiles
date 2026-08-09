@@ -28,3 +28,4 @@ hl.bind(cfg.mainMod .. " + SHIFT + PERIOD", hl.dsp.exec_cmd("qs ipc call miscApp
 hl.bind(cfg.mainMod .. " + R", hl.dsp.exec_cmd("qs ipc call recording toggleScreen"))
 hl.bind(cfg.mainMod .. " + SHIFT + R", hl.dsp.exec_cmd("qs ipc call recording toggleRegion"))
 hl.bind(cfg.mainMod .. " + escape", hl.dsp.exec_cmd("qs ipc call power toggle"))
+hl.bind(cfg.mainMod .. " + W", hl.dsp.exec_cmd("qs ipc call infoPanel open 'Wallpaper'"))

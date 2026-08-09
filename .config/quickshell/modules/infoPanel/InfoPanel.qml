@@ -4,6 +4,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Io
 import qs.widgets
 import qs.config
 import "tabs"
@@ -35,6 +36,22 @@ Singleton {
 
     function close() {
         panelOpen = false;
+    }
+
+    IpcHandler {
+        target: "infoPanel"
+
+        function open(tabLabel: string) {
+            for (let i = 0; i < root.tabModel.length; i++) {
+                if (root.tabModel[i].label === tabLabel) {
+                    if ((i === root.currentIndex && !root.panelOpen) || i !== root.currentIndex)
+                        root.show(i);
+                    else
+                        root.close();
+                    return;
+                }
+            }
+        }
     }
 
     property bool panelOpen: false

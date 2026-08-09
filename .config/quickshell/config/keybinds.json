@@ -73,7 +73,7 @@
       },
       {
         "keybind": ["SUPER", "W"],
-        "description": "Change wallpaper"
+        "description": "Open wallpaper selector"
       }
     ]
   },
