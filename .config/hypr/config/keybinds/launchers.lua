@@ -9,6 +9,12 @@ hl.bind(cfg.mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(cfg.office))
 hl.bind(cfg.mainMod .. " + CTRL + V", hl.dsp.exec_cmd(cfg.volumeMixer))
 hl.bind(cfg.mainMod .. " + CTRL + W", hl.dsp.exec_cmd(cfg.wifi))
 hl.bind(cfg.mainMod .. " + SPACE", hl.dsp.exec_cmd("pkill " .. cfg.menuName .. " ; " .. cfg.menu))
+hl.bind(
+	cfg.mainMod .. " + K",
+	hl.dsp.exec_cmd(
+		"busctl --user get-property sm.puri.OSK0 /sm/puri/OSK0 sm.puri.OSK0 Visible -j | jq -r '.data' | grep -q 'true' && busctl call --user sm.puri.OSK0 /sm/puri/OSK0 sm.puri.OSK0 SetVisible b false || busctl call --user sm.puri.OSK0 /sm/puri/OSK0 sm.puri.OSK0 SetVisible b true"
+	)
+)
 
 -- Hyprpicker
 hl.bind(cfg.mainMod .. " + SHIFT + P", hl.dsp.exec_cmd("hyprpicker -a -q"))

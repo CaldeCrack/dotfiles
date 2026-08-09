@@ -119,7 +119,7 @@
         "description": "Force close"
       },
       {
-        "keybind": ["SUPER", "ALT", "SPACE"],
+        "keybind": ["SUPER", "ALT", "F"],
         "description": "Float"
       },
       {
