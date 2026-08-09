@@ -63,7 +63,10 @@ Singleton {
     }
     // Component { id: controlPanel; ControlPanelButton {} }
     // Component { id: notifications; NotificationsButton {} }
-    // Component { id: power; PowerButton {} }
+    Component {
+        id: power
+        PowerButton {}
+    }
 
     readonly property var componentMap: ({
             distro: distroButton,
@@ -76,9 +79,9 @@ Singleton {
             wallpaper: wallpaper,
             recording: recording,
             tray: tray,
-            miscApps: miscApps
-        // controlPanel: controlPanel,
-        // notifications: notifications,
-        // power: power
+            miscApps: miscApps,
+            // controlPanel: controlPanel,
+            // notifications: notifications,
+            power: power
         })
 }

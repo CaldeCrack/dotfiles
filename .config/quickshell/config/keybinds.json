@@ -220,11 +220,11 @@
         "description": "Set maximum brightness"
       },
       {
-        "keybind": ["SUPER", "L"],
+        "keybind": ["SUPER", "SHIFT", "L"],
         "description": "Lock"
       },
       {
-        "keybind": ["SUPER", "SHIFT", "Esc"],
+        "keybind": ["SUPER", "Esc"],
         "description": "Power menu"
       }
     ]

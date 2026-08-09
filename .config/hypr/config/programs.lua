@@ -5,9 +5,6 @@ M.fileManager = "kitty ~/.config/hypr/scripts/kitty-run.sh spf"
 
 M.menuName = "rofi"
 M.menu = M.menuName .. " -show drun -modi drun -show-icons"
-M.emojiMenu = M.menuName .. ' -modi "emoji:rofimoji -f emoji nerd_font" -show emoji'
-M.clipboardMenu = M.menuName .. " -modi clipboard:~/.local/share/scripts/cliphist-rofi.sh -show clipboard -show-icons"
-M.powerMenu = M.menuName .. " -show pm -modi pm:rofi-power-menu"
 
 M.browser = "zen-browser"
 M.discord = "vesktop"
