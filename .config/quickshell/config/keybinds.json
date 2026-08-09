@@ -74,6 +74,15 @@
       {
         "keybind": ["SUPER", "W"],
         "description": "Open wallpaper selector"
+      },
+            {
+        "keybind": ["SUPER", "M"],
+        "description": "Open media controls"
+      },
+
+      {
+        "keybind": ["SUPER", "K"],
+        "description": "Toggle on-screen keyboard"
       }
     ]
   },
@@ -131,7 +140,7 @@
         "description": "Fullscreen spoof"
       },
       {
-        "keybind": ["SUPER", "M"],
+        "keybind": ["SUPER", "SHIFT", "M"],
         "description": "Maximize"
       },
       {
