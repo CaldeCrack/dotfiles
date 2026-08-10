@@ -1,6 +1,7 @@
 DataPicker 1.0 DataPicker.qml
 singleton Audio 1.0 Audio.qml
 singleton Battery 1.0 Battery.qml
+singleton Brightness 1.0 Brightness.qml
 singleton Cava 1.0 Cava.qml
 singleton Clipboard 1.0 Clipboard.qml
 singleton Emoji 1.0 Emoji.qml
