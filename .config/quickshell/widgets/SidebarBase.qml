@@ -59,10 +59,11 @@ Item {
     // --- sizing / appearance ------------------------------------------------------
     property real sidebarWidth: 340
     property real contentPadding: 16
-    property real radius: 0
+    property real radius: 16
     property color color: Colors.md3.surface_container
     property color borderColor: Colors.md3.outline_variant
     property real borderWidth: 1
+    property int edgeMargin: 4
 
     // --- shadow ------------------------------------------------------
     property bool shadowEnabled: true
@@ -71,8 +72,8 @@ Item {
     property real shadowOpacity: 1.0
     property real shadowSpread: 2
 
-    readonly property real shadowMarginLeft: shadowEnabled && edge !== Qt.LeftEdge ? shadowSpread : 0
-    readonly property real shadowMarginRight: shadowEnabled && edge !== Qt.RightEdge ? shadowSpread : 0
+    readonly property real shadowMarginLeft: (shadowEnabled && edge !== Qt.LeftEdge ? shadowSpread : 0) + edgeMargin
+    readonly property real shadowMarginRight: (shadowEnabled && edge !== Qt.RightEdge ? shadowSpread : 0) + edgeMargin
     readonly property real shadowMarginTop: shadowEnabled ? shadowSpread : 0
     readonly property real shadowMarginBottom: shadowEnabled ? shadowSpread : 0
 
