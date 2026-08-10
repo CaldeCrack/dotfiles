@@ -15,25 +15,13 @@ Item {
     implicitWidth: column.implicitWidth
     implicitHeight: column.implicitHeight
 
-    function volumeIconName(vol, isMuted) {
-        if (isMuted)
-            return "media/volume-off";
-        if (vol <= 0)
-            return "media/volume-x";
-        if (vol < 40)
-            return "media/volume";
-        if (vol < 80)
-            return "media/volume-1";
-        return "media/volume-2";
-    }
-
     Column {
         id: column
         spacing: 12
 
         PanelIconButton {
             id: volumeButton
-            iconName: root.volumeIconName(Audio.volume, Audio.muted)
+            iconName: Audio.currentVolumeIcon
             checked: root.activePopup === "volume"
             onClicked: root.activePopup = (root.activePopup === "volume" ? "" : "volume")
         }

@@ -57,6 +57,27 @@ Singleton {
         return isHeadphoneNode(node) ? "media/headphones" : "media/speaker";
     }
 
+    // --- Icon selection: volume level / muted state --------------------
+    //
+    // Lives here rather than in a widget so every consumer (this sidebar
+    // row, the eventual bar button reflecting live state, anything else)
+    // computes the exact same icon from the exact same two inputs.
+    function volumeIconName(vol, isMuted) {
+        if (isMuted)
+            return "media/volume-off";
+        if (vol <= 0)
+            return "media/volume-x";
+        if (vol < 40)
+            return "media/volume";
+        if (vol < 80)
+            return "media/volume-1";
+        return "media/volume-2";
+    }
+
+    // Reactive convenience so callers don't have to re-derive this from
+    // volume+muted themselves every time — just bind to it directly.
+    readonly property string currentVolumeIcon: volumeIconName(volume, muted)
+
     function setVolume(percent) {
         if (!sink?.ready || !sink?.audio)
             return;
