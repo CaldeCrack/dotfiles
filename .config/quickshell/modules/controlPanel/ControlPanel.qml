@@ -6,9 +6,6 @@ import qs.widgets
 
 // ControlPanel
 // ------------
-// Sidebar window hosting SidebarBase. Volume, Brightness, and Wifi are
-// in place; Bluetooth gets added next, same pattern.
-//
 // Caller owns `panelOpen`, same one-way contract as SidebarBase itself:
 //
 //   property bool controlPanelOpen: false
@@ -74,7 +71,9 @@ PanelWindow {
                 width: parent.width
             }
 
-            // Bluetooth lands here next, same pattern.
+            BluetoothSection {
+                width: parent.width
+            }
         }
     }
 }
