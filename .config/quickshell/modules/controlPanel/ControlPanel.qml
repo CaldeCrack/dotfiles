@@ -6,9 +6,8 @@ import qs.widgets
 
 // ControlPanel
 // ------------
-// Sidebar window hosting SidebarBase. Volume and Brightness are in
-// place; Wifi/Bluetooth get added one at a time in later steps, stacked
-// below them.
+// Sidebar window hosting SidebarBase. Volume, Brightness, and Wifi are
+// in place; Bluetooth gets added next, same pattern.
 //
 // Caller owns `panelOpen`, same one-way contract as SidebarBase itself:
 //
@@ -61,7 +60,7 @@ PanelWindow {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: parent.top
-            spacing: 8
+            spacing: 16
 
             VolumeSlider {
                 width: parent.width
@@ -71,7 +70,11 @@ PanelWindow {
                 width: parent.width
             }
 
-            // Wifi, Bluetooth land here next, same pattern.
+            WifiSection {
+                width: parent.width
+            }
+
+            // Bluetooth lands here next, same pattern.
         }
     }
 }
