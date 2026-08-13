@@ -32,9 +32,9 @@ notify_user() {
 	str_volume=$(printf "%3d" "$volume")
 	mute=$(get_mute)
 	if [[ "$mute" = "[MUTED]" ]]; then
-		dunstify -a "changeVolume" -u low -i "$(get_icon)" -h string:x-dunst-stack-tag:myvolume "Volume muted" 
+		notify-send -a "changeVolume" -u low -i "$(get_icon)" -h string:x-dunst-stack-tag:myvolume "Volume muted" 
 	else
-		dunstify -a "changeVolume" -u low -i "$(get_icon)" -h string:x-dunst-stack-tag:myvolume -h int:value:"$volume" "Volume: ${str_volume}%"
+		notify-send -a "changeVolume" -u low -i "$(get_icon)" -h string:x-dunst-stack-tag:myvolume -h int:value:"$volume" "Volume: ${str_volume}%"
 	fi
 }
 

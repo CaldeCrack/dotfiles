@@ -17,7 +17,7 @@ notify_user() {
 	max_brightness=$(get_max_brightness)
 	norm_brightness=$(echo "$brightness" "$max_brightness" | awk '{print $1 / $2 * 100 }')
 	str_brightness=$(printf "%3d" "$norm_brightness")
-	dunstify -a "changeBrightness" -u low -i "$(get_icon)" -h string:x-dunst-stack-tag:mybrightness -h int:value:"$norm_brightness" "Brightness: ${str_brightness}%"
+	notify-send -a "changeBrightness" -u low -i "$(get_icon)" -h string:x-dunst-stack-tag:mybrightness -h int:value:"$norm_brightness" "Brightness: ${str_brightness}%"
 }
 
 set_max_brightness() {
