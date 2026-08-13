@@ -1,4 +1,5 @@
 import QtQuick
+import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Notifications
 import qs.config
@@ -32,6 +33,13 @@ import qs.config
 // emits what happened. The host decides what dismiss vs. expire actually
 // means for the surface it's showing this in (see Notifications.qml's
 // dismiss()/expireToast() split).
+//
+// Enter/exit animation lives here rather than on whatever hosts it, so
+// every host gets the same feel for free. It's driven by the ListView
+// attached signals (ListView.onAdd / ListView.onRemove + delayRemove) —
+// harmless no-ops if this item isn't inside a ListView. Plain positioners
+// (Column/Row/etc.) don't support delayed removal at all, which is why a
+// ListView is the right host for anything that needs an exit animation.
 Item {
     id: root
 
@@ -61,8 +69,15 @@ Item {
 
     implicitWidth: cardWidth
     implicitHeight: card.height
+    // Plain Item does NOT bind width/height to implicit* automatically —
+    // without this, root.height silently stays 0 and only "works" because
+    // QML doesn't clip children to a zero-sized parent by default. Any
+    // container that actually measures this item (ListView, Column, ...)
+    // needs a real height here, not just an implicit one.
+    width: implicitWidth
+    height: implicitHeight
 
-    readonly property int _padding: 8
+    readonly property int _padding: 12
     readonly property bool _hasTimer: root.timeout > 0
     readonly property color _urgencyColor: root._colorForUrgency(root.urgency)
 
@@ -70,28 +85,22 @@ Item {
 
     function _colorForUrgency(u) {
         switch (u) {
-        case NotificationUrgency.Critical:
-            return Colors.md3.error;
-        case NotificationUrgency.Low:
-            return Colors.md3.secondary;
-        default:
-            return Colors.md3.primary;
+        case NotificationUrgency.Critical: return Colors.md3.error
+        case NotificationUrgency.Low: return Colors.md3.secondary
+        default: return Colors.md3.primary
         }
     }
 
     // Coarse on purpose (30s tick) — this only feeds a "3m ago"-style
     // label, no need for anything finer-grained.
     function _relativeTime(ts, now) {
-        const diffSec = Math.max(0, Math.floor((now - ts) / 1000));
-        if (diffSec < 60)
-            return "now";
-        const min = Math.floor(diffSec / 60);
-        if (min < 60)
-            return min + "m";
-        const hr = Math.floor(min / 60);
-        if (hr < 24)
-            return hr + "h";
-        return Math.floor(hr / 24) + "d";
+        const diffSec = Math.max(0, Math.floor((now - ts) / 1000))
+        if (diffSec < 60) return "now"
+        const min = Math.floor(diffSec / 60)
+        if (min < 60) return min + "m"
+        const hr = Math.floor(min / 60)
+        if (hr < 24) return hr + "h"
+        return Math.floor(hr / 24) + "d"
     }
 
     Timer {
@@ -99,6 +108,43 @@ Item {
         running: true
         repeat: true
         onTriggered: root._now = Date.now()
+    }
+
+    // -----------------------------------------------------------------
+    // Enter / exit animation
+    // -----------------------------------------------------------------
+    // Entrance: fade + drop in from above. Exit: fade + collapse height to
+    // 0 in place ("cramp vertically") rather than sliding — dismissal
+    // isn't directional the way arrival is.
+    //
+    // The entrance offset is a Translate transform, NOT an animation on
+    // the real y property. ListView actively manages each delegate's y as
+    // part of its own layout (and is doing so concurrently for siblings
+    // via the displaced: transition) — animating y directly would fight
+    // that. A transform sits on top purely visually and never touches the
+    // property the view itself is driving.
+
+    transform: Translate { id: _entryOffset }
+
+    ListView.onAdd: _enterAnimation.start()
+    ListView.onRemove: {
+        root.ListView.delayRemove = true
+        _exitAnimation.start()
+    }
+
+    ParallelAnimation {
+        id: _enterAnimation
+        NumberAnimation { target: root; property: "opacity"; from: 0; to: 1; duration: 300; easing.type: Easing.OutCubic }
+        NumberAnimation { target: _entryOffset; property: "y"; from: -card.implicitHeight; to: 0; duration: 300; easing.type: Easing.OutCubic }
+    }
+
+    SequentialAnimation {
+        id: _exitAnimation
+        ParallelAnimation {
+            NumberAnimation { target: root; property: "opacity"; to: 0; duration: 200; easing.type: Easing.InCubic }
+            NumberAnimation { target: card; property: "height"; to: 0; duration: 200; easing.type: Easing.InCubic }
+        }
+        ScriptAction { script: root.ListView.delayRemove = false }
     }
 
     Rectangle {
@@ -109,7 +155,8 @@ Item {
         radius: 14
         color: Colors.md3.surface_container
         border.width: 1
-        border.color: cardHover.containsMouse ? Colors.md3.outline : Colors.md3.outline_variant
+        border.color: (cardHover.containsMouse || closeHover.containsMouse) ? Colors.md3.outline : Colors.md3.outline_variant
+        clip: true // needed once height animates below content's natural size on exit
 
         MouseArea {
             id: cardHover
@@ -124,15 +171,12 @@ Item {
             y: root._padding
             width: parent.width - root._padding * 2
             spacing: 8
-            leftPadding: 2
-            rightPadding: 2
-            bottomPadding: 2
 
             // ---- header: urgency dot, app icon, app name, time, close ----
             Item {
                 id: header
                 width: parent.width
-                height: Math.max(appNameText.implicitHeight, closeButton.height, 16)
+                height: Math.max(appNameText.implicitHeight, closeIcon.height, 16)
 
                 Rectangle {
                     id: urgencyDot
@@ -157,11 +201,10 @@ Item {
 
                 Rectangle {
                     id: closeButton
-                    width: 24
-                    height: width
-                    radius: width / 2
-                    color: closeHover.containsMouse ? Colors.md3.surface_container_highest : "transparent"
-
+                    width: 22
+                    height: 22
+                    radius: 6
+                    color: closeHover.containsMouse ? Colors.md3.surface_container_high : "transparent"
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
 
@@ -175,8 +218,8 @@ Item {
                     MouseArea {
                         id: closeHover
                         anchors.fill: parent
-                        cursorShape: Qt.PointingHandCursor
                         hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
                         onClicked: root.dismissRequested(root.notifId)
                     }
                 }
@@ -288,7 +331,7 @@ Item {
             // ---- timer bar: grows outward from the horizontal center ----
             Item {
                 id: timerTrack
-                width: parent.width - parent.rightPadding - parent.leftPadding
+                width: parent.width
                 height: 6
                 visible: root._hasTimer
 
@@ -319,13 +362,12 @@ Item {
                         duration: root.timeout
                         easing.type: Easing.Linear
                         running: false
-                        paused: root._hasTimer ? (cardHover.containsMouse || closeHover.containsMouse) : false
+                        paused: cardHover.containsMouse || closeHover.containsMouse
                         onFinished: root.timedOut(root.notifId)
                     }
                 }
 
-                Component.onCompleted: if (root._hasTimer)
-                    timerAnim.start()
+                Component.onCompleted: if (root._hasTimer) timerAnim.start()
             }
         }
     }
