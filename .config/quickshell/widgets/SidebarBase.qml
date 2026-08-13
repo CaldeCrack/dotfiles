@@ -60,7 +60,7 @@ Item {
     property real sidebarWidth: 340
     property real contentPadding: 16
     property real radius: 16
-    property color color: Colors.md3.surface_container
+    property color color: Colors.md3.surface
     property color borderColor: Colors.md3.outline_variant
     property real borderWidth: 1
     property int edgeMargin: 4
