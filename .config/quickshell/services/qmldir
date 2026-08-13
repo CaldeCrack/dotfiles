@@ -9,6 +9,7 @@ singleton Emoji 1.0 Emoji.qml
 singleton Media 1.0 Media.qml
 singleton NerdFont 1.0 NerdFont.qml
 singleton Network 1.0 Network.qml
+singleton Notifications 1.0 Notifications.qml
 singleton Power 1.0 Power.qml
 singleton Recording 1.0 Recording.qml
 singleton SystemStats 1.0 SystemStats.qml

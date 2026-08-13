@@ -8,6 +8,7 @@ Keybind 1.0 Keybind.qml
 LinkChip 1.0 LinkChip.qml
 MarqueeText 1.0 MarqueeText.qml
 NavStack 1.0 NavStack.qml
+NotificationItem 1.0 NotificationItem.qml
 PanelBase 1.0 PanelBase.qml
 PanelIconButton 1.0 PanelIconButton.qml
 PickerGrid 1.0 PickerGrid.qml
