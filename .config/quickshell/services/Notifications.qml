@@ -2,6 +2,7 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import Quickshell.Services.Notifications
 
 // Central notification service.
@@ -38,6 +39,16 @@ import Quickshell.Services.Notifications
 // separate set of strings.
 Singleton {
     id: root
+
+    Item {
+        IpcHandler {
+            target: "notifications"
+
+            function toggleCenter(): void {
+                root.centerOpen = !root.centerOpen;
+            }
+        }
+    }
 
     // -----------------------------------------------------------------
     // Config

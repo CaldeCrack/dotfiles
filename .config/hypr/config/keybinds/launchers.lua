@@ -33,3 +33,4 @@ hl.bind(cfg.mainMod .. " + SHIFT + R", hl.dsp.exec_cmd("qs ipc call recording to
 hl.bind(cfg.mainMod .. " + escape", hl.dsp.exec_cmd("qs ipc call power toggle"))
 hl.bind(cfg.mainMod .. " + W", hl.dsp.exec_cmd("qs ipc call infoPanel open 'Wallpaper'"))
 hl.bind(cfg.mainMod .. " + M", hl.dsp.exec_cmd("qs ipc call infoPanel open 'Media'"))
+hl.bind(cfg.mainMod .. " + N", hl.dsp.exec_cmd("qs ipc call notifications toggleCenter"))

@@ -73,13 +73,16 @@
       },
       {
         "keybind": ["SUPER", "W"],
-        "description": "Open wallpaper selector"
+        "description": "Toggle wallpaper selector"
       },
-            {
+      {
         "keybind": ["SUPER", "M"],
-        "description": "Open media controls"
+        "description": "Toggle media controls"
       },
-
+      {
+        "keybind": ["SUPER", "N"],
+        "description": "Toggle notification center"
+      },
       {
         "keybind": ["SUPER", "K"],
         "description": "Toggle on-screen keyboard"
