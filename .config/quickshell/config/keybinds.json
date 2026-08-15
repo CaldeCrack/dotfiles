@@ -25,7 +25,7 @@
         "description": "Office software"
       },
       {
-        "keybind": ["SUPER", "R"],
+        "keybind": ["SUPER", "SPACE"],
         "description": "App Launcher"
       },
       {
