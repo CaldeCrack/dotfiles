@@ -10,5 +10,6 @@ ShellRoot {
 
     Bar {}
     NotificationToasts {}
+    NotificationsSidebar {}
     readonly property var _forceInfoPanelInit: InfoPanel
 }

@@ -62,6 +62,12 @@ Singleton {
 
     property bool silentMode: false
 
+    // Whether the notification center (sidebar) is currently open. Lives
+    // here rather than as local state on the bar button or the sidebar
+    // window themselves, so both can bind to it directly without shell.qml
+    // needing to wire them together manually.
+    property bool centerOpen: false
+
     // Deliberately plain JS arrays, NOT ListModel. Records carry a nested
     // `actions` array ({identifier, text}[]) and ListModel's role system
     // does not reliably round-trip nested arrays-of-objects when set via
@@ -73,6 +79,10 @@ Singleton {
     // the same array object.
     property var history: []
     property var activeToasts: []
+
+    // Drives the bar button's bell-dot icon. Recomputed automatically
+    // whenever history changes.
+    readonly property int unreadCount: root.history.filter(n => !n.read).length
 
     // -----------------------------------------------------------------
     // Internal bookkeeping
@@ -169,6 +179,15 @@ Singleton {
 
     function toggleSilent() {
         root.silentMode = !root.silentMode;
+    }
+
+    // Marks everything read as soon as the center is opened — otherwise
+    // the bell-dot would stay lit forever after the person has actually
+    // looked at their notifications.
+    function toggleCenter() {
+        root.centerOpen = !root.centerOpen;
+        if (root.centerOpen)
+            root.markAllRead();
     }
 
     // Clears the unread flag used for the bar button's badge count. No-op

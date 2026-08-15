@@ -65,7 +65,10 @@ Singleton {
         id: controlPanel
         ControlPanelButton {}
     }
-    // Component { id: notifications; NotificationsButton {} }
+    Component {
+        id: notifications
+        NotificationsButton {}
+    }
     Component {
         id: power
         PowerButton {}
@@ -84,7 +87,7 @@ Singleton {
             tray: tray,
             miscApps: miscApps,
             controlPanel: controlPanel,
-            // notifications: notifications,
+            notifications: notifications,
             power: power
         })
 }

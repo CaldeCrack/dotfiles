@@ -58,7 +58,7 @@ Item {
 
     // --- sizing / appearance ------------------------------------------------------
     property real sidebarWidth: 340
-    property real contentPadding: 16
+    property real contentPadding: 8
     property real radius: 16
     property color color: Colors.md3.surface
     property color borderColor: Colors.md3.outline_variant
