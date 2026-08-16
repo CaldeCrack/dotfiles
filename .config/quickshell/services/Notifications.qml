@@ -45,7 +45,7 @@ Singleton {
             target: "notifications"
 
             function toggleCenter(): void {
-                root.centerOpen = !root.centerOpen;
+                root.toggleCenter();
             }
         }
     }
