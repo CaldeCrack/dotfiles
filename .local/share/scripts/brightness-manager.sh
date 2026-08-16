@@ -1,5 +1,20 @@
 #!/usr/bin/env bash
 
+DEBOUNCE_FILE="/tmp/brightness-manager.lock"
+DEBOUNCE_NS=20000000
+
+now=$(date +%s%N)
+
+if [[ -f "$DEBOUNCE_FILE" ]]; then
+    last=$(cat "$DEBOUNCE_FILE")
+
+    if (( now - last < DEBOUNCE_NS )); then
+        exit 0
+    fi
+fi
+
+printf '%s\n' "$now" > "$DEBOUNCE_FILE"
+
 get_max_brightness() {
   brightnessctl m
 }
