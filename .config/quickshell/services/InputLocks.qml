@@ -24,13 +24,15 @@ import Quickshell.Io
 Singleton {
     id: root
 
-    readonly property bool ready: _capsPath !== "" && _numPath !== ""
+    readonly property bool ready: _capsPath !== "" && _numPath !== "" && _scrollPath !== ""
 
     property string _capsPath: ""
     property string _numPath: ""
+    property string _scrollPath: ""
 
     property bool capsLockOn: false
     property bool numLockOn: false
+    property bool scrollLockOn: false
 
     Timer {
         interval: 100
@@ -40,6 +42,7 @@ Singleton {
         onTriggered: {
             capsProcess.running = true;
             numProcess.running = true;
+            scrollProcess.running = true;
         }
     }
 
@@ -58,6 +61,15 @@ Singleton {
 
         stdout: SplitParser {
             onRead: line => root.numLockOn = line.trim() === "1"
+        }
+    }
+
+    Process {
+        id: scrollProcess
+        command: ["cat", root._scrollPath]
+
+        stdout: SplitParser {
+            onRead: line => root.scrollLockOn = line.trim() === "1"
         }
     }
 
@@ -88,6 +100,17 @@ Singleton {
             onRead: line => {
                 if (line && !root._numPath)
                     root._numPath = line.trim() + "/brightness";
+            }
+        }
+    }
+
+    Process {
+        running: true
+        command: ["sh", "-c", "ls -d /sys/class/leds/*::scrolllock 2>/dev/null | head -n1"]
+        stdout: SplitParser {
+            onRead: line => {
+                if (line && !root._scrollPath)
+                    root._scrollPath = line.trim() + "/brightness";
             }
         }
     }

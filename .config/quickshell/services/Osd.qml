@@ -20,6 +20,7 @@ import Quickshell
 //   { kind: "brightness", mode: "level",   value, iconName }
 //   { kind: "capslock",   mode: "boolean", active, label }
 //   { kind: "numlock",    mode: "boolean", active, label }
+//   { kind: "scrolllock",    mode: "boolean", active, label }
 //
 // `mode` is what OsdIndicator actually switches its layout on — see that
 // file. `kind` is carried along for anything that wants to branch on the
@@ -101,7 +102,7 @@ Singleton {
         }
     }
 
-    // ---- caps / num lock ----
+    // ---- caps / num / scroll lock ----
     Connections {
         target: InputLocks
         function onReadyChanged() {
@@ -116,5 +117,11 @@ Singleton {
             if (root._locksBaselined)
                 root.show({ kind: "numlock", mode: "boolean", active: InputLocks.numLockOn, label: "Num Lock" });
         }
+
+        function onScrollLockOnChanged() {
+            if (root._locksBaselined)
+                root.show({ kind: "scrolllock", mode: "boolean", active: InputLocks.scrollLockOn, label: "Scroll Lock" });
+        }
+
     }
 }
