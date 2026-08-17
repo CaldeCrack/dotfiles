@@ -26,3 +26,4 @@ _darcs
 
 \w*/node_modules(\/|$)
 ^/\.config/zen(/|$)
+^assets/
