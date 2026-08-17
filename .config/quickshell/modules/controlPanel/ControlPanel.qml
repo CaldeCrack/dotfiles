@@ -57,7 +57,7 @@ PanelWindow {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: parent.top
-            spacing: 16
+            spacing: 8
 
             VolumeSlider {
                 width: parent.width
