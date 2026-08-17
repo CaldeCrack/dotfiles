@@ -1,3 +1,26 @@
+-- Special workspace rules
+hl.window_rule({
+	name = "scratchpad-aspect",
+	match = {
+		workspace = "special:scratchpad",
+	},
+	maximize = false,
+	fullscreen = false,
+	float = true,
+	size = { 400, 400 },
+	move = {
+		"(monitor_w - window_w - 20)",
+		"(monitor_h - window_h - 20)",
+	},
+	content = "photo",
+	render_unfocused = true,
+})
+
+hl.workspace_rule({
+	workspace = "special:scratchpad",
+	on_created_empty = "imv ~/Pictures/Calde/waguri-dance.gif",
+})
+
 -- Allow RetroArch to render while unfocused
 hl.window_rule({
 	name = "retroarch-render-unfocused",

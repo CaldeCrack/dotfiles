@@ -9,8 +9,11 @@ Singleton {
     // Sorted list of used workspaces — drives the Repeater
     readonly property var workspaces: {
         let ws = [];
-        for (let i = 0; i < Hyprland.workspaces.values.length; ++i)
-            ws.push(Hyprland.workspaces.values[i]);
+        for (let i = 0; i < Hyprland.workspaces.values.length; ++i) {
+            let workspace = Hyprland.workspaces.values[i];
+            if (workspace.id >= 0)
+                ws.push(workspace);
+        }
         ws.sort((a, b) => a.id - b.id);
         return ws;
     }

@@ -149,6 +149,10 @@
       {
         "keybind": ["SUPER", "P"],
         "description": "Pin"
+      },
+     {
+        "keybind": ["SUPER", "SHIFT", "S"],
+        "description": "Send to scratchpad"
       }
     ]
   },
@@ -168,6 +172,10 @@
       {
         "keybind": ["SUPER", "#"],
         "description": "Focus workspace #"
+      },
+      {
+        "keybind": ["SUPER", "S"],
+        "description": "Toggle scratchpad"
       }
     ]
   },

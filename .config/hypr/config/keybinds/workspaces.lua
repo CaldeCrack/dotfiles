@@ -13,3 +13,6 @@ hl.bind(cfg.mainMod .. " + down", hl.dsp.focus({ workspace = "e+1" }))
 -- Scroll through workspaces with mainMod + scroll
 hl.bind(cfg.mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
 hl.bind(cfg.mainMod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }))
+
+-- Special workspace
+hl.bind(cfg.mainMod .. " + S", hl.dsp.workspace.toggle_special("scratchpad"))
