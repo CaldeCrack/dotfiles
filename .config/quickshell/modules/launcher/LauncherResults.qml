@@ -30,18 +30,21 @@ Item {
     onModelChanged: currentIndex = 0
 
     function columnCount() {
-        return (root.layoutMode === "grid" && resultsLoader.item)
-            ? resultsLoader.item.columns
-            : 1;
+        return (root.layoutMode === "grid" && resultsLoader.item) ? resultsLoader.item.columns : 1;
     }
 
     function clampIndex(i) {
-        if (!root.model || root.model.length === 0) return 0;
+        if (!root.model || root.model.length === 0)
+            return 0;
         return Math.max(0, Math.min(root.model.length - 1, i));
     }
 
-    function moveUp() { root.currentIndex = clampIndex(root.currentIndex - columnCount()); }
-    function moveDown() { root.currentIndex = clampIndex(root.currentIndex + columnCount()); }
+    function moveUp() {
+        root.currentIndex = clampIndex(root.currentIndex - columnCount());
+    }
+    function moveDown() {
+        root.currentIndex = clampIndex(root.currentIndex + columnCount());
+    }
 
     // Left/right only mean anything once entries sit side by side — in
     // list mode they're left alone entirely so the search field's own
@@ -49,15 +52,19 @@ Item {
     // Keys.onLeftPressed/onRightPressed, which only forward here when
     // layoutMode is "grid").
     function moveLeft() {
-        if (root.layoutMode !== "grid") return;
+        if (root.layoutMode !== "grid")
+            return;
         root.currentIndex = clampIndex(root.currentIndex - 1);
     }
     function moveRight() {
-        if (root.layoutMode !== "grid") return;
+        if (root.layoutMode !== "grid")
+            return;
         root.currentIndex = clampIndex(root.currentIndex + 1);
     }
 
-    function activateCurrent() { root.activateIndex(root.currentIndex); }
+    function activateCurrent() {
+        root.activateIndex(root.currentIndex);
+    }
 
     // A Loader swap, not two always-alive views with one hidden — cheaper
     // (only the active layout's delegates ever exist) at the cost of
@@ -104,7 +111,7 @@ Item {
             readonly property int targetCellSize: 96
             readonly property int columns: Math.max(1, Math.floor(width / targetCellSize))
             cellWidth: width / columns
-            cellHeight: 118 // extra room for a two-line wrapped label, see LauncherGridEntry
+            cellHeight: 96
 
             delegate: LauncherGridEntry {
                 onActivated: root.activateIndex(index)

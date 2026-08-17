@@ -44,7 +44,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: 16
-        color: Colors.md3.surface_container_high
+        color: Colors.md3.surface_container
     }
 
     Icon {

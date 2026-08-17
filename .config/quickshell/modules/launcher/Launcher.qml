@@ -164,7 +164,7 @@ PanelWindow {
             id: chrome
             anchors.fill: parent
             radius: 16
-            color: Colors.md3.surface_container
+            color: Colors.md3.surface
             border.width: 1
             border.color: Colors.md3.outline_variant
         }

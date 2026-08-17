@@ -33,7 +33,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         anchors.margins: 4
-        radius: 10
+        radius: 16
         color: (root.selected || root.hovered) ? Colors.md3.secondary_container : "transparent"
     }
 
