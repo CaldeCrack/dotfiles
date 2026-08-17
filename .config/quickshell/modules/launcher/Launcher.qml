@@ -3,14 +3,15 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 import qs.config
+import qs.services
 import qs.widgets
 
 // Launcher
 // --------
-// Window shell + slide animation + search bar, now wired to real results:
-// apps mode enumerates installed applications via DesktopEntries. Calc
-// ("=") and keybind ("/") modes still land in later steps — `modeFor()`
-// below is the seam where they plug in.
+// Window shell + slide animation + search bar, wired to real results:
+// apps mode enumerates installed applications via DesktopEntries, calc
+// mode ("=") shells out to qalc via the Calc service, keybind mode ("/")
+// searches config/keybinds.json via KeybindsLoader.
 
 PanelWindow {
     id: launcherWindow
@@ -111,6 +112,27 @@ PanelWindow {
         onTriggered: launcherWindow.visible = false
     }
 
+    // qalc runs async (debounced Process, not a synchronous call) — this
+    // is what re-renders the calc entry once a result actually comes
+    // back, separately from the immediate re-render onQueryChanged
+    // already does for the "computing…" placeholder state. Guarded by
+    // mode so a slow qalc response can't clobber results after the
+    // person has already moved on to a different query/mode.
+    Connections {
+        target: Calc
+        function onResultReady() {
+            if (launcherWindow.modeFor(searchBar.text) === "calc") {
+                launcherWindow.resultsModel = launcherWindow.buildResultsFor(searchBar.text);
+            }
+        }
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        enabled: launcherWindow.launcherOpen
+        onClicked: launcherWindow.close()
+    }
+
     Item {
         id: card
         width: launcherWindow.cardWidth
@@ -162,10 +184,23 @@ PanelWindow {
                 anchors.right: parent.right
 
                 onQueryChanged: query => {
+                    // Calc evaluation is triggered here, exactly once per
+                    // actual text change — NOT inside buildResultsFor,
+                    // which also gets called from the resultReady handler
+                    // below to re-render once qalc finishes. If that
+                    // rebuild also called evaluate(), it would restart the
+                    // debounce timer forever.
+                    if (launcherWindow.modeFor(query) === "calc") {
+                        Calc.evaluate(query.slice(1));
+                    }
                     launcherWindow.resultsModel = launcherWindow.buildResultsFor(query);
                 }
-                onSubmitted: launcherWindow.activateTopResult()
+                onSubmitted: results.activateCurrent()
                 onEscapePressed: launcherWindow.close()
+                onNavigateUp: results.moveUp()
+                onNavigateDown: results.moveDown()
+                onNavigateLeft: results.moveLeft()
+                onNavigateRight: results.moveRight()
             }
 
             LauncherResults {
@@ -190,8 +225,8 @@ PanelWindow {
     //     description, activatable, onActivate }
     // `keys` is presence-checked by LauncherEntry to decide whether to
     // render a Keybind or plain Text label — that's the only branch the
-    // views themselves ever need to make. Calc and keybind modes (steps
-    // 6-7) just need to produce more entries in this same shape.
+    // views themselves ever need to make. Keybind entries below are the
+    // reason that branch exists at all.
 
     property var resultsModel: buildResultsFor("")
 
@@ -208,10 +243,10 @@ PanelWindow {
         if (mode === "apps") {
             return buildAppResults(query);
         }
-        // Calc and keybind modes land in later steps — empty results for
-        // now rather than silently falling back to app search, so the
-        // prefix behaves consistently once those modes exist.
-        return [];
+        if (mode === "calc") {
+            return buildCalcResults(query.slice(1));
+        }
+        return buildKeybindResults(query.slice(1));
     }
 
     function buildAppResults(query) {
@@ -274,6 +309,62 @@ PanelWindow {
         }
     }
 
+    // Always exactly one entry, per spec — the result (or its current
+    // provisional/error state) pinned at index 0. Purely a read of
+    // Calc's current state; never calls Calc.evaluate() itself (see the
+    // note on onQueryChanged above for why that split matters).
+    function buildCalcResults(expr) {
+        const trimmed = expr.trim();
+
+        let label, description, activatable;
+
+        if (trimmed.length === 0) {
+            label = "Type an expression…";
+            description = "";
+            activatable = false;
+        } else if (Calc.computing) {
+            // Provisional: show the raw input while qalc is still
+            // running rather than leaving the list blank for 200ms+.
+            label = trimmed;
+            description = "Calculating…";
+            activatable = false;
+        } else if (Calc.errored) {
+            label = "No result";
+            description = trimmed;
+            activatable = false;
+        } else {
+            label = Calc.result;
+            description = trimmed;
+            activatable = true;
+        }
+
+        return [
+            {
+                icon: {
+                    name: "search/calculator"
+                },
+                label: label,
+                keys: null,
+                description: description,
+                activatable: activatable,
+                onActivate: () => {
+                    // wl-copy (wl-clipboard), not Quickshell.clipboardText —
+                    // Quickshell's own docs warn that property goes empty on
+                    // Wayland "unless a quickshell window is focused," which
+                    // is exactly what stops being true the instant the
+                    // launcher closes right after this. wl-copy spawns an
+                    // independent process that stays clipboard owner on its
+                    // own, so the value survives the launcher closing.
+                    // Requires wl-clipboard installed.
+                    Quickshell.execDetached({
+                        command: ["wl-copy", Calc.result]
+                    });
+                    launcherWindow.close();
+                }
+            }
+        ];
+    }
+
     function activateEntry(index) {
         const entry = resultsModel[index];
         if (entry && entry.activatable !== false) {
@@ -281,9 +372,70 @@ PanelWindow {
         }
     }
 
-    function activateTopResult() {
-        if (resultsModel.length > 0) {
-            activateEntry(0);
+    // ── Keybind mode ("/") ──────────────────────────────────────
+    // Search-only per spec: entries are never activatable, click/Enter
+    // do nothing. Category → icon is the one bit of hand-maintained data
+    // this needs — fill in real categories from your keybinds.json as
+    // you go; unmapped ones fall back to a generic keyboard icon rather
+    // than rendering nothing.
+    readonly property var categoryIcons: ({
+            "Apps": "common/apps",
+            "Windows": "common/window",
+            "Workspaces": "common/workspace",
+            "Media": "media/music",
+            "Session": "common/session",
+            "Shell": "common/shell",
+            "Gestures": "common/gestures"
+        })
+    readonly property string fallbackCategoryIcon: "common/keyboard"
+
+    // Flattened once as a reactive property (re-evaluates only when
+    // KeybindsLoader.categories actually changes, e.g. the file being
+    // hand-edited), not rebuilt on every keystroke — the plan explicitly
+    // called this out: filtering the flat list per keystroke is cheap,
+    // re-flattening categories→shortcuts on every keystroke would be
+    // needless repeated work for something that rarely changes.
+    readonly property var flatKeybinds: {
+        const cats = KeybindsLoader.categories;
+        let flat = [];
+        for (let i = 0; i < cats.length; i++) {
+            const cat = cats[i];
+            const shortcuts = cat.shortcuts || [];
+            for (let j = 0; j < shortcuts.length; j++) {
+                flat.push({
+                    category: cat.category,
+                    keybind: shortcuts[j].keybind,
+                    description: shortcuts[j].description || ""
+                });
+            }
         }
+        return flat;
+    }
+
+    function buildKeybindResults(query) {
+        const q = query.toLowerCase().trim();
+
+        const matches = flatKeybinds.filter(item => {
+            if (!q)
+                return true;
+            const category = item.category.toLowerCase();
+            const description = item.description.toLowerCase();
+            const keysText = item.keybind.join("+").toLowerCase();
+            return category.includes(q) || description.includes(q) || keysText.includes(q);
+        });
+
+        return matches.map(item => ({
+                    icon: {
+                        name: categoryIcons[item.category] || fallbackCategoryIcon
+                    },
+                    // `label` is unused whenever `keys` is set (LauncherEntry
+                    // renders a Keybind instead) — kept populated anyway so the
+                    // entry is still sane if something ever reads it directly.
+                    label: item.keybind.join("+"),
+                    keys: item.keybind,
+                    description: item.description,
+                    activatable: false,
+                    onActivate: () => {} // search-only, per spec — never called anyway
+                }));
     }
 }
