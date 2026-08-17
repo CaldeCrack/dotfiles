@@ -47,6 +47,7 @@ Singleton {
             property JsonObject general: JsonObject {
                 property string wallpaperDir: "~/Pictures/Wallpapers"
                 property string profilePicture: "~/.face"
+                property string terminal: "kitty"
             }
         }
     }

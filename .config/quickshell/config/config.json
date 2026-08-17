@@ -11,7 +11,8 @@
     },
     "general": {
         "wallpaperDir": "~/.config/shared-assets/wallpapers/",
-        "profilePicture": "~/.config/shared-assets/pfps/Purple_anime_boy.jpg"
+        "profilePicture": "~/.config/shared-assets/pfps/Purple_anime_boy.jpg",
+        "terminal": "kitty"
     },
     "weather": {
         "location": "Santiago,Chile",

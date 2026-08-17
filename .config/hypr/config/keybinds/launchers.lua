@@ -8,7 +8,6 @@ hl.bind(cfg.mainMod .. " + D", hl.dsp.exec_cmd(cfg.discord))
 hl.bind(cfg.mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(cfg.office))
 hl.bind(cfg.mainMod .. " + CTRL + V", hl.dsp.exec_cmd(cfg.volumeMixer))
 hl.bind(cfg.mainMod .. " + CTRL + W", hl.dsp.exec_cmd(cfg.wifi))
-hl.bind(cfg.mainMod .. " + SPACE", hl.dsp.exec_cmd("pkill " .. cfg.menuName .. " ; " .. cfg.menu))
 hl.bind(
 	cfg.mainMod .. " + K",
 	hl.dsp.exec_cmd(
@@ -34,3 +33,4 @@ hl.bind(cfg.mainMod .. " + escape", hl.dsp.exec_cmd("qs ipc call power toggle"))
 hl.bind(cfg.mainMod .. " + W", hl.dsp.exec_cmd("qs ipc call infoPanel open 'Wallpaper'"))
 hl.bind(cfg.mainMod .. " + M", hl.dsp.exec_cmd("qs ipc call infoPanel open 'Media'"))
 hl.bind(cfg.mainMod .. " + N", hl.dsp.exec_cmd("qs ipc call notifications toggleCenter"))
+hl.bind(cfg.mainMod .. " + SPACE", hl.dsp.exec_cmd("qs ipc call launcher toggle"))
