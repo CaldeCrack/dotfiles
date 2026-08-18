@@ -42,11 +42,11 @@ Colors come from [matugen](https://github.com/InioX/matugen), generating a full 
 
 ### Control Panel
 <!-- assets/controlpanel.png -->
-<img src="./assets/controlpanel.png" alt="Control panel sidebar" width="450" />
+<img src="./assets/controlpanel.png" alt="Control panel sidebar" width="900" />
 
 ### App Launcher
 <!-- assets/launcher.png -->
-<img src="./assets/launcher.png" alt="Launcher" width="450" />
+<img src="./assets/launcher.png" alt="Launcher" width="900" />
 
 ## Requirements
 
