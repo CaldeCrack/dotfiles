@@ -32,15 +32,19 @@ Colors come from [matugen](https://github.com/InioX/matugen), generating a full 
 - ⚡ **Power menu** — shutdown/reboot/suspend/lock overlay.
 - ⚙️ **Live config** — JSON-based settings, watched and hot-reloaded.
 
+### Bar
 <!-- assets/bar.png -->
 <img src="./assets/bar.png" alt="Top bar" width="900" />
 
+### Info Panel
 <!-- assets/infopanel.png -->
 <img src="./assets/infopanel.png" alt="Info panel tabs" width="900" />
 
+### Control Panel
 <!-- assets/controlpanel.png -->
 <img src="./assets/controlpanel.png" alt="Control panel sidebar" width="450" />
 
+### App Launcher
 <!-- assets/launcher.png -->
 <img src="./assets/launcher.png" alt="Launcher" width="450" />
 
@@ -122,7 +126,7 @@ quickshell/
 │   └── miscApps/            # clipboard, emoji picker, screenshot, etc.
 ├── widgets/                 # shared building blocks (PanelBase, BarButtonBase, SidebarBase, Tooltip, ...)
 ├── assets/                  # icons + bundled data (emoji, nerd font glyphs)
-└── configApp/                # standalone settings GUI [pending]
+└── configApp/               # standalone settings GUI [pending]
 ```
 
 ## Roadmap
@@ -131,6 +135,7 @@ quickshell/
 - [ ] **Configuration app** — a standalone GUI (`configApp/`) for editing settings instead of hand-editing JSON
 - [ ] **Dock** — an optional app dock module
 - [ ] **Workspace previews** — live thumbnails on hover/switch instead of plain indicators
+- [ ] **iCalendar support** — integration with current calendar component
 - [ ] **Installer script** — one-command setup (dependency checks, config bootstrap, matugen setup)
 - [ ] **Project website** — a GitHub Pages site with docs, screenshots, and a config gallery
 
