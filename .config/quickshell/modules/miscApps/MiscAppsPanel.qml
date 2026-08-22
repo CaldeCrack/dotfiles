@@ -50,6 +50,8 @@ DismissablePopup {
         }
     }
 
+    readonly property string _ocrScript: Quickshell.shellDir + "/services/scripts/run-ocr.sh"
+
     // Jumps straight to a sub-view, bypassing the home grid — used by the
     // IPC handler below (a compositor keybind has already picked which
     // utility it wants, so there's no reason to show the grid first and
@@ -150,6 +152,24 @@ DismissablePopup {
                     iconName: "common/nerdfont"
                     label: "Glyphs"
                     onClicked: nav.push(nerdFontView, "Nerd Font Glyphs")
+                }
+            }
+
+            Row {
+                spacing: 4
+
+                UtilityButton {
+                    iconName: "media/ocr"
+                    label: "OCR"
+                    // execDetached, not a tracked Process — a tracked
+                    // Process reliably failed to actually launch slurp
+                    // here until something else (e.g. a config reload)
+                    // kicked the QML engine, while execDetached launches
+                    // it immediately and consistently. Feedback happens
+                    // inside run-ocr.sh itself (notify-send) as a result,
+                    // since execDetached gives QML no way to see the
+                    // exit code.
+                    onClicked: root.runAfterDismiss(() => Quickshell.execDetached(["bash", root._ocrScript]))
                 }
             }
         }

@@ -66,10 +66,13 @@ A few services shell out to external tools instead of reimplementing their funct
 | [`qalc`](https://qalculate.github.io/) | Calculator |
 | `mpd` / `mpc` / [`mpdris2-rs`](https://github.com/eonpatapon/mpDris2) | Music playback (MPD) |
 | `systemd` (`systemctl`, `loginctl`) | Power actions (shutdown/reboot/suspend/lock) |
-| `ffmpeg` / `wf-recorder` / `slurp` / [`hyprshot`](https://github.com/Gustash/hyprshot) | Screen recording & screenshots |
+| `ffmpeg` / `wf-recorder` / `slurp` / `grim` / [`hyprshot`](https://github.com/Gustash/hyprshot) | Screen recording & screenshots |
 | `nvidia-smi` / `intel_gpu_top` | GPU stats |
 | [`jq`](https://jqlang.org/) | JSON parsing in helper scripts |
 | [`hyprsunset`](https://github.com/hyprwm/hyprsunset) / [`hyprpicker`](https://github.com/hyprwm/hyprpicker) | Night light & color picker |
+| [`hyprsunset`](https://github.com/hyprwm/hyprsunset) | Night light |
+| [`hyprpicker`](https://github.com/hyprwm/hyprpicker) | Color picker |
+| [`tesseract`](https://github.com/tesseract-ocr/tesseract) / tesseract language pack | OCR |
 
 ## Installation
 
