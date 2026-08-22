@@ -2,14 +2,11 @@ require("core")
 require("lazy").setup({
 	{ import = "plugins" },
 	{ import = "plugins.lsp" },
-	{ "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+	{ "nvim-treesitter/nvim-treesitter", branch = "main", lazy = false, build = ":TSUpdate" },
 	{ "nvim-tree/nvim-web-devicons", opts = {} },
 	{ "echasnovski/mini.nvim", version = "*" },
 }, {
 	rocks = { hererocks = true },
-})
-require("nvim-treesitter.configs").setup({
-	indent = { enable = true },
 })
 require("lualine").setup({
 	options = { theme = "base16" },
