@@ -85,22 +85,28 @@ Item {
 
     function _colorForUrgency(u) {
         switch (u) {
-        case NotificationUrgency.Critical: return Colors.md3.error
-        case NotificationUrgency.Low: return Colors.md3.secondary
-        default: return Colors.md3.primary
+        case NotificationUrgency.Critical:
+            return Colors.md3.error;
+        case NotificationUrgency.Low:
+            return Colors.md3.secondary;
+        default:
+            return Colors.md3.primary;
         }
     }
 
     // Coarse on purpose (30s tick) — this only feeds a "3m ago"-style
     // label, no need for anything finer-grained.
     function _relativeTime(ts, now) {
-        const diffSec = Math.max(0, Math.floor((now - ts) / 1000))
-        if (diffSec < 60) return "now"
-        const min = Math.floor(diffSec / 60)
-        if (min < 60) return min + "m"
-        const hr = Math.floor(min / 60)
-        if (hr < 24) return hr + "h"
-        return Math.floor(hr / 24) + "d"
+        const diffSec = Math.max(0, Math.floor((now - ts) / 1000));
+        if (diffSec < 60)
+            return "now";
+        const min = Math.floor(diffSec / 60);
+        if (min < 60)
+            return min + "m";
+        const hr = Math.floor(min / 60);
+        if (hr < 24)
+            return hr + "h";
+        return Math.floor(hr / 24) + "d";
     }
 
     Timer {
@@ -124,27 +130,57 @@ Item {
     // that. A transform sits on top purely visually and never touches the
     // property the view itself is driving.
 
-    transform: Translate { id: _entryOffset }
+    transform: Translate {
+        id: _entryOffset
+    }
 
     ListView.onAdd: _enterAnimation.start()
     ListView.onRemove: {
-        root.ListView.delayRemove = true
-        _exitAnimation.start()
+        root.ListView.delayRemove = true;
+        _exitAnimation.start();
     }
 
     ParallelAnimation {
         id: _enterAnimation
-        NumberAnimation { target: root; property: "opacity"; from: 0; to: 1; duration: 300; easing.type: Easing.OutCubic }
-        NumberAnimation { target: _entryOffset; property: "y"; from: -card.implicitHeight; to: 0; duration: 300; easing.type: Easing.OutCubic }
+        NumberAnimation {
+            target: root
+            property: "opacity"
+            from: 0
+            to: 1
+            duration: 300
+            easing.type: Easing.OutCubic
+        }
+        NumberAnimation {
+            target: _entryOffset
+            property: "y"
+            from: -card.implicitHeight
+            to: 0
+            duration: 300
+            easing.type: Easing.OutCubic
+        }
     }
 
     SequentialAnimation {
         id: _exitAnimation
         ParallelAnimation {
-            NumberAnimation { target: root; property: "opacity"; to: 0; duration: 200; easing.type: Easing.InCubic }
-            NumberAnimation { target: card; property: "height"; to: 0; duration: 200; easing.type: Easing.InCubic }
+            NumberAnimation {
+                target: root
+                property: "opacity"
+                to: 0
+                duration: 200
+                easing.type: Easing.InCubic
+            }
+            NumberAnimation {
+                target: card
+                property: "height"
+                to: 0
+                duration: 200
+                easing.type: Easing.InCubic
+            }
         }
-        ScriptAction { script: root.ListView.delayRemove = false }
+        ScriptAction {
+            script: root.ListView.delayRemove = false
+        }
     }
 
     Rectangle {
@@ -155,7 +191,7 @@ Item {
         radius: 14
         color: Colors.md3.surface_container
         border.width: 1
-        border.color: (cardHover.containsMouse || closeHover.containsMouse) ? Colors.md3.outline : Colors.md3.outline_variant
+        border.color: (actionHover.containsMouse || cardHover.containsMouse || closeHover.containsMouse) ? Colors.md3.outline : Colors.md3.outline_variant
         clip: true // needed once height animates below content's natural size on exit
 
         MouseArea {
@@ -362,12 +398,13 @@ Item {
                         duration: root.timeout
                         easing.type: Easing.Linear
                         running: false
-                        paused: cardHover.containsMouse || closeHover.containsMouse
+                        paused: actionHover.containsMouse || cardHover.containsMouse || closeHover.containsMouse
                         onFinished: root.timedOut(root.notifId)
                     }
                 }
 
-                Component.onCompleted: if (root._hasTimer) timerAnim.start()
+                Component.onCompleted: if (root._hasTimer)
+                    timerAnim.start()
             }
         }
     }
