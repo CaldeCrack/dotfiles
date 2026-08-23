@@ -11,7 +11,8 @@ import qs.widgets
 // Window shell + slide animation + search bar, wired to real results:
 // apps mode enumerates installed applications via DesktopEntries, calc
 // mode ("=") shells out to qalc via the Calc service, keybind mode ("/")
-// searches config/keybinds.json via KeybindsLoader.
+// searches config/keybinds.json via KeybindsLoader, file mode ("$")
+// browses the filesystem via the Files service.
 
 PanelWindow {
     id: launcherWindow
@@ -115,7 +116,7 @@ PanelWindow {
     // qalc runs async (debounced Process, not a synchronous call) — this
     // is what re-renders the calc entry once a result actually comes
     // back, separately from the immediate re-render onQueryChanged
-    // already does for the "computing…" placeholder state. Guarded by
+    // already does for the "computing..." placeholder state. Guarded by
     // mode so a slow qalc response can't clobber results after the
     // person has already moved on to a different query/mode.
     Connections {
@@ -131,6 +132,21 @@ PanelWindow {
         anchors.fill: parent
         enabled: launcherWindow.launcherOpen
         onClicked: launcherWindow.close()
+    }
+
+    // Same shape as Calc's Connections above, and for the same reason:
+    // `find` runs async, so this is what re-renders the file list once a
+    // directory listing actually completes, separate from the immediate
+    // "Loading..." re-render onQueryChanged already does. Guarded by mode
+    // so a slow listing can't clobber results after the person has
+    // already switched away from file mode (or navigated further).
+    Connections {
+        target: Files
+        function onResultReady() {
+            if (launcherWindow.modeFor(searchBar.text) === "file") {
+                launcherWindow.resultsModel = launcherWindow.buildResultsFor(searchBar.text);
+            }
+        }
     }
 
     Item {
@@ -184,14 +200,25 @@ PanelWindow {
                 anchors.right: parent.right
 
                 onQueryChanged: query => {
-                    // Calc evaluation is triggered here, exactly once per
-                    // actual text change — NOT inside buildResultsFor,
-                    // which also gets called from the resultReady handler
-                    // below to re-render once qalc finishes. If that
-                    // rebuild also called evaluate(), it would restart the
-                    // debounce timer forever.
-                    if (launcherWindow.modeFor(query) === "calc") {
+                    // Calc evaluation and file-directory listing are both
+                    // triggered here, exactly once per actual text change
+                    // — NOT inside buildResultsFor, which also gets called
+                    // from the resultReady handlers above to re-render
+                    // once qalc/find finish. If those rebuilds also
+                    // triggered new work, they'd restart their respective
+                    // debounce timers forever.
+                    const mode = launcherWindow.modeFor(query);
+                    if (mode === "calc") {
                         Calc.evaluate(query.slice(1));
+                    } else if (mode === "file") {
+                        const parsed = launcherWindow.parseFileQuery(query.slice(1));
+                        // Only re-list when the resolved directory actually
+                        // changes — typing more filter characters within
+                        // the same folder is pure synchronous filtering
+                        // over Files.entries, no process spawn needed.
+                        if (parsed.dir !== Files.directory) {
+                            Files.listDirectory(parsed.dir);
+                        }
                     }
                     launcherWindow.resultsModel = launcherWindow.buildResultsFor(query);
                 }
@@ -235,6 +262,8 @@ PanelWindow {
             return "calc";
         if (query.startsWith("/"))
             return "keybind";
+        if (query.startsWith("$"))
+            return "file";
         return "apps";
     }
 
@@ -245,6 +274,9 @@ PanelWindow {
         }
         if (mode === "calc") {
             return buildCalcResults(query.slice(1));
+        }
+        if (mode === "file") {
+            return buildFileResults(query.slice(1));
         }
         return buildKeybindResults(query.slice(1));
     }
@@ -319,14 +351,14 @@ PanelWindow {
         let label, description, activatable;
 
         if (trimmed.length === 0) {
-            label = "Type an expression…";
+            label = "Type an expression...";
             description = "";
             activatable = false;
         } else if (Calc.computing) {
             // Provisional: show the raw input while qalc is still
             // running rather than leaving the list blank for 200ms+.
             label = trimmed;
-            description = "Calculating…";
+            description = "Calculating...";
             activatable = false;
         } else if (Calc.errored) {
             label = "No result";
@@ -379,15 +411,15 @@ PanelWindow {
     // you go; unmapped ones fall back to a generic keyboard icon rather
     // than rendering nothing.
     readonly property var categoryIcons: ({
-            "Apps": "common/apps",
-            "Windows": "common/window",
-            "Workspaces": "common/workspace",
-            "Media": "media/music",
-            "Session": "common/session",
-            "Shell": "common/shell",
-            "Gestures": "common/gestures"
+            "Apps": "search/apps",
+            "Window Management": "search/window",
+            "Wallpaper": "search/image",
+            "System": "search/settings",
+            "Media": "search/media",
+            "Audio": "search/audio",
+            "Screenshots": "search/screenshot"
         })
-    readonly property string fallbackCategoryIcon: "common/keyboard"
+    readonly property string fallbackCategoryIcon: "search/keyboard"
 
     // Flattened once as a reactive property (re-evaluates only when
     // KeybindsLoader.categories actually changes, e.g. the file being
@@ -437,5 +469,332 @@ PanelWindow {
                     activatable: false,
                     onActivate: () => {} // search-only, per spec — never called anyway
                 }));
+    }
+
+    // ── File mode ("$") ──────────────────────────────────────────
+    // Splits the query into a directory portion (resolved to an absolute
+    // path — "~" and "/" are recognized explicitly, a bare word with no
+    // slash at all defaults to filtering within $HOME) and a filter
+    // portion (whatever comes after the last "/"). Only the directory
+    // portion ever triggers a new `find` — see the guard in
+    // onQueryChanged above.
+    function parseFileQuery(rest) {
+        const home = Quickshell.env("HOME");
+
+        // Lone "~" or "/" — someone's mid-way through typing a path and
+        // hasn't reached a second character yet. Handled explicitly so
+        // these don't get treated as a literal filter substring (which
+        // would just show "no matches" until a "/" is typed).
+        if (rest === "~")
+            return {
+                dir: home,
+                filter: ""
+            };
+        if (rest === "/")
+            return {
+                dir: "/",
+                filter: ""
+            };
+
+        const lastSlash = rest.lastIndexOf("/");
+        let dirPart, filter;
+        if (lastSlash === -1) {
+            // No slash anywhere — the whole thing is a filter, directory
+            // defaults to home. This is the plain "$searchterm" case.
+            dirPart = "";
+            filter = rest;
+        } else {
+            dirPart = rest.slice(0, lastSlash + 1); // keep the trailing "/"
+            filter = rest.slice(lastSlash + 1);
+        }
+
+        let resolvedDir;
+        if (dirPart === "") {
+            resolvedDir = home;
+        } else if (dirPart.startsWith("~")) {
+            resolvedDir = home + dirPart.slice(1); // drop the "~", keep the rest incl. "/"
+        } else if (dirPart.startsWith("/")) {
+            resolvedDir = dirPart;
+        } else {
+            // A slash showed up but the path doesn't start with "~" or
+            // "/" (e.g. "Documents/") — treat it as relative to home
+            // rather than rejecting it outright.
+            resolvedDir = home + "/" + dirPart;
+        }
+
+        // Normalize away a trailing slash so Files.directory/entry.path
+        // building stays consistent regardless of how it was typed.
+        resolvedDir = resolvedDir.replace(/\/+$/, "") || "/";
+
+        return {
+            dir: resolvedDir,
+            filter: filter
+        };
+    }
+
+    // Extension → icon is the one hand-maintained table this mode needs,
+    // same pattern as categoryIcons above — systemIcon does real
+    // freedesktop icon-theme lookup, so mapping ".py" to "text-x-python"
+    // gets the actual Python logo for free, no custom rendering required.
+    // Grow this as gaps show up; unmapped extensions fall back to a
+    // generic file icon rather than rendering nothing.
+    readonly property var extensionIcons: ({
+            "py": "text-x-python",
+            "js": "text-x-javascript",
+            "ts": "text-x-typescript",
+            "json": "application-json",
+            "md": "text-x-markdown",
+            "txt": "text-plain",
+            "sh": "text-x-shellscript",
+            "c": "text-x-csrc",
+            "h": "text-x-chdr",
+            "cpp": "text-x-c++src",
+            "hpp": "text-x-c++hdr",
+            "qml": "text-x-qml",
+            "html": "text-html",
+            "css": "text-css",
+            "pdf": "application-pdf",
+            "png": "image-png",
+            "jpg": "image-jpeg",
+            "jpeg": "image-jpeg",
+            "svg": "image-svg+xml",
+            "mp3": "audio-mpeg",
+            "mp4": "video-mp4",
+            "zip": "application-zip",
+            "tar": "application-x-tar",
+            "gz": "application-x-compressed-tar"
+        })
+    readonly property string fallbackFileIcon: "text-x-generic"
+
+    function iconForFileEntry(entry) {
+        if (entry.isDir)
+            return "inode-directory";
+        const dotIndex = entry.name.lastIndexOf(".");
+        // No extension at all, or a dotfile like ".bashrc" (dot is index
+        // 0, not a real extension separator) — both fall back rather than
+        // treating the whole filename as an "extension".
+        if (dotIndex <= 0)
+            return fallbackFileIcon;
+        const ext = entry.name.slice(dotIndex + 1).toLowerCase();
+        return extensionIcons[ext] || fallbackFileIcon;
+    }
+
+    // Purely a read of Files' current state, same split as buildCalcResults
+    // — never calls Files.listDirectory() itself, that only happens from
+    // onQueryChanged when the resolved directory actually changes.
+    function buildFileResults(rest) {
+        const parsed = parseFileQuery(rest);
+
+        // Files hasn't caught up to this directory yet — either the
+        // listing was just triggered by onQueryChanged and is still
+        // running, or it's mid-listing a previous folder. Either way,
+        // showing stale entries from a different directory would be
+        // actively misleading, so a provisional placeholder goes here
+        // instead (mirrors Calc's "Calculating..." provisional state).
+        if (Files.directory !== parsed.dir || Files.listing) {
+            return [
+                {
+                    icon: {
+                        name: "common/folder-open"
+                    },
+                    label: "Loading...",
+                    keys: null,
+                    description: parsed.dir,
+                    activatable: false,
+                    onActivate: () => {}
+                }
+            ];
+        }
+
+        if (Files.errored) {
+            return [
+                {
+                    icon: {
+                        name: "common/circle-x"
+                    },
+                    label: "Can't read this folder",
+                    keys: null,
+                    description: Files.errorMessage || parsed.dir,
+                    activatable: false,
+                    onActivate: () => {}
+                }
+            ];
+        }
+
+        const q = parsed.filter.toLowerCase();
+        let matches = Files.entries.filter(entry => {
+            return !q || entry.name.toLowerCase().includes(q);
+        });
+
+        matches.sort((a, b) => {
+            if (a.isDir !== b.isDir)
+                return a.isDir ? -1 : 1; // folders first
+            return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+        });
+
+        return matches.map(entry => ({
+                    icon: {
+                        systemIcon: iconForFileEntry(entry),
+                        systemIconFallback: entry.isDir ? "inode-directory" : fallbackFileIcon
+                    },
+                    label: entry.name,
+                    keys: null,
+                    description: entry.path,
+                    activatable: true,
+                    onActivate: () => {
+                        if (entry.isDir) {
+                            launcherWindow.navigateToFolder(entry.path);
+                        } else {
+                            launcherWindow.openFile(entry.path);
+                        }
+                    }
+                }));
+    }
+
+    // Re-writing searchBar.text (rather than e.g. a separate "current
+    // directory" property) is deliberate: it reuses the exact same
+    // queryChanged → parse → Files.listDirectory() chain that typing a
+    // path by hand already goes through, no separate code path needed.
+    // Does NOT close the launcher — selecting a folder navigates, it
+    // doesn't activate.
+    function navigateToFolder(path) {
+        searchBar.text = "$" + path + "/";
+    }
+
+    // Plain `xdg-open <path>` works fine for GUI-handled files (images,
+    // PDFs, etc.) but hits the exact same bug launchEntry() already
+    // works around for apps: xdg-open resolves the file's mime type to
+    // whatever .desktop entry is registered as its default handler, then
+    // launches it while ignoring Terminal=true on that entry — same as
+    // DesktopEntry.execute() does. If the default handler for a text
+    // file happens to be a CLI editor (vim/nvim/nano — common if that
+    // was ever set via xdg-mime or a file manager), it execs with no
+    // terminal attached and just runs invisibly.
+    //
+    // So: resolve the mime type ourselves (`file --mime-type`), look up
+    // the registered default (`xdg-mime query default`), then read that
+    // .desktop file directly rather than going through
+    // DesktopEntries.byId() — mime-handler-only entries like nvim.desktop
+    // are typically marked NoDisplay=true (they're meant to be a file-
+    // association target, not something that shows in an app menu), and
+    // Quickshell's application index may not surface those the same way
+    // it does normal launchable apps. Reading the file ourselves sidesteps
+    // that uncertainty entirely. Falls back to plain xdg-open whenever
+    // any step is inconclusive — i.e. everything that already worked
+    // (GUI apps) keeps working exactly as before.
+    property string _pendingOpenPath: ""
+
+    function openFile(path) {
+        _pendingOpenPath = path;
+        mimeTypeProcess.command = ["file", "--mime-type", "-b", path];
+        mimeTypeProcess.running = true;
+        // Closing immediately, not waiting on the lookup — the person
+        // already committed to opening this file, no reason to hold the
+        // launcher open for a background mime-type query.
+        launcherWindow.close();
+    }
+
+    Process {
+        id: mimeTypeProcess
+        running: false
+        stdout: StdioCollector {
+            id: mimeTypeCollector
+            onStreamFinished: {
+                const mimeType = mimeTypeCollector.text.trim();
+                if (!mimeType) {
+                    Quickshell.execDetached({
+                        command: ["xdg-open", launcherWindow._pendingOpenPath]
+                    });
+                    return;
+                }
+                defaultAppProcess.command = ["xdg-mime", "query", "default", mimeType];
+                defaultAppProcess.running = true;
+            }
+        }
+    }
+
+    Process {
+        id: defaultAppProcess
+        running: false
+        stdout: StdioCollector {
+            id: defaultAppCollector
+            onStreamFinished: {
+                const desktopId = defaultAppCollector.text.trim();
+                if (!desktopId) {
+                    Quickshell.execDetached({
+                        command: ["xdg-open", launcherWindow._pendingOpenPath]
+                    });
+                    return;
+                }
+                // Search the standard XDG application directories in
+                // priority order (user's own first, matching real
+                // xdg-mime resolution order) and print the first match's
+                // content — combining find+cat into one process instead
+                // of two, and `-quit` stops after the first hit so
+                // multiple installs of the same app don't get concatenated
+                // together.
+                const home = Quickshell.env("HOME");
+                desktopFileProcess.command = ["find", home + "/.local/share/applications", "/usr/local/share/applications", "/usr/share/applications", "-maxdepth", "1", "-name", desktopId, "-exec", "cat", "{}", ";", "-quit"];
+                desktopFileProcess.running = true;
+            }
+        }
+    }
+
+    Process {
+        id: desktopFileProcess
+        running: false
+        stdout: StdioCollector {
+            id: desktopFileCollector
+            onStreamFinished: {
+                const path = launcherWindow._pendingOpenPath;
+                const content = desktopFileCollector.text;
+
+                if (!content.trim()) {
+                    // Desktop file wasn't found in any standard
+                    // location — fall back rather than guessing further.
+                    Quickshell.execDetached({
+                        command: ["xdg-open", path]
+                    });
+                    return;
+                }
+
+                const isTerminal = /^Terminal\s*=\s*true\s*$/mi.test(content);
+                if (!isTerminal) {
+                    // Confirmed GUI handler — xdg-open already handles
+                    // this correctly, no need to second-guess it.
+                    Quickshell.execDetached({
+                        command: ["xdg-open", path]
+                    });
+                    return;
+                }
+
+                const execMatch = content.match(/^Exec\s*=\s*(.+)$/mi);
+                if (!execMatch) {
+                    Quickshell.execDetached({
+                        command: ["xdg-open", path]
+                    });
+                    return;
+                }
+
+                // Strip field codes (%f/%F/%u/%U/%i/%c/%k/%%) rather than
+                // substituting them properly — the real path gets
+                // appended as a trailing argument instead. That's a
+                // heuristic covering editors that accept a bare filename
+                // (most of them), not a full implementation of the Exec
+                // key spec.
+                const execTokens = execMatch[1].replace(/%[fFuUick%]/g, "").trim().split(/\s+/).filter(t => t.length > 0);
+
+                if (execTokens.length === 0) {
+                    Quickshell.execDetached({
+                        command: ["xdg-open", path]
+                    });
+                    return;
+                }
+
+                Quickshell.execDetached({
+                    command: [Settings.general.terminal, "-e", ...execTokens, path]
+                });
+            }
+        }
     }
 }

@@ -223,7 +223,7 @@ Item {
         // never actually be seen.
         Text {
             anchors.verticalCenter: parent.verticalCenter
-            text: "Search apps, = to calculate, / for keybinds"
+            text: "Search apps, = to calculate, / for keybinds, $ file search"
             color: Colors.md3.on_surface_variant
             visible: input.text.length === 0
         }
