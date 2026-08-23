@@ -17,9 +17,9 @@ BarButtonBase {
 
     readonly property string _tooltipLabel: {
         if (Notifications.unreadCount === 1)
-            return "1 notification";
+            return "1 new notification";
         if (Notifications.unreadCount > 0)
-            return Notifications.unreadCount + " notifications";
+            return Notifications.unreadCount + " new notifications";
         return "Notification Center";
     }
 
