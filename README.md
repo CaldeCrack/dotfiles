@@ -73,6 +73,7 @@ A few services shell out to external tools instead of reimplementing their funct
 | [`hyprsunset`](https://github.com/hyprwm/hyprsunset) | Night light |
 | [`hyprpicker`](https://github.com/hyprwm/hyprpicker) | Color picker |
 | [`tesseract`](https://github.com/tesseract-ocr/tesseract) / tesseract language pack | OCR |
+| `qrencode` / `zbar` | QR encoding and decoding |
 
 ## Installation
 

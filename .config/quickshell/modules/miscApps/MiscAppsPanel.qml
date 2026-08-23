@@ -161,15 +161,13 @@ DismissablePopup {
                 UtilityButton {
                     iconName: "media/ocr"
                     label: "OCR"
-                    // execDetached, not a tracked Process — a tracked
-                    // Process reliably failed to actually launch slurp
-                    // here until something else (e.g. a config reload)
-                    // kicked the QML engine, while execDetached launches
-                    // it immediately and consistently. Feedback happens
-                    // inside run-ocr.sh itself (notify-send) as a result,
-                    // since execDetached gives QML no way to see the
-                    // exit code.
                     onClicked: root.runAfterDismiss(() => Quickshell.execDetached(["bash", root._ocrScript]))
+                }
+
+                UtilityButton {
+                    iconName: "media/qr-code"
+                    label: "QR Code"
+                    onClicked: nav.push(qrCodeView, "QR Code")
                 }
             }
         }
@@ -224,6 +222,15 @@ DismissablePopup {
 
             NerdFontOptions {
                 onEntrySelected: root.dismissRequested()
+                onEscapePressed: root.dismissRequested()
+            }
+        }
+
+        Component {
+            id: qrCodeView
+
+            QrCodeOptions {
+                onScanRequested: command => root.runAfterDismiss(() => Quickshell.execDetached(["bash", command]))
                 onEscapePressed: root.dismissRequested()
             }
         }
