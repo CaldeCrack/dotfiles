@@ -83,6 +83,18 @@ Item {
 
     property real _now: Date.now()
 
+    property bool anyActionHovered: {
+        let count = actionsRepeater.count;
+
+        for (let i = 0; i < count; i++) {
+            let item = actionsRepeater.itemAt(i);
+            if (item && item.isHovered) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     function _colorForUrgency(u) {
         switch (u) {
         case NotificationUrgency.Critical:
@@ -191,7 +203,7 @@ Item {
         radius: 14
         color: Colors.md3.surface_container
         border.width: 1
-        border.color: (actionHover.containsMouse || cardHover.containsMouse || closeHover.containsMouse) ? Colors.md3.outline : Colors.md3.outline_variant
+        border.color: (root.anyActionHovered || cardHover.containsMouse || closeHover.containsMouse) ? Colors.md3.outline : Colors.md3.outline_variant
         clip: true // needed once height animates below content's natural size on exit
 
         MouseArea {
@@ -332,10 +344,12 @@ Item {
                 spacing: 6
 
                 Repeater {
+                    id: actionsRepeater
                     model: root.actions
 
                     Rectangle {
                         id: actionChip
+                        property bool isHovered: actionHover.containsMouse
                         required property var modelData
 
                         radius: 8
@@ -398,7 +412,7 @@ Item {
                         duration: root.timeout
                         easing.type: Easing.Linear
                         running: false
-                        paused: actionHover.containsMouse || cardHover.containsMouse || closeHover.containsMouse
+                        paused: root.anyActionHovered || cardHover.containsMouse || closeHover.containsMouse
                         onFinished: root.timedOut(root.notifId)
                     }
                 }
