@@ -87,6 +87,7 @@ PanelWindow {
     property real edgeMargin: 2
     // Minimum gap kept between the card and the screen edge when clamping.
     property real screenMargin: 4
+    property bool dim: false
 
     function repositionToTarget() {
         if (!target)
@@ -190,6 +191,13 @@ PanelWindow {
     MouseArea {
         anchors.fill: parent
         onClicked: root.dismissRequested()
+    }
+
+    Rectangle {
+        anchors.fill: parent
+        visible: root.dim
+        color: "#000000"
+        opacity: 0.4
     }
 
     // Swallows clicks landing on the card's own empty background so they
