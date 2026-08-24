@@ -6,36 +6,38 @@ import qs.widgets
 
 // ReminderRow
 // -----------
-// One reminder, two lines:
-//   - top: urgency dot + countdown ("23m", "45s" once under a minute,
-//     "Overdue" once fired) on the left, tick/x on the right.
-//   - bottom: title, swapped for the description on hover (if any).
+// A reminder, stacked top to bottom:
+//   - countdown line ("23m", "45s" once under a minute, "Overdue" once
+//     fired), with the urgency dot
+//   - title, single line, elided
+//   - description, single line + ellipsis when collapsed
+// Tick/x sits in its own top-right corner, anchored to the whole row
+// rather than nested inside the (short) countdown line — nesting it
+// there was what caused the clipping, since the icon button was taller
+// than that line.
 //
-// Tick and x occupy the exact same slot but are never both live at
-// once — which one exists is driven entirely by `reminder.fired`, not
-// by hovering one to reveal the other. Fired -> tick (confirm/dismiss).
-// Not yet fired -> x (delete outright). The service itself doesn't
-// enforce this pairing; it's a UI decision made here.
-//
-// Standalone component — takes a `reminder` object directly rather
-// than reaching into Reminders itself, so it can be used both as
-// ReminderList's delegate (reminder: modelData) and, right now, tested
-// in isolation before that list exists. To smoke-test this visually
-// before step 3: call Reminders.addReminder("Test", "desc", "low",
-// 65000) from anywhere temporarily — it persists immediately.
+// The row itself is clickable to expand the description to full
+// wrapped text, but only when there's actually more to show —
+// Text.truncated (a real Qt property, not a guess from character
+// count) reports whether the collapsed single line actually got cut
+// off. No description, or a description that already fits, means the
+// row stays inert and the cursor stays a normal arrow.
 
 Item {
     id: root
 
     required property var reminder
 
-    property real rowHeight: 44
+    property real horizontalPadding: 8
+    property real verticalPadding: 6
+    property real lineSpacing: 2
     property real iconButtonSize: 22
 
-    implicitHeight: rowHeight
+    property bool expanded: false
 
     readonly property bool fired: reminder.fired
     readonly property bool hasDescription: reminder.description && reminder.description.length > 0
+    readonly property bool canExpand: hasDescription && (root.expanded || descriptionText.truncated)
 
     readonly property color urgencyColor: {
         switch (reminder.urgency) {
@@ -66,6 +68,23 @@ Item {
 
     readonly property string countdownText: root.fired ? "Overdue" : formatRemaining(Reminders.remainingMs(reminder))
 
+    implicitHeight: verticalPadding * 2 + countdownRow.height + lineSpacing + titleText.height + (hasDescription ? lineSpacing + descriptionText.height : 0)
+
+    Behavior on implicitHeight {
+        NumberAnimation {
+            duration: 150
+            easing.type: Easing.OutCubic
+        }
+    }
+
+    // Passive — covers the whole row (including the action corner) so
+    // the hover highlight still shows there, independent of the click
+    // zone below which deliberately excludes it. Cursor shape lives on
+    // that MouseArea instead, not here — a MouseArea with hoverEnabled
+    // claims cursor ownership within its own bounds regardless of what
+    // a HoverHandler underneath requests, so setting it here only ever
+    // took effect outside the MouseArea's area (in practice: barely
+    // anywhere, since the MouseArea covers almost the entire row).
     HoverHandler {
         id: rowHover
     }
@@ -73,8 +92,9 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: 8
-        color: Colors.md3.on_surface
-        opacity: rowHover.hovered ? 0.06 : 0
+        border.color: Colors.md3.outline_variant
+        border.width: 1
+        color: (rowHover.hovered && !actionMouse.containsMouse) ? Colors.md3.surface_container_highest : Colors.md3.surface_container_high
         Behavior on opacity {
             NumberAnimation {
                 duration: 120
@@ -82,15 +102,32 @@ Item {
         }
     }
 
-    // --- top line: urgency dot + countdown  |  tick/x (shared slot) -------
+    // Click zone for expand/collapse. No manual exclusion for the
+    // action button's corner — that used to be a rightMargin trim, but
+    // margin only trims that edge for the row's FULL height, which cut
+    // a dead strip through every line (including the ellipsis, which
+    // sits at the right end of a truncated line). actionSlot is
+    // declared after this MouseArea, so it naturally stacks on top and
+    // claims its own small bounds first — precise exclusion, not an
+    // approximated margin.
+    MouseArea {
+        anchors.fill: parent
+        enabled: root.canExpand
+        hoverEnabled: true
+        cursorShape: root.canExpand ? Qt.PointingHandCursor : Qt.ArrowCursor
+        onClicked: root.expanded = !root.expanded
+    }
+
+    // --- countdown line: urgency dot + countdown text ----------------------
     Item {
-        id: topLine
+        id: countdownRow
         anchors.top: parent.top
         anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.leftMargin: 8
-        anchors.rightMargin: 8
-        height: 18
+        anchors.right: actionSlot.left
+        anchors.topMargin: root.verticalPadding
+        anchors.leftMargin: root.horizontalPadding
+        anchors.rightMargin: 4
+        height: 16
 
         Rectangle {
             id: urgencyDot
@@ -110,69 +147,80 @@ Item {
             color: root.fired ? Colors.md3.error : Colors.md3.on_surface_variant
             text: root.countdownText
         }
+    }
 
-        Item {
-            id: actionSlot
-            anchors.right: parent.right
-            anchors.verticalCenter: parent.verticalCenter
-            width: root.iconButtonSize
-            height: root.iconButtonSize
-            implicitWidth: width
-            implicitHeight: height
-            property bool hovered: actionMouse.containsMouse
+    // --- title -----------------------------------------------------------
+    Text {
+        id: titleText
+        anchors.top: countdownRow.bottom
+        anchors.topMargin: root.lineSpacing
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.leftMargin: root.horizontalPadding
+        anchors.rightMargin: root.horizontalPadding
+        elide: Text.ElideRight
+        font.pixelSize: 13
+        color: Colors.md3.on_surface
+        text: root.reminder.title
+    }
 
-            Rectangle {
-                anchors.fill: parent
-                radius: 16
-                color: Colors.md3.on_surface
-                opacity: actionMouse.containsMouse ? 0.12 : 0
-                Behavior on opacity {
-                    NumberAnimation {
-                        duration: 120
-                    }
+    // --- description: one line + ellipsis, wraps fully when expanded -------
+    Text {
+        id: descriptionText
+        anchors.top: titleText.bottom
+        anchors.topMargin: root.lineSpacing
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.leftMargin: root.horizontalPadding
+        anchors.rightMargin: root.horizontalPadding
+        visible: root.hasDescription
+        font.pixelSize: 12
+        color: Colors.md3.on_surface_variant
+        text: root.reminder.description ?? ""
+        wrapMode: root.expanded ? Text.Wrap : Text.NoWrap
+        elide: root.expanded ? Text.ElideNone : Text.ElideRight
+    }
+
+    // --- tick/x: independent top-right corner, not nested in countdownRow --
+    Item {
+        id: actionSlot
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.topMargin: root.verticalPadding - 2
+        anchors.rightMargin: root.horizontalPadding
+        width: root.iconButtonSize
+        height: root.iconButtonSize
+
+        Rectangle {
+            anchors.fill: parent
+            radius: width / 2
+            color: Colors.md3.on_surface
+            opacity: actionMouse.containsMouse ? 0.12 : 0
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 120
                 }
-            }
-
-            Icon {
-                anchors.centerIn: parent
-                name: root.fired ? "actions/check" : "actions/x"
-                size: 14
-                color: root.fired ? Colors.md3.primary : Colors.md3.on_surface_variant
-            }
-
-            MouseArea {
-                id: actionMouse
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
-                onClicked: root.fired ? Reminders.dismissReminder(root.reminder.id) : Reminders.deleteReminder(root.reminder.id)
             }
         }
 
-        Tooltip {
-            target: actionSlot
-            text: root.fired ? "Mark as done" : "Delete reminder"
+        Icon {
+            anchors.centerIn: parent
+            name: root.fired ? "actions/check" : "actions/x"
+            size: 14
+            color: root.fired ? Colors.md3.primary : Colors.md3.on_surface_variant
+        }
+
+        MouseArea {
+            id: actionMouse
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: root.fired ? Reminders.dismissReminder(root.reminder.id) : Reminders.deleteReminder(root.reminder.id)
         }
     }
 
-    // --- bottom line: title, swaps to description (or a placeholder) on hover
-    Text {
-        anchors.top: topLine.bottom
-        anchors.topMargin: 2
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.leftMargin: 8
-        anchors.rightMargin: 8
-        elide: Text.ElideRight
-        font.pixelSize: 13
-        // Placeholder ("No description") reads as italic/muted so it's
-        // visually distinct from actually-hovering real content.
-        font.italic: rowHover.hovered && !root.hasDescription
-        color: (rowHover.hovered && !root.hasDescription) ? Colors.md3.on_surface_variant : Colors.md3.on_surface
-        text: {
-            if (!rowHover.hovered)
-                return root.reminder.title;
-            return root.hasDescription ? root.reminder.description : "No description";
-        }
+    Tooltip {
+        target: actionSlot
+        text: root.fired ? "Mark as done" : "Delete reminder"
     }
 }
