@@ -2,6 +2,7 @@ AnchoredPopup 1.0 AnchoredPopup.qml
 BarButtonBase 1.0 BarButtonBase.qml
 BatteryIndicator 1.0 BatteryIndicator.qml
 DismissablePopup 1.0 DismissablePopup.qml
+Dropdown 1.0 Dropdown.qml
 Icon 1.0 Icon.qml
 KeyCap 1.0 KeyCap.qml
 Keybind 1.0 Keybind.qml

@@ -1,5 +1,6 @@
 BluetoothSection 1.0 BluetoothSection.qml
 BrightnessSlider 1.0 BrightnessSlider.qml
 ControlPanel 1.0 ControlPanel.qml
+RemindersSection 1.0 RemindersSection.qml
 VolumeSlider 1.0 VolumeSlider.qml
 WifiSection 1.0 WifiSection.qml

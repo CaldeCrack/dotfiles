@@ -16,6 +16,7 @@ singleton Notifications 1.0 Notifications.qml
 singleton Osd 1.0 Osd.qml
 singleton Power 1.0 Power.qml
 singleton Recording 1.0 Recording.qml
+singleton Reminders 1.0 Reminders.qml
 singleton SystemStats 1.0 SystemStats.qml
 singleton Time 1.0 Time.qml
 singleton Tray 1.0 Tray.qml
