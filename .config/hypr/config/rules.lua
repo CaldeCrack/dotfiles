@@ -9,8 +9,8 @@ hl.window_rule({
 	float = true,
 	size = { 400, 400 },
 	move = {
-		"(monitor_w - window_w - 20)",
-		"(monitor_h - window_h - 20)",
+		"(monitor_w - 400 - 10)",
+		"(monitor_h - 400 - 10)",
 	},
 	content = "photo",
 	render_unfocused = true,
