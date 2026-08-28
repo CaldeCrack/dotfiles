@@ -56,7 +56,8 @@ Singleton {
     Connections {
         target: root.players
 
-        function onObjectInsertedPost() {
+        function onObjectInsertedPost(object, index) {
+            root.watchPlayerPlayback(object);
             root.updateActivePlayer();
         }
 
@@ -66,6 +67,38 @@ Singleton {
                 root.updateActivePlayer();
             }
         }
+    }
+
+    function considerPlayingPlayer(player) {
+        if (player.playbackState !== MprisPlaybackState.Playing)
+            return;
+        if (player === root.activePlayer)
+            return;
+        if (root.activePlayer && root.activePlayer.playbackState === MprisPlaybackState.Playing)
+            return;
+
+        root.setActivePlayer(player);
+    }
+
+    function watchPlayerPlayback(player) {
+        player.playbackStateChanged.connect(() => {
+            root.considerPlayingPlayer(player);
+        });
+
+        // A newly registered player can already be playing before we connect
+        // to its playbackStateChanged signal.
+        root.considerPlayingPlayer(player);
+    }
+
+    // Covers players MPRIS already had before this singleton finished
+    // initializing (same "Quickshell reloaded during development, or
+    // players connected before the shell started" case the startup Timer
+    // above exists for) — objectInsertedPost only fires for players
+    // added *after* this point, so anything already present needs to be
+    // caught here instead.
+    Component.onCompleted: {
+        for (const p of root.players.values)
+            root.watchPlayerPlayback(p);
     }
 
     Connections {
