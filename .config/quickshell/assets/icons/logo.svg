@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#20242B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-egg-icon lucide-egg">
+  <rect x="1" y="1" width="22" height="22" rx="4" fill="#FAFAF8" stroke="none" />
+  <path d="M12 2C8 2 4 8 4 14a8 8 0 0 0 16 0c0-6-4-12-8-12" stroke="#20242B" stroke-width="1.5"/>
+  <path d="M15 4 L12 8 L15 12 L12 16" stroke="#20242B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

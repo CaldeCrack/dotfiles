@@ -43,6 +43,7 @@ Item {
     property string systemIconFallback: ""
 
     property real size: 20
+    property bool tint: true
     property color color: Colors.md3.on_surface
 
     implicitWidth: size
@@ -71,6 +72,6 @@ Item {
         fillMode: Image.PreserveAspectFit
         smooth: true
         asynchronous: true
-        color: root.isBundledIcon ? root.color : "transparent"
+        color: root.tint && root.isBundledIcon ? root.color : "transparent"
     }
 }

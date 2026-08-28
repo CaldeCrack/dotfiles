@@ -12,10 +12,10 @@ Item {
     // All links point at the same repo for now since docs don't exist yet —
     // update shellDocsUrl once there's somewhere real for it to point.
 
-    readonly property string shellName: "CaldeShell"
-    readonly property string shellWebsite: "https://github.com/CaldeCrack/CaldeShell"
-    readonly property string shellDocsUrl: "https://github.com/CaldeCrack/CaldeShell"
-    readonly property string shellGithubUrl: "https://github.com/CaldeCrack/CaldeShell"
+    readonly property string shellName: "CrackShell"
+    readonly property string shellWebsite: "https://github.com/CaldeCrack/CrackShell"
+    readonly property string shellDocsUrl: "https://github.com/CaldeCrack/CrackShell"
+    readonly property string shellGithubUrl: "https://github.com/CaldeCrack/CrackShell"
 
     Rectangle {
         anchors.fill: parent
@@ -30,15 +30,14 @@ Item {
         anchors.margins: 16
         spacing: 16
 
-        // Placeholder logo — plain circle until there's an actual
-        // project logo to drop in.
-        Rectangle {
+        Icon {
             id: shellLogoPlaceholder
             anchors.verticalCenter: parent.verticalCenter
             width: 160
             height: 160
-            radius: width / 2
-            color: Colors.md3.tertiary
+            name: "logo"
+            size: 40
+            tint: false
         }
 
         Column {
