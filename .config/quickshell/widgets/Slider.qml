@@ -96,6 +96,7 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
+        preventStealing: true
         onPressed: mouse => root.moved(root.ratioFromX(mouse.x) * 100)
         onPositionChanged: mouse => {
             if (pressed)
