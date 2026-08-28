@@ -1,15 +1,12 @@
 <div align="center">
 
 <!-- some day I'll create a logo -->
-<!-- assets/logo.png -->
-<img src="./assets/logo.png" alt="Shell logo" width="120" />
+<!-- assets/logo.svg -->
+<img src="./assets/logo.svg" alt="Shell logo" width="120" />
 
-# CaldeShell
+# CrackShell
 
 A fast, modular desktop shell built on [Quickshell](https://quickshell.org), with dynamic Material You theming via `matugen`.
-
-<!-- assets/banner.png -->
-<img src="./assets/banner.png" alt="Shell showcase banner" width="900" />
 
 </div>
 
@@ -80,7 +77,7 @@ A few services shell out to external tools instead of reimplementing their funct
 This repo is managed with [GNU Stow](https://www.gnu.org/software/stow/) and contains config files for several tools beyond the shell itself (including Hyprland).
 
 ```bash
-git clone https://github.com/CaldeCrack/CaldeShell.git ~/dotfiles
+git clone https://github.com/CaldeCrack/CrackShell.git ~/dotfiles
 cd ~/dotfiles
 stow --adopt .
 ```
