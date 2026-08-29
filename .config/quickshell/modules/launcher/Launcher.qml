@@ -411,15 +411,15 @@ PanelWindow {
     // you go; unmapped ones fall back to a generic keyboard icon rather
     // than rendering nothing.
     readonly property var categoryIcons: ({
-            "Apps": "search/apps",
-            "Window Management": "search/window",
-            "Wallpaper": "search/image",
-            "System": "search/settings",
-            "Media": "search/media",
-            "Audio": "search/audio",
-            "Screenshots": "search/screenshot"
+            "Apps": "common/apps",
+            "Windows": "common/window",
+            "Workspaces": "common/workspace",
+            "Shell": "common/shell",
+            "Media": "search/image",
+            "Session": "common/session",
+            "Gestures": "common/gestures"
         })
-    readonly property string fallbackCategoryIcon: "search/keyboard"
+    readonly property string fallbackCategoryIcon: "common/keyboard"
 
     // Flattened once as a reactive property (re-evaluates only when
     // KeybindsLoader.categories actually changes, e.g. the file being
