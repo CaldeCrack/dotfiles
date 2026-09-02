@@ -18,8 +18,14 @@ Singleton {
 
     readonly property bool wifiHardwareEnabled: Networking.wifiHardwareEnabled
 
-    property bool wifiEnabled: Networking.wifiEnabled
-    onWifiEnabledChanged: Networking.wifiEnabled = wifiEnabled
+    // Read directly, don't mirror into a local property — a local
+    // property with a two-way sync (bind in, write back on change)
+    // breaks its own binding the moment toggleWifiEnabled() assigns to
+    // it, so external wifi-state changes (toggled via nmcli, a kill
+    // switch, etc.) would stop showing up here after the first local
+    // toggle. Same reasoning Bluetooth.qml's bluetoothEnabled already
+    // uses — this should have matched that from the start.
+    readonly property bool wifiEnabled: Networking.wifiEnabled
 
     readonly property var device: {
         const wifiDevices = Networking.devices.values.filter(d => d.type === DeviceType.Wifi);
@@ -30,13 +36,31 @@ Singleton {
     // Audio.qml's availableSinks needs it — networks is an ObjectModel,
     // not a plain array, and .values is Quickshell's reactive view of
     // one as a real list.
+    //
+    // Also explicitly reads device.state, otherwise unused here — forces
+    // a re-sort whenever the device's own connection state changes,
+    // rather than relying solely on nested reactivity through each
+    // network's own properties, which is the suspected source of the
+    // "connected network doesn't update until restart" staleness.
     readonly property var sortedNetworks: {
         if (!device)
             return [];
+        const _stateDependency = device.state;
         return [...device.networks.values].sort((a, b) => b.signalStrength - a.signalStrength);
     }
 
-    readonly property var connectedNetwork: sortedNetworks.find(n => n.connected) ?? null
+    // Same explicit device.state read here too — connectedNetwork should
+    // already reactively depend on each network's .connected via the
+    // .find() below, but that depends on property-change notifications
+    // propagating correctly through networks.values -> sort -> find, a
+    // chain that's a few layers deeper than a plain property binding.
+    // This is a belt-and-suspenders forced dependency on top of that,
+    // not a replacement for figuring out if the deeper chain is actually
+    // the gap — worth removing once confirmed one way or the other.
+    readonly property var connectedNetwork: {
+        const _stateDependency = device?.state;
+        return sortedNetworks.find(n => n.connected) ?? null;
+    }
 
     // --- toggling wifi on/off -------------------------------------------
     //
@@ -46,7 +70,7 @@ Singleton {
     function toggleWifiEnabled() {
         if (!wifiHardwareEnabled)
             return;
-        wifiEnabled = !wifiEnabled;
+        Networking.wifiEnabled = !Networking.wifiEnabled;
     }
 
     // Scanning burns a bit of power and isn't needed unless something is
