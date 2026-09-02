@@ -1,5 +1,5 @@
 hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
-hl.env("HYPRSHOT_DIR", "/home/caldecrack/Pictures/Screenshots")
+hl.env("HYPRSHOT_DIR", os.getenv("HOME") .. "/Pictures/Screenshots")
 hl.env("QT_QPA_PLATFORM", "wayland")
 hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")

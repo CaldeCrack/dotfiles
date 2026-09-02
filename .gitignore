@@ -6,3 +6,6 @@
 .config/yazi/theme.toml
 .config/hypr/state/
 
+# Ignore custom config file
+.config/quickshell/config/config.json
+
