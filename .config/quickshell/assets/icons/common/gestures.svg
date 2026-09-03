@@ -1,1 +1,60 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-hand-move"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M8 13v-8.5a1.5 1.5 0 0 1 3 0v7.5" /><path d="M11 11.5v-2a1.5 1.5 0 0 1 3 0v2.5" /><path d="M14 10.5a1.5 1.5 0 0 1 3 0v1.5" /><path d="M17 11.5a1.5 1.5 0 0 1 3 0v4.5a6 6 0 0 1 -6 6h-2h.208a6 6 0 0 1 -5.012 -2.7l-.196 -.3c-.312 -.479 -1.407 -2.388 -3.286 -5.728a1.5 1.5 0 0 1 .536 -2.022a1.867 1.867 0 0 1 2.28 .28l1.47 1.47" /><path d="M2.541 5.594a13.487 13.487 0 0 1 2.46 -1.427" /><path d="M14 3.458c1.32 .354 2.558 .902 3.685 1.612" /></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   stroke="currentColor"
+   stroke-width="2"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   class="icon icon-tabler icons-tabler-outline icon-tabler-hand-move"
+   version="1.1"
+   id="svg7"
+   sodipodi:docname="gestures.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs7" />
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     showgrid="true"
+     inkscape:zoom="24.513035"
+     inkscape:cx="12.564744"
+     inkscape:cy="10.361834"
+     inkscape:window-width="1354"
+     inkscape:window-height="726"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg7">
+    <inkscape:grid
+       id="grid7"
+       units="px"
+       originx="0"
+       originy="0"
+       spacingx="1"
+       spacingy="1"
+       empcolor="#0099e5"
+       empopacity="0.30196078"
+       color="#0099e5"
+       opacity="0.14901961"
+       empspacing="5"
+       enabled="true"
+       visible="true" />
+  </sodipodi:namedview>
+  <path
+     id="rect7"
+     style="opacity:1;fill:#ffffff;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:square;stroke-dasharray:none"
+     d="M 8 2 L 8 3 L 7 3 L 7 11 L 6 11 L 6 10 L 3 10 L 3 11 L 2 11 L 2 13 L 3 13 L 3 15 L 4 15 L 4 17 L 5 17 L 5 19 L 6 19 L 6 20 L 7 20 L 7 21 L 8 21 L 8 22 L 9 22 L 9 23 L 17 23 L 17 22 L 18 22 L 18 21 L 19 21 L 19 20 L 20 20 L 20 19 L 21 19 L 21 10 L 20 10 L 20 9 L 17 9 L 17 8 L 14 8 L 14 7 L 12 7 L 12 3 L 11 3 L 11 2 L 8 2 z M 13 2 L 13 4 L 14 4 L 14 5 L 16 5 L 16 6 L 18 6 L 18 4 L 17 4 L 17 3 L 15 3 L 15 2 L 13 2 z M 4 3 L 4 4 L 2 4 L 2 5 L 1 5 L 1 7 L 3 7 L 3 6 L 5 6 L 5 5 L 6 5 L 6 3 L 4 3 z M 9 4 L 10 4 L 10 13 L 12 13 L 12 9 L 13 9 L 13 13 L 15 13 L 15 10 L 16 10 L 16 13 L 18 13 L 18 11 L 19 11 L 19 18 L 18 18 L 18 19 L 17 19 L 17 20 L 16 20 L 16 21 L 10 21 L 10 20 L 9 20 L 9 19 L 8 19 L 8 18 L 7 18 L 7 16 L 6 16 L 6 14 L 5 14 L 5 13 L 4 13 L 4 12 L 6 12 L 6 13 L 7 13 L 7 14 L 9 14 L 9 4 z " />
+</svg>

@@ -1,1 +1,44 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-list-icon lucide-layout-list"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><path d="M14 4h7"/><path d="M14 9h7"/><path d="M14 15h7"/><path d="M14 20h7"/></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   stroke="currentColor"
+   stroke-width="2"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   class="lucide lucide-layout-grid-icon lucide-layout-grid"
+   version="1.1"
+   id="svg4"
+   sodipodi:docname="layout-list.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="17.333333"
+     inkscape:cx="12"
+     inkscape:cy="12"
+     inkscape:window-width="1354"
+     inkscape:window-height="726"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4" />
+  <defs
+     id="defs4" />
+  <path
+     id="rect5"
+     style="opacity:1;fill:#ffffff;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:square;stroke-dasharray:none"
+     d="M 3,2 C 3,2.3333333 3,2.6666667 3,3 2.6666667,3 2.3333333,3 2,3 c 0,2.3333333 0,4.6666667 0,7 0.3333333,0 0.6666667,0 1,0 0,0.333333 0,0.666667 0,1 2.3333333,0 4.6666667,0 7,0 0,-0.333333 0,-0.666667 0,-1 0.333333,0 0.666667,0 1,0 C 11,7.6666667 11,5.3333333 11,3 10.666667,3 10.333333,3 10,3 10,2.6666667 10,2.3333333 10,2 7.6666667,2 5.3333333,2 3,2 Z m 10,1 c 0,0.6666667 0,1.3333333 0,2 3,0 6,0 9,0 0,-0.6666667 0,-1.3333333 0,-2 -3,0 -6,0 -9,0 z M 4,4 C 5.6666667,4 7.3333333,4 9,4 9,5.6666667 9,7.3333333 9,9 7.3333333,9 5.6666667,9 4,9 4,7.3333333 4,5.6666667 4,4 Z m 9,4 c 0,0.6666667 0,1.3333333 0,2 3,0 6,0 9,0 0,-0.6666667 0,-1.3333333 0,-2 -3,0 -6,0 -9,0 z M 3,13 c 0,0.333333 0,0.666667 0,1 -0.3333333,0 -0.6666667,0 -1,0 0,2.333333 0,4.666667 0,7 0.3333333,0 0.6666667,0 1,0 0,0.333333 0,0.666667 0,1 2.3333333,0 4.6666667,0 7,0 0,-0.333333 0,-0.666667 0,-1 0.333333,0 0.666667,0 1,0 0,-2.333333 0,-4.666667 0,-7 -0.333333,0 -0.666667,0 -1,0 0,-0.333333 0,-0.666667 0,-1 -2.3333333,0 -4.6666667,0 -7,0 z m 10,1 c 0,0.666667 0,1.333333 0,2 3,0 6,0 9,0 0,-0.666667 0,-1.333333 0,-2 -3,0 -6,0 -9,0 z m -9,1 c 1.6666667,0 3.3333333,0 5,0 0,1.666667 0,3.333333 0,5 -1.6666667,0 -3.3333333,0 -5,0 0,-1.666667 0,-3.333333 0,-5 z m 9,4 c 0,0.666667 0,1.333333 0,2 3,0 6,0 9,0 0,-0.666667 0,-1.333333 0,-2 -3,0 -6,0 -9,0 z" />
+</svg>

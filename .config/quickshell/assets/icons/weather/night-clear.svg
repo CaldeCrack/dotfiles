@@ -1,1 +1,60 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon-icon lucide-moon"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   stroke="#ffffff"
+   stroke-width="2"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   class="lucide lucide-moon-icon lucide-moon"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="night-clear.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     showgrid="true"
+     inkscape:zoom="21.208333"
+     inkscape:cx="7.7799607"
+     inkscape:cy="13.225933"
+     inkscape:window-width="1354"
+     inkscape:window-height="726"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1">
+    <inkscape:grid
+       id="grid1"
+       units="px"
+       originx="0"
+       originy="0"
+       spacingx="1"
+       spacingy="1"
+       empcolor="#0099e5"
+       empopacity="0.30196078"
+       color="#0099e5"
+       opacity="0.14901961"
+       empspacing="5"
+       enabled="true"
+       visible="true" />
+  </sodipodi:namedview>
+  <path
+     id="rect1"
+     style="opacity:1;fill:#ffffff;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:square;stroke-dasharray:none"
+     d="M 8 2 L 8 3 L 6 3 L 6 4 L 5 4 L 5 5 L 4 5 L 4 6 L 3 6 L 3 8 L 2 8 L 2 16 L 3 16 L 3 18 L 4 18 L 4 19 L 5 19 L 5 20 L 6 20 L 6 21 L 8 21 L 8 22 L 16 22 L 16 21 L 18 21 L 18 20 L 19 20 L 19 19 L 20 19 L 20 18 L 21 18 L 21 16 L 22 16 L 22 11 L 19 11 L 19 12 L 15 12 L 15 11 L 14 11 L 14 10 L 13 10 L 13 9 L 12 9 L 12 5 L 13 5 L 13 2 L 8 2 z M 9 4 L 11 4 L 11 5 L 10 5 L 10 10 L 11 10 L 11 11 L 12 11 L 12 12 L 13 12 L 13 13 L 14 13 L 14 14 L 19 14 L 19 13 L 20 13 L 20 15 L 19 15 L 19 17 L 18 17 L 18 18 L 17 18 L 17 19 L 15 19 L 15 20 L 9 20 L 9 19 L 7 19 L 7 18 L 6 18 L 6 17 L 5 17 L 5 15 L 4 15 L 4 9 L 5 9 L 5 7 L 6 7 L 6 6 L 7 6 L 7 5 L 9 5 L 9 4 z " />
+</svg>
