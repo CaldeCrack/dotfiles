@@ -54,6 +54,70 @@ Item {
             currentPage -= 1;
     }
 
+    // ---- Keyboard navigation -----------------------------------------
+    // Moves the highlight by (dx, dy) in grid terms, derived from wherever
+    // selectedWallpaper currently sits within pagedWallpapers. Vertical
+    // movement clamps at the current page's top/bottom row. Horizontal
+    // movement past the current page's left/right edge changes page
+    // instead of clamping — landing on the matching edge column of the
+    // new page.
+
+    focus: true
+
+    Keys.onLeftPressed: moveFocus(-1, 0)
+    Keys.onRightPressed: moveFocus(1, 0)
+    Keys.onUpPressed: moveFocus(0, -1)
+    Keys.onDownPressed: moveFocus(0, 1)
+
+    function moveFocus(dx, dy) {
+        if (pagedWallpapers.length === 0)
+            return;
+
+        const idx = pagedWallpapers.indexOf(selectedWallpaper);
+        if (idx === -1) {
+            // Nothing on this page is highlighted yet (e.g. current
+            // selection got filtered out) — land on the first item rather
+            // than trying to compute a relative move from nothing.
+            wallpaperSelected(pagedWallpapers[0]);
+            return;
+        }
+
+        const row = Math.floor(idx / columns);
+        const newCol = (idx % columns) + dx;
+
+        if (newCol < 0 && currentPage > 0) {
+            prevPage();
+            selectAtEdge(row, columns - 1); // rightmost column of the new page
+            return;
+        }
+        if (newCol >= columns && currentPage < totalPages - 1) {
+            nextPage();
+            selectAtEdge(row, 0); // leftmost column of the new page
+            return;
+        }
+
+        const col = Math.max(0, Math.min(columns - 1, newCol));
+        const newRow = Math.max(0, Math.min(rows - 1, row + dy));
+
+        let newIndex = newRow * columns + col;
+        if (newIndex >= pagedWallpapers.length)
+            newIndex = pagedWallpapers.length - 1;
+
+        wallpaperSelected(pagedWallpapers[newIndex]);
+    }
+
+    // Lands the highlight on a specific row/column of whatever page is
+    // *now* current — called right after prevPage()/nextPage(), by which
+    // point pagedWallpapers has already recomputed for the new page.
+    function selectAtEdge(row, col) {
+        if (pagedWallpapers.length === 0)
+            return;
+        let idx = row * columns + col;
+        if (idx >= pagedWallpapers.length)
+            idx = pagedWallpapers.length - 1;
+        wallpaperSelected(pagedWallpapers[idx]);
+    }
+
     Grid {
         anchors.fill: parent
 
@@ -72,7 +136,7 @@ Item {
 
                 readonly property bool isSelected: modelData === root.selectedWallpaper
                 readonly property bool isCurrent: modelData === root.currentWallpaperName
-                readonly property string fileName: modelData.split("/").pop()
+                readonly property string fileName: Wallpaper.relativePath(modelData)
 
                 Column {
                     anchors.fill: parent
@@ -136,7 +200,14 @@ Item {
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
 
-                            onClicked: root.wallpaperSelected(isSelected ? root.currentWallpaperName : modelData)
+                            onClicked: {
+                                // Reclaim keyboard focus on click too — e.g.
+                                // after typing in the search field, clicking
+                                // a thumbnail directly (without Escape first)
+                                // should let arrow keys pick up from here.
+                                root.forceActiveFocus();
+                                root.wallpaperSelected(isSelected ? root.currentWallpaperName : modelData);
+                            }
                         }
                     }
 

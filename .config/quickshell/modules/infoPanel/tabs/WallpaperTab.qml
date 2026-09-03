@@ -1,6 +1,7 @@
 import QtQuick
 import "wallpaper" as Wallpaper
 import qs.services as Services
+import qs.modules.infoPanel
 
 // Wallpaper tab: three stacked sections, full width each. This file owns
 // sizing/positioning AND wiring between the sections (unlike a pure layout
@@ -23,6 +24,28 @@ Item {
     // pressed and WallpaperService round-trips through matugen — Colors.qml
     // picks that up on its own via its FileView watch.
     property string selectedWallpaper: Services.Wallpaper.currentWallpaper
+
+    // Hands keyboard focus to the grid whenever this tab becomes the
+    // active one, so arrow keys work immediately without a click first.
+    //
+    // This can't be driven by this item's own `visible` — InfoPanel binds
+    // it (`visible: root.currentIndex === 0`), but if Wallpaper is already
+    // the default tab (index 0) when the panel first opens, `visible` was
+    // already true at creation and never actually *changes*, so
+    // onVisibleChanged wouldn't fire on that first open. Watching
+    // InfoPanel's own state directly covers both cases: opening straight
+    // into this tab, and switching to it later.
+    Connections {
+        target: InfoPanel
+        function onPanelOpenChanged() {
+            if (InfoPanel.panelOpen && InfoPanel.currentIndex === 0)
+                grid.forceActiveFocus();
+        }
+        function onCurrentIndexChanged() {
+            if (InfoPanel.panelOpen && InfoPanel.currentIndex === 0)
+                grid.forceActiveFocus();
+        }
+    }
 
     Column {
         anchors.fill: parent

@@ -25,6 +25,23 @@ Singleton {
     property var wallpapers: []
     readonly property int count: wallpapers.length
 
+    // Strips `directory` (+ the separating slash) off an absolute path,
+    // leaving whatever subfolder structure is underneath it — e.g.
+    // "/home/user/Pictures/Wallpapers/nature/lake.png" becomes
+    // "nature/lake.png". This is the single source of truth for the
+    // "relative path" concept so the label under each thumbnail and the
+    // search filter both agree on what a wallpaper's display name is,
+    // rather than each re-deriving it (and potentially disagreeing) from
+    // the raw absolute path.
+    function relativePath(absolutePath) {
+        if (!absolutePath)
+            return "";
+        let rel = absolutePath;
+        if (rel.startsWith(root.directory))
+            rel = rel.substring(root.directory.length);
+        return rel.replace(/^\/+/, "");
+    }
+
     Component.onCompleted: refresh()
     onDirectoryChanged: refresh()
 
@@ -43,10 +60,13 @@ Singleton {
 
     Process {
         id: scanProcess
-        // Passed as discrete argv entries (no shell in between), so no
-        // quoting/escaping to worry about even if the directory has spaces
-        // — "(" / "-o" / ")" are just literal tokens find understands.
-        command: ["find", root.directory, "-maxdepth", "1", "-type", "f", "(", "-iname", "*.png", "-o", "-iname", "*.jpg", "-o", "-iname", "*.jpeg", "-o", "-iname", "*.webp", "-o", "-iname", "*.bmp", ")"]
+        // No -maxdepth: recurses into subfolders so wallpapers can be
+        // organized into e.g. nature/, abstract/, etc. and still show up
+        // here. Still passed as discrete argv entries (no shell in
+        // between), so no quoting/escaping to worry about even with spaces
+        // in folder names — "(" / "-o" / ")" are just literal tokens find
+        // understands.
+        command: ["find", root.directory, "-type", "f", "(", "-iname", "*.png", "-o", "-iname", "*.jpg", "-o", "-iname", "*.jpeg", "-o", "-iname", "*.webp", "-o", "-iname", "*.bmp", ")"]
         running: false
 
         stdout: StdioCollector {
