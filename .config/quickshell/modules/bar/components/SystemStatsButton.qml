@@ -112,7 +112,7 @@ BarButtonBase {
 
                 Item {
                     anchors.fill: parent
-                    anchors.margins: 8
+                    anchors.topMargin: 8
 
                     // Celsius (big, left) + fahrenheit/kelvin (small,
                     // grayed, right, stacked) — celsius reads as the
@@ -180,7 +180,8 @@ BarButtonBase {
                     Thermometer {
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.bottom: parent.bottom
-                        height: parent.height * 0.8
+                        anchors.bottomMargin: 12
+                        height: Math.round(parent.height * 0.7)
                         width: height
                         percentage: popup.tempPercentage(SystemStats.temperature)
                     }

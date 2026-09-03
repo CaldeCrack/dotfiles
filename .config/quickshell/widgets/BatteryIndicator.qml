@@ -32,11 +32,11 @@ Item {
     // hand-eyeballed off the path's control points, not measured, so
     // they're exposed as properties specifically to be nudged once this
     // is actually on screen.
-    property real fillX: 8.5
-    property real fillWidth: 7
-    property real fillBottomY: 18.5
-    property real fillMaxHeight: 12
-    property real fillRadius: 1
+    property real fillX: 9
+    property real fillWidth: 6
+    property real fillBottomY: 18
+    property real fillMaxHeight: 11
+    property real fillRadius: 0
 
     property real _displayPercentage: percentage
     Behavior on _displayPercentage {

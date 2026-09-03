@@ -1,43 +1,47 @@
 import QtQuick
-import QtQuick.Effects
 import qs.config
+import qs.widgets
 
-// Renders the thermometer glyph with a dynamic fill level.
+// Pixel-art thermometer with a dynamic fill level.
 //
-// The outline and the fill are two separate layers rather than one SVG,
-// for two reasons:
-//  - Qt's SVG renderer doesn't reliably honor <clipPath>/clip-path inside a
-//    data-URI SVG, so the fill geometry is clipped with QML's own masking.
-//  - The outline only depends on tubeColor/tubeStrokeWidth, not on
-//    percentage, so it is generated only once while the fill animates using
-//    ordinary QML geometry.
+// No masking here anymore — the previous version needed MultiEffect
+// masking because the fill rectangle's corners could poke past a curved
+// bulb outline. The new asset's body is entirely straight-edged blocks
+// (matching the pixel-art style), so a correctly-positioned Rectangle
+// can't overflow it, same reasoning BatteryIndicator already uses. Outline
+// is Icon.qml directly instead of a hand-rolled Image — no reason to
+// duplicate that machinery when Icon already does the currentColor
+// substitution + theme coloring this needs.
 Item {
     id: root
 
-    required property real percentage
+    required property real percentage // 0-100, clamped internally
 
     property color fillColor: Colors.md3.primary
     property color tubeColor: Colors.md3.on_surface
-    property real tubeStrokeWidth: 1.4
 
-    // Convenience property for square sizing.
+    // Convenience for quick testing — same pattern as Icon.qml's own
+    // `size` and BatteryIndicator's.
     property real size: 24
     implicitWidth: size
     implicitHeight: size
 
-    // ---------------------------------------------------------------------
-    // Fill geometry (24x24 SVG coordinate space)
-    // ---------------------------------------------------------------------
+    // Fill geometry, in the same 24x24 coordinate space as the source SVG.
+    // Hand-eyeballed off the new asset, not measured — exposed as
+    // properties specifically to be nudged once this is actually on
+    // screen, same convention as BatteryIndicator's fillX/fillWidth/etc.
 
-    // Bottom bulb.
+    // Bottom block — square now instead of the old circular bulb, always
+    // fully filled (doesn't animate with percentage, just anchors the
+    // column visually).
     property real bulbCenterX: 12
-    property real bulbCenterY: 18
-    property real bulbRadius: 2.4
+    property real bulbCenterY: 19
+    property real bulbSize: 4
 
-    // Vertical temperature column.
+    // Vertical column that actually represents the reading.
     property real columnWidth: 1
     property real columnTopY: 3.5
-    property real columnBottomY: 18
+    property real columnBottomY: 17
 
     property real _displayPercentage: percentage
     Behavior on _displayPercentage {
@@ -52,102 +56,31 @@ Item {
     readonly property real _columnY: columnBottomY - _columnHeight
 
     readonly property real _viewBoxSize: 24
-    readonly property real _scale: width / _viewBoxSize
+    readonly property real _scale: root.width / _viewBoxSize
 
-    // ---------------------------------------------------------------------
-    // Static outline
-    // ---------------------------------------------------------------------
-
-    readonly property string _outlineSvg: `
-<svg xmlns="http://www.w3.org/2000/svg"
-     width="24"
-     height="24"
-     viewBox="0 0 24 24"
-     fill="none"
-     stroke="${tubeColor}"
-     stroke-width="${tubeStrokeWidth}"
-     stroke-linecap="round"
-     stroke-linejoin="round">
-    <path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/>
-</svg>`
-
-    // Filled silhouette used only as a mask.
-    readonly property string _maskSvg: `
-<svg xmlns="http://www.w3.org/2000/svg"
-     width="24"
-     height="24"
-     viewBox="0 0 24 24">
-    <path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"
-          fill="white"/>
-</svg>`
-
-    Image {
-        id: maskImage
-
-        anchors.fill: parent
-        visible: false
-        layer.enabled: true
-
-        fillMode: Image.PreserveAspectFit
-        smooth: true
-
-        sourceSize.width: root.width * 2
-        sourceSize.height: root.height * 2
-
-        source: "data:image/svg+xml;utf8," + encodeURIComponent(root._maskSvg)
+    // Column — grows upward from the bulb as percentage increases. Sharp
+    // corners (no radius), matching the blocky pixel-art look rather than
+    // the old rounded-cap version.
+    Rectangle {
+        color: root.fillColor
+        width: root.columnWidth * root._scale
+        x: (root.bulbCenterX - root.columnWidth / 2) * root._scale
+        y: root._columnY * root._scale
+        height: root._columnHeight * root._scale
     }
 
-    Item {
-        id: fillContainer
-
-        anchors.fill: parent
-        visible: false
-        layer.enabled: true
-
-        // Temperature column.
-        Rectangle {
-            color: root.fillColor
-
-            width: root.columnWidth * root._scale
-            radius: width / 2
-
-            x: (root.bulbCenterX - root.columnWidth / 2) * root._scale
-
-            y: root._columnY * root._scale
-            height: root._columnHeight * root._scale
-        }
-
-        // Bottom bulb (always visible).
-        Rectangle {
-            color: root.fillColor
-
-            width: root.bulbRadius * 2 * root._scale
-            height: width
-            radius: width / 2
-
-            x: (root.bulbCenterX - root.bulbRadius) * root._scale
-            y: (root.bulbCenterY - root.bulbRadius) * root._scale
-        }
+    // Bottom block — square, always fully filled.
+    Rectangle {
+        color: root.fillColor
+        width: root.bulbSize * root._scale
+        height: width
+        x: (root.bulbCenterX - root.bulbSize / 2) * root._scale
+        y: (root.bulbCenterY - root.bulbSize / 2) * root._scale
     }
 
-    MultiEffect {
+    Icon {
         anchors.fill: parent
-
-        source: fillContainer
-
-        maskEnabled: true
-        maskSource: maskImage
-    }
-
-    Image {
-        anchors.fill: parent
-
-        fillMode: Image.PreserveAspectFit
-        smooth: true
-
-        sourceSize.width: root.width * 2
-        sourceSize.height: root.height * 2
-
-        source: "data:image/svg+xml;utf8," + encodeURIComponent(root._outlineSvg)
+        name: "weather/thermometer"
+        size: root.size
     }
 }
