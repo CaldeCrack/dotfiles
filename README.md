@@ -6,7 +6,7 @@
 
 # CrackShell
 
-A fast, modular desktop shell built on [Quickshell](https://quickshell.org), with dynamic Material You theming via `matugen`.
+A fast, modular desktop shell built on [Quickshell](https://quickshell.org), with dynamic Material You theming via `matugen` and pixel art focused style.
 
 </div>
 
@@ -69,14 +69,16 @@ A few services shell out to external tools instead of reimplementing their funct
 | [`hyprsunset`](https://github.com/hyprwm/hyprsunset) / [`hyprpicker`](https://github.com/hyprwm/hyprpicker) | Night light & color picker |
 | [`hyprsunset`](https://github.com/hyprwm/hyprsunset) | Night light |
 | [`hyprpicker`](https://github.com/hyprwm/hyprpicker) | Color picker |
-| [`tesseract`](https://github.com/tesseract-ocr/tesseract) / tesseract language pack | OCR |
+| [`tesseract`](https://github.com/tesseract-ocr/tesseract) / `tesseract-data-eng` (or another language) | OCR |
 | `qrencode` / `zbar` | QR encoding and decoding |
+| `xdg-tools` | Open files |
 
 ## Installation
 
 This repo is managed with [GNU Stow](https://www.gnu.org/software/stow/) and contains config files for several tools beyond the shell itself (including Hyprland).
 
 ```bash
+mkdir ~/dotfiles
 git clone https://github.com/CaldeCrack/CrackShell.git ~/dotfiles
 cd ~/dotfiles
 stow --adopt .
@@ -140,7 +142,7 @@ quickshell/
 - [ ] **Installer script** — one-command setup (dependency checks, config bootstrap, matugen setup)
 - [ ] **Project website** — a GitHub Pages site with docs, screenshots, and a config gallery
 
-Have an idea or a feature request? Open an issue. Suggestions are welcome.
+Have an idea, feature request or some problem? Open an issue. Feedback is welcome.
 
 ## Acknowledgements
 
@@ -154,6 +156,13 @@ This project's visual language and several UX ideas were inspired by other shell
 - Various other shells/dotfiles I'd seen from time to time in [unixporn](https://www.reddit.com/r/unixporn/)
 
 Huge thanks to their authors and communities, this shell wouldn't look or work the way it does without studying their approaches first.
+
+Also the SVGs were created using as a base icons from the following projects:
+
+- [Lucide](https://lucide.dev/icons/)
+- [Tabler](https://tabler.io/icons)
+
+Thanks to them creating the pixel art SVGs was a much smoother process than it would've been otherwise.
 
 ## License
 
