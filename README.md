@@ -31,10 +31,6 @@ Colors come from [matugen](https://github.com/InioX/matugen), generating a full 
 - ⚡ **Power menu** — shutdown/reboot/suspend/lock overlay.
 - ⚙️ **Live config** — JSON-based settings, watched and hot-reloaded.
 
-### Bar
-<!-- assets/bar.png -->
-<img src="./assets/bar.png" alt="Top bar" width="900" />
-
 ### Info Panel
 <!-- assets/infopanel.png -->
 <img src="./assets/infopanel.png" alt="Info panel tabs" width="900" />
