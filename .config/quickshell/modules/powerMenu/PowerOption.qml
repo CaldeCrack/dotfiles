@@ -22,10 +22,10 @@ Item {
     readonly property bool hovered: mouseArea.containsMouse
     readonly property bool highlighted: hovered || focused
 
-    signal clicked()
+    signal clicked
 
     implicitWidth: 160
-    implicitHeight: 160
+    implicitHeight: 480
 
     Rectangle {
         id: highlightBg
@@ -35,7 +35,10 @@ Item {
         opacity: root.highlighted ? 0.12 : 0
 
         Behavior on opacity {
-            NumberAnimation { duration: 120; easing.type: Easing.OutCubic }
+            NumberAnimation {
+                duration: 120
+                easing.type: Easing.OutCubic
+            }
         }
     }
 
@@ -51,23 +54,30 @@ Item {
             color: root.highlighted ? Colors.md3.primary : Colors.md3.on_surface
 
             Behavior on color {
-                ColorAnimation { duration: 120 }
+                ColorAnimation {
+                    duration: 120
+                }
             }
 
             scale: root.highlighted ? 1.08 : 1.0
             Behavior on scale {
-                NumberAnimation { duration: 120; easing.type: Easing.OutCubic }
+                NumberAnimation {
+                    duration: 120
+                    easing.type: Easing.OutCubic
+                }
             }
         }
 
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
             text: root.label
-            font.pixelSize: 14
+            font.pixelSize: 16
             color: root.highlighted ? Colors.md3.primary : Colors.md3.on_surface
 
             Behavior on color {
-                ColorAnimation { duration: 120 }
+                ColorAnimation {
+                    duration: 120
+                }
             }
         }
     }

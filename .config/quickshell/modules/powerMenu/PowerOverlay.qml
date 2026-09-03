@@ -58,9 +58,19 @@ PanelWindow {
             action: () => Power.suspend()
         },
         {
+            icon: "power/hibernate",
+            label: "Hibernate",
+            action: () => Power.hibernate()
+        },
+        {
             icon: "power/lock",
             label: "Lock",
             action: () => Power.lock()
+        },
+        {
+            icon: "power/log-out",
+            label: "Logout",
+            action: () => Power.logout()
         }
     ]
 
@@ -219,7 +229,7 @@ PanelWindow {
             onClicked: root.hide()
         }
 
-        // --- content: 4 options + keyboard nav -----------------------------
+        // --- content: 6 options + keyboard nav -----------------------------
         Item {
             id: content
             anchors.fill: parent
@@ -233,7 +243,7 @@ PanelWindow {
 
             Row {
                 anchors.centerIn: parent
-                spacing: 32
+                spacing: 16
 
                 Repeater {
                     model: root.options
