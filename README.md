@@ -1,12 +1,14 @@
 <div align="center">
 
-<!-- some day I'll create a logo -->
 <!-- assets/logo.svg -->
 <img src="./assets/logo.svg" alt="Shell logo" width="120" />
 
 # CrackShell
 
 A fast, modular desktop shell built on [Quickshell](https://quickshell.org), with dynamic Material You theming via `matugen` and pixel art focused style.
+
+<!-- assets/banner.png -->
+<img src="./assets/banner.png" alt="Shell showcase banner" width="900" />
 
 </div>
 
