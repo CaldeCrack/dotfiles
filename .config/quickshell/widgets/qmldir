@@ -13,6 +13,7 @@ NotificationGroup 1.0 NotificationGroup.qml
 NotificationItem 1.0 NotificationItem.qml
 OsdIndicator 1.0 OsdIndicator.qml
 PanelBase 1.0 PanelBase.qml
+PanelCloseButton 1.0 PanelCloseButton.qml
 PanelIconButton 1.0 PanelIconButton.qml
 PickerGrid 1.0 PickerGrid.qml
 PreviewPopup 1.0 PreviewPopup.qml

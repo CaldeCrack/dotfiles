@@ -17,6 +17,10 @@ QtObject {
     // { workspaceId: [{ title, iconName }] } — populated from get_tree.
     property var _windowsByWorkspace: ({})
 
+    // { workspaceId: { title, iconName } } — last-focused window per
+    // workspace, also populated from get_tree. See _focusedLeaf below.
+    property var _representativeByWorkspace: ({})
+
     function start() {
         refresh();
         subscribeProcess.running = true;
@@ -30,6 +34,18 @@ QtObject {
     // v1 preview data: [{ title, iconName }] for the windows on workspace `id`.
     function windowsFor(id) {
         return root._windowsByWorkspace[id] ?? [];
+    }
+
+    function selectedWindowFor(id) {
+        return root._representativeByWorkspace[id] ?? null;
+    }
+
+    // No live/off-screen window capture protocol exists on i3/sway (unlike
+    // Hyprland's hyprland-toplevel-export-v1) — a workspace that isn't
+    // currently on screen simply has no image to fetch. Always null; the
+    // overlay is expected to fall back to an icon-only tile here.
+    function thumbnailSourceFor(id) {
+        return null;
     }
 
     function focus(id) {
@@ -48,9 +64,6 @@ QtObject {
 
         let ws = [];
         for (const w of data) {
-            // "num" is -1 for name-only workspaces (e.g. a workspace named
-            // "www" with no leading number) — same filter idea as the
-            // Hyprland backend's `id >= 0`.
             if (w.num >= 0)
                 ws.push({
                     id: w.num,
@@ -84,6 +97,42 @@ QtObject {
         }
     }
 
+    // Follows a workspace's `focus` array — child ids in most-recently-
+    // focused order, at every container level — down to a leaf window.
+    // This is i3/sway's own recency tracking, so it's a direct read rather
+    // than something inferred: no address-matching needed, unlike the
+    // Hyprland backend's lastwindow lookup.
+    function _focusedLeaf(node) {
+        let current = node;
+        while (current) {
+            const kids = (current.nodes ?? []).concat(current.floating_nodes ?? []);
+            if (kids.length === 0)
+                return null;
+
+            let next = null;
+            if (Array.isArray(current.focus)) {
+                for (const focusedId of current.focus) {
+                    next = kids.find(k => k.id === focusedId);
+                    if (next)
+                        break;
+                }
+            }
+            if (!next)
+                next = kids[0];
+
+            const iconName = next.app_id ?? next.window_properties?.class ?? "";
+            const isWindow = !!iconName || next.window !== undefined;
+            if (isWindow)
+                return {
+                    title: next.name ?? "",
+                    iconName: iconName
+                };
+
+            current = next;
+        }
+        return null;
+    }
+
     function _applyTree(jsonText) {
         let data;
         try {
@@ -93,11 +142,9 @@ QtObject {
             return;
         }
 
-        let map = {};
+        let windowsMap = {};
+        let repMap = {};
 
-        // Scratchpad and any other negative-id workspace are deliberately
-        // excluded — same filter as the button list itself, so preview data
-        // never exists for a workspace the bar doesn't show.
         function walk(node) {
             const kids = (node.nodes ?? []).concat(node.floating_nodes ?? []);
             for (const child of kids) {
@@ -105,7 +152,8 @@ QtObject {
                     if (child.num >= 0) {
                         let windows = [];
                         root._collectWindows(child, windows);
-                        map[child.num] = windows;
+                        windowsMap[child.num] = windows;
+                        repMap[child.num] = root._focusedLeaf(child);
                     }
                 } else {
                     walk(child);
@@ -114,7 +162,8 @@ QtObject {
         }
         walk(data);
 
-        root._windowsByWorkspace = map;
+        root._windowsByWorkspace = windowsMap;
+        root._representativeByWorkspace = repMap;
     }
 
     // One-shot: current workspace list/state
@@ -135,10 +184,11 @@ QtObject {
 
     // Long-lived: fires on every workspace change (focus, create, destroy,
     // rename, move) AND every window change (open, close, move between
-    // workspaces) — windowsFor() depends on the latter too, not just the
-    // workspace list. The event payload itself isn't parsed — any event on
-    // either channel means state may have changed, so just re-query for the
-    // full current state rather than trying to apply a partial diff.
+    // workspaces) — windowsFor()/selectedWindowFor() depend on the latter
+    // too, not just the workspace list. The event payload itself isn't
+    // parsed — any event on either channel means state may have changed,
+    // so just re-query for the full current state rather than trying to
+    // apply a partial diff.
     property Process subscribeProcess: Process {
         command: [root.toolCmd, "-m", "-t", "subscribe", "[\"workspace\", \"window\"]"]
         stdout: SplitParser {

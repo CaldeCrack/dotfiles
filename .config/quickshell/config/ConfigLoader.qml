@@ -39,6 +39,14 @@ Singleton {
                 property int verticalMargin: 24
             }
 
+            property JsonObject workspaceOverlay: JsonObject {
+                property int horizontalMargin: 24
+                property int verticalMargin: 24
+                property int tileWidth: 200
+                property int tileHeight: 130
+                property int columns: 3
+            }
+
             property JsonObject weather: JsonObject {
                 property string location: "Santiago"
                 property string units: "metric"

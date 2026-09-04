@@ -128,42 +128,11 @@ PanelWindow {
                 color: Colors.md3.on_surface
             }
 
-            // Simple hover-highlighted close button. Not built on
-            // BarButtonBase since that's sized/styled specifically for the
-            // bar (implicitHeight defaults to Settings.bar.height,
-            // which has nothing to do with this panel). If more panels
-            // end up needing this same close-button look, pull it into
-            // its own widgets/PanelCloseButton.qml.
-            Rectangle {
+            PanelCloseButton {
                 id: closeButton
-
-                width: 28
-                height: 28
-                radius: width / 2
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
-                color: closeArea.containsMouse ? Colors.md3.surface : Colors.md3.surface_container
-
-                Behavior on opacity {
-                    NumberAnimation {
-                        duration: 100
-                    }
-                }
-
-                Text {
-                    anchors.centerIn: parent
-                    text: "\u2715"
-                    color: Colors.md3.on_surface
-                    font.pixelSize: 14
-                }
-
-                MouseArea {
-                    id: closeArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: root.close()
-                }
+                onClicked: root.close()
             }
         }
 

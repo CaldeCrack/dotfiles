@@ -34,3 +34,4 @@ hl.bind(cfg.mainMod .. " + W", hl.dsp.exec_cmd("qs ipc call infoPanel open 'Wall
 hl.bind(cfg.mainMod .. " + M", hl.dsp.exec_cmd("qs ipc call infoPanel open 'Media'"))
 hl.bind(cfg.mainMod .. " + N", hl.dsp.exec_cmd("qs ipc call notifications toggleCenter"))
 hl.bind(cfg.mainMod .. " + SPACE", hl.dsp.exec_cmd("qs ipc call launcher toggle"))
+hl.bind(cfg.mainMod .. " + TAB", hl.dsp.exec_cmd("qs ipc call workspaceOverlay toggle"))
