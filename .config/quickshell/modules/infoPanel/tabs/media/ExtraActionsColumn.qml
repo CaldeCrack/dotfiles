@@ -33,7 +33,7 @@ Item {
         PanelIconButton {
             id: playerButton
             iconName: "media/music"
-            systemIconName: Media.available ? Media.resolveIconName(Media.activePlayer.desktopEntry) : ""
+            appId: Media.available ? Media.activePlayer.desktopEntry : ""
             checked: root.activePopup === "player"
             onClicked: root.activePopup = (root.activePopup === "player" ? "" : "player")
         }

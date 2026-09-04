@@ -19,6 +19,7 @@ Item {
 
     property string iconName: ""       // bundled icon (assets/icons/<name>.svg), tinted per checked/hover state
     property string systemIconName: "" // real app/system icon via Icon.qml's systemIcon mode — never tinted (own branding colors). Takes priority over iconName when non-empty; iconName acts as the fallback.
+    property string appId: ""
     property real iconSize: 18
     property real padding: 8
     property bool checked: false
@@ -65,8 +66,16 @@ Item {
     // mode, and the fallback whenever systemIconName is empty.
     Icon {
         anchors.centerIn: parent
-        visible: root.systemIconName.length === 0
+        visible: root.iconName.length > 0
         name: root.iconName
+        size: root.iconSize
+        color: root.checked ? Colors.md3.on_primary_container : (root.hovered ? root.hoveredColor : root.color)
+    }
+
+    Icon {
+        anchors.centerIn: parent
+        visible: root.appId.length > 0
+        appId: root.appId
         size: root.iconSize
         color: root.checked ? Colors.md3.on_primary_container : (root.hovered ? root.hoveredColor : root.color)
     }

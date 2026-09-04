@@ -254,22 +254,9 @@ Singleton {
         activePlayer.loopState = order[(idx + 1) % order.length];
     }
 
-    // --- Icon resolution ---------------------------------------------------
-    //
-    // MPRIS's `desktopEntry` is just the .desktop file's basename (e.g.
-    // "zen"), not an icon name — the real icon lives in that file's own
-    // Icon= key (e.g. "zen-browser" for Zen). byId() does an exact-match
-    // lookup against Quickshell's desktop entry index; heuristicLookup()
-    // is a fuzzier second choice for cases where the id doesn't match
-    // exactly (per Quickshell's own docs, it "may guess incorrectly," so
-    // it's deliberately not first choice). Returns "" (not the raw id) on
-    // failure — callers are expected to have their own bundled-icon
-    // fallback for that case rather than us guessing a system icon name
-    // that probably won't resolve either.
-    function resolveIconName(desktopEntryId) {
-        if (!desktopEntryId)
-            return "";
-        const entry = DesktopEntries.byId(desktopEntryId) || DesktopEntries.heuristicLookup(desktopEntryId);
-        return entry?.icon || "";
-    }
+    // Icon resolution moved to widgets/Icon.qml's `appId` mode — any
+    // consumer that needs an icon for `desktopEntry` now uses
+    // `Icon { appId: Media.activePlayer.desktopEntry }` directly instead
+    // of resolving a name here first. Kept the raw `desktopEntry` exposed
+    // via activePlayer for anything that still wants it directly.
 }

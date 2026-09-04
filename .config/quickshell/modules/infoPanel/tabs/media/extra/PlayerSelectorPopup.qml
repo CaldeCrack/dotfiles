@@ -46,7 +46,6 @@ AnchoredPopup {
 
                 readonly property bool isActive: modelData === Media.activePlayer
                 readonly property bool isMpd: modelData.dbusName === Media.mpdBusName
-                readonly property string resolvedIcon: Media.resolveIconName(modelData.desktopEntry)
 
                 Rectangle {
                     anchors.fill: parent
@@ -59,8 +58,7 @@ AnchoredPopup {
                     }
                 }
 
-                // 1. Real resolved icon, when one was actually found —
-                //    applies to any player, MPD included.
+                // 1. Real resolved icon, when one was actually found
                 Icon {
                     id: resolvedPlayerIcon
                     anchors {
@@ -68,8 +66,8 @@ AnchoredPopup {
                         leftMargin: 8
                         verticalCenter: parent.verticalCenter
                     }
-                    visible: entry.resolvedIcon.length > 0
-                    systemIcon: entry.resolvedIcon
+                    visible: modelData.desktopEntry.length > 0
+                    appId: modelData.desktopEntry
                     size: 22
                 }
 
@@ -83,7 +81,7 @@ AnchoredPopup {
                         leftMargin: 8
                         verticalCenter: parent.verticalCenter
                     }
-                    visible: entry.isMpd && entry.resolvedIcon.length === 0
+                    visible: entry.isMpd
                     name: "media/music"
                     size: 22
                 }
@@ -100,7 +98,7 @@ AnchoredPopup {
                         leftMargin: 8
                         verticalCenter: parent.verticalCenter
                     }
-                    visible: !entry.isMpd && entry.resolvedIcon.length === 0
+                    visible: !entry.isMpd && modelData.desktopEntry.length === 0
                     systemIcon: "application-x-executable"
                     size: 22
                 }
