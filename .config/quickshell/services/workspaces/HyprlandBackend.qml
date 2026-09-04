@@ -1,4 +1,4 @@
-import QtQml
+import QtQuick
 import Quickshell.Hyprland
 
 // Instantiated by services/Workspaces.qml's Loader — not a singleton itself,
@@ -66,12 +66,34 @@ QtObject {
         if (!ws || ws.toplevels.values.length === 0)
             return null;
 
-        const lastAddr = ws.lastIpcObject?.lastwindow;
-        if (lastAddr) {
-            const match = ws.toplevels.values.find(t => t.address === lastAddr);
+        // Best case: this workspace is the one actually focused system-wide
+        // right now, so its genuinely active window is knowable directly —
+        // no matching, no staleness.
+        const activeMatch = ws.toplevels.values.find(t => t.activated);
+        if (activeMatch)
+            return activeMatch;
+
+        // Otherwise, fall back to Hyprland's own last-focused-per-workspace
+        // record, matched by TITLE — deliberately not by address.
+        // HyprlandToplevel.address is documented as staying an empty string
+        // "until the address is reported" via a separate async protocol
+        // (hyprland-toplevel-mapping-v1), which may lag or may not be
+        // supported at all — matching against a field that's frequently
+        // still empty is what silently broke this originally, always
+        // falling through to the first-toplevel fallback below. `title` is
+        // a core property with no such handshake.
+        //
+        // Caveat: two windows sharing an identical title will match
+        // whichever is found first — acceptable for a "representative
+        // window" purpose, since either is still a real window on that
+        // workspace, just not guaranteed to be THE most recent one.
+        const lastTitle = ws.lastIpcObject?.lastwindowtitle;
+        if (lastTitle) {
+            const match = ws.toplevels.values.find(t => t.title === lastTitle);
             if (match)
                 return match;
         }
+
         return ws.toplevels.values[0];
     }
 

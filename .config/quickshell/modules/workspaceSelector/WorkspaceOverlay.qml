@@ -11,19 +11,19 @@ import qs.widgets
 // ----------------
 // Same shape as ShortcutsWindow (full-screen scrim + inset card, toggled
 // via IpcHandler since a layer-shell client can't grab a global hotkey on
-// its own) — the only real difference is what's inside the card: a grid of
-// workspace thumbnails instead of a keybind cheat sheet.
+// its own) — no header here though, just the grid, since there's nothing
+// to title and closing is Escape/the toggle shortcut/clicking the scrim.
 //
-// Empty workspaces are excluded entirely — there's nothing useful to
-// preview or switch to. "Empty" here means no windows, per
-// Workspaces.windowsFor(), not just excluded by the >=0 id filter the
-// backends already apply for the bar button.
+// Always shows a fixed grid of workspaceCount tiles (ids 1..workspaceCount),
+// not just currently-existing/non-empty ones — an id with no real workspace
+// behind it yet just renders an empty tile (no thumbnail, no icon, still
+// clickable to create/focus it, same as clicking that number on the bar).
 //
 // Thumbnails come from Workspaces.thumbnailSourceFor(id), which is only
 // ever non-null on Hyprland (hyprland-toplevel-export-v1 can render an
 // off-screen window on request; no equivalent protocol exists for i3/sway).
-// On i3/sway every tile falls back to just the selected window's icon —
-// see ScreencopyView.hasContent below.
+// On i3/sway, and for any genuinely empty tile, only the big background
+// number and (if there IS a selected window) its icon show.
 //
 // Not instantiated by any bar button — this only ever opens via its own
 // shortcut, so it should be instantiated once directly in shell.qml
@@ -48,15 +48,19 @@ PanelWindow {
     color: "transparent"
     exclusiveZone: 0
 
-    // How many non-empty workspaces exist, in the same order the grid
-    // renders them — recomputed whenever the underlying workspace/window
-    // state changes, since it's just a filter over Workspaces.workspaces.
-    readonly property var visibleWorkspaces: Workspaces.workspaces.filter(w => Workspaces.windowsFor(w.id).length > 0)
+    // Fixed range shown, independent of how many workspaces actually
+    // exist/have windows. Not yet a config key you've added — default 10
+    // until it is. Combined with columns (5, per your config) that's the
+    // 2-row/5-per-row layout.
+    readonly property int workspaceCount: Settings.workspaceOverlay.count ?? 10
+    readonly property var workspaceIds: Array.from({
+        length: root.workspaceCount
+    }, (_, i) => i + 1)
 
     readonly property int columns: Settings.workspaceOverlay.columns
 
-    // Index into visibleWorkspaces — keyboard/mouse selection, kept in
-    // sync between the two (hovering a tile also updates this).
+    // Index into workspaceIds — keyboard/mouse selection, kept in sync
+    // between the two (hovering a tile also updates this).
     property int selectedIndex: 0
 
     function toggle() {
@@ -74,22 +78,20 @@ PanelWindow {
     // always starts the keyboard cursor on "where you already are."
     function open() {
         Workspaces.refresh();
-        const idx = root.visibleWorkspaces.findIndex(w => w.id === Workspaces.activeId);
+        const idx = root.workspaceIds.indexOf(Workspaces.activeId);
         root.selectedIndex = idx >= 0 ? idx : 0;
     }
 
     function moveSelection(delta) {
-        if (root.visibleWorkspaces.length === 0)
-            return;
         const next = root.selectedIndex + delta;
-        if (next >= 0 && next < root.visibleWorkspaces.length)
+        if (next >= 0 && next < root.workspaceIds.length)
             root.selectedIndex = next;
     }
 
     function activateSelected() {
-        const ws = root.visibleWorkspaces[root.selectedIndex];
-        if (ws) {
-            Workspaces.focus(ws.id);
+        const id = root.workspaceIds[root.selectedIndex];
+        if (id !== undefined) {
+            Workspaces.focus(id);
             root.close();
         }
     }
@@ -165,7 +167,7 @@ PanelWindow {
         id: panel
 
         anchors.fill: parent
-        anchors.topMargin: Settings.bar.height + (Settings.workspaceOverlay.verticalMargin)
+        anchors.topMargin: Settings.bar.height + Settings.workspaceOverlay.verticalMargin
         anchors.bottomMargin: Settings.workspaceOverlay.verticalMargin
         anchors.leftMargin: Settings.workspaceOverlay.horizontalMargin
         anchors.rightMargin: Settings.workspaceOverlay.horizontalMargin
@@ -176,63 +178,26 @@ PanelWindow {
             anchors.fill: parent
         }
 
-        Item {
-            id: header
-
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.margins: 20
-            height: closeButton.height
-
-            Text {
-                anchors.centerIn: parent
-                text: "Workspaces"
-                font.pixelSize: 20
-                font.bold: true
-                color: Colors.md3.on_surface
-            }
-
-            PanelCloseButton {
-                id: closeButton
-                anchors.right: parent.right
-                anchors.verticalCenter: parent.verticalCenter
-                onClicked: root.close()
-            }
-        }
-
-        Text {
-            anchors.centerIn: parent
-            visible: root.visibleWorkspaces.length === 0
-            text: "No windows open"
-            color: Colors.md3.on_surface_variant
-            font.pixelSize: 16
-        }
-
         GridLayout {
             id: grid
 
-            anchors.top: header.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
+            anchors.fill: parent
             anchors.margins: 20
-            anchors.topMargin: 10
 
             columns: root.columns
             rowSpacing: 16
             columnSpacing: 16
 
             Repeater {
-                model: root.visibleWorkspaces
+                model: root.workspaceIds
 
                 delegate: Rectangle {
                     id: tile
 
-                    required property var modelData
+                    required property int modelData
                     required property int index
 
-                    readonly property int wsId: modelData.id
+                    readonly property int wsId: modelData
                     readonly property bool selected: index === root.selectedIndex
                     readonly property var selectedWindow: Workspaces.selectedWindowFor(wsId)
 
@@ -245,11 +210,31 @@ PanelWindow {
                     color: Colors.md3.surface_container_high
                     border.width: selected ? 2 : 0
                     border.color: Colors.md3.primary
+                    // The background number and the screencap are both
+                    // rectangular by default — clip so neither pokes out
+                    // past the tile's own rounded corners.
+                    clip: true
 
                     Behavior on border.width {
                         NumberAnimation {
                             duration: 100
                         }
+                    }
+
+                    // Big, muted workspace number, centered — sits BEHIND
+                    // everything else. Primarily visible on empty tiles
+                    // (nothing to cover it) and on i3/sway (no thumbnail
+                    // protocol at all); a populated Hyprland tile's
+                    // thumbnail will generally cover it entirely, which is
+                    // expected — it's a placeholder, not meant to compete
+                    // with real content once there is any.
+                    Text {
+                        anchors.centerIn: parent
+                        text: tile.wsId
+                        font.pixelSize: Math.min(parent.width, parent.height) * 0.55
+                        font.bold: true
+                        color: Colors.md3.on_surface_variant
+                        opacity: 0.25
                     }
 
                     ScreencopyView {
@@ -266,8 +251,8 @@ PanelWindow {
 
                         // Re-capture every time the overlay opens, not just
                         // when captureSource's identity changes — the same
-                        // Toplevel handle can persist across opens while its
-                        // on-screen contents have changed in the meantime.
+                        // Toplevel handle can persist across opens while
+                        // its on-screen contents have changed since.
                         Connections {
                             target: root
                             function onVisibleChanged() {
@@ -277,46 +262,15 @@ PanelWindow {
                         }
                     }
 
-                    // No capture source at all (i3/sway, always) or no
-                    // frame yet (Hyprland, briefly) — icon-only fallback,
-                    // same graceful-nothing pattern Icon already uses.
+                    // Selected window's icon, centered, in front of the
+                    // thumbnail. Renders nothing if there's no selected
+                    // window (empty tile) — same graceful-nothing behavior
+                    // Icon already has for an unresolved appId.
                     Icon {
                         anchors.centerIn: parent
-                        visible: !capture.hasContent
                         appId: tile.selectedWindow?.iconName ?? ""
                         systemIconFallback: "application-x-executable"
-                        size: 32
-                    }
-
-                    // Selected window's icon badge, over the thumbnail.
-                    Icon {
-                        anchors.right: parent.right
-                        anchors.bottom: parent.bottom
-                        anchors.margins: 6
-                        visible: capture.hasContent
-                        appId: tile.selectedWindow?.iconName ?? ""
-                        systemIconFallback: "application-x-executable"
-                        size: 20
-                    }
-
-                    Rectangle {
-                        anchors.left: parent.left
-                        anchors.top: parent.top
-                        anchors.margins: 6
-                        width: idLabel.implicitWidth + 8
-                        height: idLabel.implicitHeight + 4
-                        radius: 4
-                        color: Colors.md3.scrim
-                        opacity: 0.6
-
-                        Text {
-                            id: idLabel
-                            anchors.centerIn: parent
-                            text: tile.wsId
-                            color: "white"
-                            font.pixelSize: 11
-                            font.bold: true
-                        }
+                        size: 48
                     }
 
                     MouseArea {
