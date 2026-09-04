@@ -1,12 +1,23 @@
 import QtQuick
-import qs.config
 import qs.widgets
 import qs.services
+import qs.config
 
 BarButtonBase {
     id: root
+
     horizontalPadding: 4
     hoverOpacity: 0
+
+    // v1 ("list": icons + titles) vs v2 ("thumbnail": live capture, not yet
+    // built). TODO: once config.json grows a workspaces section, replace
+    // this with Settings.workspaces.previewMode.
+    property string previewMode: "list"
+
+    // Which workspace's segment is currently hovered, -1 for none. Owned
+    // here (not per-segment) because the preview popup below is a single
+    // shared instance, not one per segment.
+    property int hoveredWsId: -1
 
     // This button has no single click target of its own — each segment
     // handles its own click — so leave onClicked/onRightClicked unset.
@@ -16,12 +27,14 @@ BarButtonBase {
         spacing: 1
 
         Repeater {
+            id: repeater
             model: Workspaces.workspaces
 
             delegate: Item {
                 id: segment
 
                 required property var modelData
+                required property int index
                 readonly property int wsId: modelData.id
                 readonly property bool active: wsId === Workspaces.activeId
                 readonly property bool hovered: hoverArea.containsMouse
@@ -59,6 +72,69 @@ BarButtonBase {
                     acceptedButtons: Qt.LeftButton
                     cursorShape: Qt.PointingHandCursor
                     onClicked: Workspaces.focus(segment.wsId)
+
+                    onEntered: {
+                        previewDebounce.pendingWsId = segment.wsId;
+                        previewDebounce.pendingTarget = segment;
+                        previewDebounce.restart();
+                    }
+                    onExited: {
+                        previewDebounce.stop();
+                        // Only clear if this segment was the one showing —
+                        // avoids a fast-moving cursor clobbering the next
+                        // segment's just-set hoveredWsId.
+                        if (root.hoveredWsId === segment.wsId)
+                            root.hoveredWsId = -1;
+                    }
+                }
+            }
+        }
+    }
+
+    // Debounces the *appearing* edge only — moving across several segments
+    // to reach one further along the pill shouldn't flicker a popup open
+    // for each one passed over. Hiding (onExited above) is instant.
+    Timer {
+        id: previewDebounce
+        interval: 200
+        property int pendingWsId: -1
+        property Item pendingTarget: null
+        onTriggered: {
+            root.hoveredWsId = pendingWsId;
+            previewPopup.target = pendingTarget;
+        }
+    }
+
+    PreviewPopup {
+        id: previewPopup
+        open: root.hoveredWsId !== -1 && root.previewMode === "list"
+
+        Column {
+            spacing: 4
+
+            Repeater {
+                model: root.hoveredWsId !== -1 ? Workspaces.windowsFor(root.hoveredWsId) : []
+
+                delegate: Row {
+                    required property var modelData
+                    spacing: 6
+
+                    Icon {
+                        appId: modelData.iconName
+                        systemIconFallback: "application-x-executable"
+                        size: 16
+                    }
+
+                    Text {
+                        text: modelData.title
+                        color: Colors.md3.on_surface
+                        font.pixelSize: 12
+                        elide: Text.ElideRight
+                        // Cap width so a long title doesn't stretch the
+                        // popup unreasonably wide; MarqueeText would be a
+                        // nicer upgrade here if that widget suits this case.
+                        width: Math.min(implicitWidth, 220)
+                    }
                 }
             }
         }
