@@ -9,11 +9,6 @@ BarButtonBase {
     horizontalPadding: 4
     hoverOpacity: 0
 
-    // v1 ("list": icons + titles) vs v2 ("thumbnail": live capture, not yet
-    // built). TODO: once config.json grows a workspaces section, replace
-    // this with Settings.workspaces.previewMode.
-    property string previewMode: "list"
-
     // Which workspace's segment is currently hovered, -1 for none. Owned
     // here (not per-segment) because the preview popup below is a single
     // shared instance, not one per segment.
@@ -107,7 +102,7 @@ BarButtonBase {
 
     PreviewPopup {
         id: previewPopup
-        open: root.hoveredWsId !== -1 && root.previewMode === "list"
+        open: root.hoveredWsId !== -1
 
         Column {
             spacing: 4
@@ -125,14 +120,10 @@ BarButtonBase {
                         size: 16
                     }
 
-                    Text {
+                    MarqueeText {
                         text: modelData.title
                         color: Colors.md3.on_surface
                         font.pixelSize: 12
-                        elide: Text.ElideRight
-                        // Cap width so a long title doesn't stretch the
-                        // popup unreasonably wide; MarqueeText would be a
-                        // nicer upgrade here if that widget suits this case.
                         width: Math.min(implicitWidth, 220)
                     }
                 }

@@ -66,4 +66,26 @@ Singleton {
     function windowsFor(id) {
         return backendLoader.item?.windowsFor?.(id) ?? [];
     }
+
+    // The last-focused window on workspace `id`, as { title, iconName } —
+    // used for the overlay's icon-over-thumbnail. Same window that
+    // thumbnailSourceFor() captures, so the two stay visually consistent.
+    function selectedWindowFor(id) {
+        return backendLoader.item?.selectedWindowFor?.(id) ?? null;
+    }
+
+    // Capture source for ScreencopyView — a real Toplevel handle on
+    // Hyprland, always null on i3/sway (no off-screen capture protocol
+    // available there). Callers should treat null as "show icon only."
+    function thumbnailSourceFor(id) {
+        return backendLoader.item?.thumbnailSourceFor?.(id) ?? null;
+    }
+
+    // Freshens whatever data a backend can't keep live on its own
+    // (Hyprland's lastIpcObject). Call before reading selectedWindowFor()/
+    // thumbnailSourceFor() for freshly-accurate results — e.g. right when
+    // the workspace overlay opens.
+    function refresh() {
+        backendLoader.item?.refresh?.();
+    }
 }

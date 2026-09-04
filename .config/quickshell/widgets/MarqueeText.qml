@@ -15,6 +15,7 @@ Item {
     property real speed: 40 // pixels/sec
     property int pause: 1200
 
+    implicitWidth: label1.implicitWidth
     implicitHeight: label1.implicitHeight
     clip: true
 
